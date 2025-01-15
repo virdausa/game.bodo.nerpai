@@ -12,11 +12,9 @@
     <!-- Fonts -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
     <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
-    <!-- <link href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" rel="stylesheet" /> -->
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@9.0.3"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script> -->
     <style>
         /* Add your custom styles here */
         .activated {
