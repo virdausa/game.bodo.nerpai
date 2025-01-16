@@ -69,7 +69,7 @@
                                 @endforeach
                             </div>
 
-                            <x-button2 type="button" id="add-product" class="mr-3 bg-blue-700">Add Another Product</x-button>
+                            <x-button2 type="button" id="add-product" class="mr-3 bg-blue-700">Add Another Product</x-button2>
                             <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
                             <h3 class="text-lg font-bold dark:text-white mb-3">Expedition</h3>
 

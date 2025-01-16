@@ -157,7 +157,7 @@
     <script>
     $(document).ready(function () {
         if (typeof simpleDatatables !== 'undefined' && typeof simpleDatatables.DataTable !== 'undefined') {
-            // Dynamically initialize DataTables for specific IDs
+
             const tableIds = ["search-table", "search-table1"]; // Add all unique IDs here
             tableIds.forEach(function (id) {
                 const tableElement = document.getElementById(id);

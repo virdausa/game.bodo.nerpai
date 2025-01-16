@@ -10,6 +10,8 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\InboundRequestController;
+use App\Http\Controllers\OutboundRequestController;
+
 use App\Http\Controllers\LocationController;
 
 use App\Http\Controllers\CustomerComplaintController;
@@ -35,7 +37,8 @@ route::resource("customers", CustomerController::class);
 route::resource("purchases", PurchaseController::class);
 route::resource("locations", LocationController::class);
 
-route::resource("inbound_request", controller: InboundRequestController::class);
+route::resource("inbound_requests", controller: InboundRequestController::class);
+route::resource("outbound_requests", controller: OutboundRequestController::class);
 
 
 route::resource("products", controller: ProductController::class);

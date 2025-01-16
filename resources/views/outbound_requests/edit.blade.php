@@ -1,16 +1,18 @@
-@extends('layouts.app')
-
-@section('content')
-    <h1>Edit Outbound Request</h1>
-
+<x-app-layout>
+<div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-white">
+    <h3 class="text-lg font-bold dark:text-white">Edit Outbound Request</h3>
+    <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
     <form action="{{ route('outbound_requests.update', $outboundRequest->id) }}" method="POST">
         @csrf
         @method('PUT')
 
         <!-- Warehouse Selection -->
-		<div class="form-group">
-			<label for="warehouse_id">Warehouse</label>
-			<select name="warehouse_id" id="warehouse_id" class="form-control {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }}>
+		<div class="mb-4">
+			<x-input-label for="warehouse_id">Warehouse</x-input-label>
+			<select name="warehouse_id" id="warehouse_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }}>
 				@foreach($warehouses as $warehouse)
 				<option value="{{ $warehouse->id }}" {{ $outboundRequest->warehouse_id == $warehouse->id ? 'selected' : '' }}>
 					{{ $warehouse->name }}
@@ -18,44 +20,45 @@
 				@endforeach
 			</select>
 		</div>
+        <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
-        <h3>Requested Products</h3>
-        <table class="table table-bordered">
-            <thead>
+        <h3 class="text-lg font-bold dark:text-white">Requested Products</h3>
+        <x-table-table id="search-table">
+            <x-table-thead>
                 <tr>
-                    <th>Product</th>
-                    <th>Requested Quantity</th>
-                    <th>Stock in Warehouse</th>
-					<th>Locations (Room, Rack, Quantity)</th>
+                    <x-table-th>Product</x-table-th>
+                    <x-table-th>Requested Quantity</x-table-th>
+                    <x-table-th>Stock in Warehouse</x-table-th>
+					<x-table-th>Locations (Room, Rack, Quantity)</x-table-th>
                 </tr>
-            </thead>
-            <tbody>
+            </x-table-thead>
+            <x-table-tbody>
                 @foreach ($outboundRequest->requested_quantities as $productId => $quantity)
-                    <tr>
-                        <td>{{ $outboundRequest->sales->products->find($productId)->name }}</td>
-                        <td>{{ $quantity }}</td>
-                        <td id="stock-in-warehouse-{{ $productId }}">
+                    <x-table-tr>
+                    <x-table-td>{{ $outboundRequest->sales->products->find($productId)?->name ?? 'Product not found' }}</x-table-td>
+                    <x-table-td>{{ $quantity }}</x-table-td>
+                    <x-table-td id="stock-in-warehouse-{{ $productId }}">
                             {{ \App\Models\Inventory::where('warehouse_id', $outboundRequest->warehouse_id)
 													->where('product_id', $productId)
 													->sum('quantity') }}
-                        </td>
-						<td>
-                            <table class="table table-bordered">
-								<thead>
+                        </x-table-td>
+						<x-table-td>
+                            <x-table-table class="table table-bordered">
+								<x-table-thead>
 									<tr>
-										<th>Room & Rack</th>
-										<th>Quantity</th>
+										<x-table-th>Room & Rack</x-table-th>
+										<x-table-th>Quantity</x-table-th>
                                         @if ($outboundRequest->status == 'Requested')
-    										<th>Action</th>
+    										<x-table-th>Action</x-table-th>
                                         @endif
 									</tr>
-								</thead>
-								<tbody id="locations-{{ $productId }}">
+								</x-table-thead>
+								<x-table-tbody id="locations-{{ $productId }}">
 									@if (count($outboundRequestLocations) > 0)
                                         @foreach ($outboundRequestLocations[$productId] as $key => $location)
-                                            <tr>
-                                                <td>
-                                                    <select name="locations[{{ $location->product_id }}][{{ $key }}][location_id]" class="form-control {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }} required>
+                                            <x-table-tr>
+                                                <x-table-td>
+                                                    <select name="locations[{{ $location->product_id }}][{{ $key }}][location_id]" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }} required>
                                                         @foreach ($availableLocations[$location->product_id] as $availableLocation)
                                                             <option value="{{ $availableLocation->id }}"
                                                                     {{ $availableLocation->id == $location->location_id ? 'selected' : '' }}>
@@ -63,44 +66,46 @@
                                                             </option>
                                                         @endforeach
                                                     </select>
-                                                </td>
-                                                <td>
-                                                    <input type="number" name="locations[{{ $location->product_id }}][{{ $key }}][quantity]" value="{{ $location->quantity }}" class="form-control" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }} required>
-                                                </td>
+                                                </x-table-td>
+                                                <x-table-td>
+                                                <x-text-input type="number" name="locations[{{ $location->product_id }}][{{ $key }}][quantity]" value="{{ $location->quantity }}" class="form-control" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }} required />
+                                                </x-table-td>
                                                 @if ($outboundRequest->status == 'Requested')
-                                                    <td>
+                                                    <x-table-td>
                                                         <button type="button" class="btn btn-danger remove-location">Remove</button>
-                                                    </td>
+                                                    </x-table-td>
                                                 @endif
-                                            </tr>
+                                            </x-table-tr>
                                         @endforeach
 									@else
-										<tr>
-											<td colspan="3">No locations available</td>
-										</tr>
+										<x-table-tr>
+											<x-table-td colspan="3">No locations available</x-table-td>
+										</x-table-tr>
 									@endif
-								</tbody>
-							</table>
+								</x-table-tbody>
+							</x-table-table>
                             @if ($outboundRequest->status == 'Requested')
 							    <button type="button" class="btn btn-secondary add-location" data-product-id="{{ $productId }}">Add Location</button>
                             @endif
-                        </td>
-                    </tr>
+                        </x-table-td>
+                    </x-table-tr>
                 @endforeach
-            </tbody>
-        </table>
+            </x-table-tbody>
+        </x-table-table>
         <input type="hidden" id="deleted_locations" name="deleted_locations" value="">
             
-        <div class="form-group">
-            <label for="notes">Notes</label>
-            <textarea name="notes" class="form-control" placeholder="Optional notes">{{ $outboundRequest->notes }}</textarea>
+        <div class="mb-4">
+            <x-input-label for="notes">Notes</x-input-label>
+            <x-input-textarea name="notes" class="form-control" placeholder="Optional notes">{{ $outboundRequest->notes }}</x-input-textarea>
         </div>
 
         @if ($outboundRequest->status != 'Requested' && $outboundRequest->status != 'Pending Confirmation')
-			<h3>Expedition Details</h3>
-			<div class="form-group">
-				<label for="expedition_id">Expedition</label>
-				<select name="expedition_id" class="form-control {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
+        <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+	
+        <h3>Expedition Details</h3>
+			<div class="mb-4">
+				<x-input-label for="expedition_id">Expedition</x-input-label>
+				<select name="expedition_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
 					@foreach($expeditions as $expedition)
 						<option value="{{ $expedition->id }}" {{ $outboundRequest->expedition_id == $expedition->id ? 'selected' : '' }}>
 							{{ $expedition->name }}
@@ -108,46 +113,47 @@
 					@endforeach
 				</select>
 			</div>
-            <div class="form-group">
-                <label for="tracking_number">Tracking Number</label>
-                <input type="text" name="tracking_number" class="form-control" value="{{ $outboundRequest->tracking_number }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
+            <div class="mb-4">
+                <x-input-label for="tracking_number">Tracking Number</x-input-label>
+                <x-text-input type="text" name="tracking_number" class="form-control" value="{{ $outboundRequest->tracking_number }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}/>
             </div>
-            <div class="form-group">
-                <label for="real_volume">Real Volume (m³)</label>
-                <input type="number" step="0.01" name="real_volume" class="form-control" value="{{ $outboundRequest->real_volume }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
+            <div class="mb-4">
+                <x-input-label for="real_volume">Real Volume (m³)</x-input-label>
+                <x-text-input type="number" step="0.01" name="real_volume" class="form-control" value="{{ $outboundRequest->real_volume }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}/>
             </div>
-            <div class="form-group">
-                <label for="real_weight">Real Weight (kg)</label>
-                <input type="number" step="0.01" name="real_weight" class="form-control" value="{{ $outboundRequest->real_weight }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
+            <div class="mb-4">
+                <x-input-label for="real_weight">Real Weight (kg)</x-input-label>
+                <x-text-input type="number" step="0.01" name="real_weight" class="form-control" value="{{ $outboundRequest->real_weight }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}/>
             </div>
 			<div class="form-group">
-                <label for="packing_fee">Packing Fee</label>
-                <input type="number" step="0.01" name="packing_fee" class="form-control" value="{{ $outboundRequest->packing_fee }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
+                <x-input-label for="packing_fee">Packing Fee</x-input-label>
+                <x-text-input type="number" step="0.01" name="packing_fee" class="form-control" value="{{ $outboundRequest->packing_fee }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}/>
             </div>
             <div class="form-group">
-                <label for="real_shipping_fee">Real Shipping Fee</label>
-                <input type="number" step="0.01" name="real_shipping_fee" class="form-control" value="{{ $outboundRequest->real_shipping_fee }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}>
+                <x-input-label for="real_shipping_fee">Real Shipping Fee</x-input-label>
+                <x-text-input type="number" step="0.01" name="real_shipping_fee" class="form-control" value="{{ $outboundRequest->real_shipping_fee }}" {{ $outboundRequest->status != 'Packing & Shipping' ? 'readonly' : '' }}/>
             </div>
         @endif
 
 		<!-- Status Display -->
-		<h3>Status Display</h3>
-        <div class="form-group">
-            <label for="status">Sales Status</label>
-            <input type="text" class="form-control" value="{{ $outboundRequest->sales->status }}" readonly>
+        <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+		<h3 class="text-lg font-bold dark:text-white">Status Display</h3>
+        <div class="mb-4">
+            <x-input-label for="status">Sales Status</x-input-label>
+            <x-text-input type="text" class="form-control" value="{{ $outboundRequest->sales->status }}" readonly/>
         </div>
-		<div class="form-group">
-            <label for="status_outbound">Outbound Status</label>
-            <input type="text" class="form-control" value="{{ $outboundRequest->status }}" readonly>
+		<div class="mb-4">
+            <x-input-label for="status_outbound">Outbound Status</x-input-label>
+            <x-text-input type="text" class="form-control" value="{{ $outboundRequest->status }}" readonly/>
         </div>
 
         <!-- Action Buttons -->
-        <h3>Actions</h3>
+        <h3 class="text-lg font-bold dark:text-white">Actions</h3>
         @switch($outboundRequest->status)
             @case('Requested')
-                <button name="submit" type="submit" class="btn btn-success" value="Verify Stock & Approve">Verify Stock & Approve</button>
-                <button name="submit" type="submit" class="btn btn-danger" value="Reject Request">Reject Request</button>
-                @break
+            <x-primary-button type="submit">Verify Stock and Approve</x-primary-button>
+            <x-danger-button type="submit">Reject Request</x-danger-button>
+            @break
 
             @case('Pending Confirmation')
                 @break
@@ -157,17 +163,18 @@
                 @break
 
             @case('In Transit')
-                <h4>Waiting Sales Confirmation about Received Quantities by Customer before Complain or Ready to Complete</h4>
+                <h4 class="text-md font-bold dark:text-white">Waiting Sales Confirmation about Received Quantities by Customer before Complain or Ready to Complete</h4>
                 @break
 
             @case('Customer Complaint')
-                <button name='submit' type="submit" class="btn btn-warning" value="Resolve Quantity Problem">Resolve Quantity Problem</button>
-                @break
+            <x-primary-button type="submit">Resolve Quantity Problem</x-primary-button>
+            @break
         @endswitch
 
         <br><br>
-        <button type="submit" class="btn btn-primary">Update Outbound Request</button>
-        <a href="{{ route('outbound_requests.index') }}" class="btn btn-secondary">Back to List</a>
+        <x-primary-button type="submit">Update Outbound Request</x-primary-button>
+        <x-button href="{{ route('outbound_requests.index') }}"
+        class="border rounded border-gray-400 dark:border-gray-700 p-2 text-lg hover:underline text-gray-700 dark:text-gray-400">Back to List</x-button>    
     </form>
 	
 	<script>
@@ -203,20 +210,20 @@
 
                 // Add a new row
                 const newRow = `
-                    <tr>
-                        <td>
-                            <select name="locations[${productId}][${rowCount}][location_id]" class="form-control location-select">
+                    <x-table-tr>
+                        <x-table-td>
+                            <select name="locations[${productId}][${rowCount}][location_id]" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white location-select">
                                 <option value="" selected>Select a location</option>
                                 ` + select[productId] + `
                             </select>
-                        </td>
-                        <td>
+                        </x-table-td>
+                        <x-table-td>
                             <input type="number" name="locations[${productId}][${rowCount}][quantity]" class="form-control" value="0">
-                        </td>
-                        <td>
-                            <button type="button" class="btn btn-danger remove-location">Remove</button>
-                        </td>
-                    </tr>
+                        </x-table-td>
+                        <x-table-td>
+                            <x-button2 type="button" class="remove-location mr-3 bg-blue-700">Add Another Product</x-button2>
+                        </x-table-td>
+                    </x-table-tr>
                 `;
                 tbody.insertAdjacentHTML('beforeend', newRow);
 
@@ -259,4 +266,5 @@
         });
     });
 	</script>
-@endsection
+    </div> </div> </div> </div>
+</x-app-layout>

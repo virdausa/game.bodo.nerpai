@@ -6,7 +6,7 @@
                     <h3 class="text-lg font-bold dark:text-white mb-4">Manage Inbound Requests</h3>
                     <p class="text-sm dark:text-gray-200 mb-6">Manage your inbound requests orders.</p>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-                    <x-table-table class="search-table">
+                    <x-table-table id="search-table">
                         <x-table-thead>
                             <tr>
                                 <x-table-th>Purchase Order</x-table-th>
@@ -32,7 +32,7 @@
                                     <x-table-td>{{ optional($request->verifier)->name }}</x-table-td>
                                     <x-table-td>{{ $request->notes }}</x-table-td>
                                     <x-table-td>
-                                        <x-button-show :route="route('nbound_requests.show', $request->id)" />
+                                        <x-button-show :route="route('inbound_requests.show', $request->id)" />
 
                                         @if ($request->status !== 'Completed')
                                             <x-button-edit :route="route('inbound_requests.edit', $request->id)" />
