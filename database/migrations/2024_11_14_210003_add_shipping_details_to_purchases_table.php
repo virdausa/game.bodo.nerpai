@@ -15,7 +15,7 @@ return new class extends Migration
 			$table->date('shipped_date')->nullable();
 			$table->string('expedition')->nullable();
 			$table->string('tracking_no')->nullable();
-            $table->enum('status', ['Planned', 'In Transit', 'Received - Pending Verification', 'Quantity Discrepancy', 'Completed', 'Pending Additional Shipment'])->change();
+            // $table->enum('status', ['Planned', 'In Transit', 'Received - Pending Verification', 'Quantity Discrepancy', 'Completed', 'Pending Additional Shipment'])->change();
         });
 	}
 

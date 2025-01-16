@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('products', function (Blueprint $table) {
             $table->string('sku')->after('name');
             $table->integer('weight')->after('price');
-            $table->enum('status', ['Active', 'Inactive'])->after('weight');
+            $table->string('status')->after('weight');
             $table->text('notes')->nullable()->after('status');
         });
     }

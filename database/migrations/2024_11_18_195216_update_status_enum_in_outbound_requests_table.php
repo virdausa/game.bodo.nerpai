@@ -13,7 +13,7 @@ return new class extends Migration
     public function up()
 	{
 		Schema::table('outbound_requests', function (Blueprint $table) {
-			$table->enum('status', ['Requested', 'Pending Confirmation', 'Packing & Shipping', 'In Transit', 'Customer Complaint', 'Ready to Complete', 'Completed'])->default('Requested')->change();
+			// $table->enum('status', ['Requested', 'Pending Confirmation', 'Packing & Shipping', 'In Transit', 'Customer Complaint', 'Ready to Complete', 'Completed'])->default('Requested')->change();
 		});
 	}
 
