@@ -13,7 +13,7 @@ class UpdatePurchaseStatusEnum extends Migration
     public function up()
     {
         Schema::table('purchases', function (Blueprint $table) {
-            $table->enum('status', ['Planned', 'In Transit', 'Completed', 'Quantity Discrepancy', 'Pending Additional Shipment'])->default('Planned')->change();
+            // $table->enum('status', ['Planned', 'In Transit', 'Completed', 'Quantity Discrepancy', 'Pending Additional Shipment'])->default('Planned')->change('status');
         });
     }
 
