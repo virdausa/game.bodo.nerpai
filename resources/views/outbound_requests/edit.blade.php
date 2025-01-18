@@ -23,75 +23,52 @@
         <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
         <h3 class="text-lg font-bold dark:text-white">Requested Products</h3>
-        <x-table-table id="search-table">
-            <x-table-thead>
-                <tr>
-                    <x-table-th>Product</x-table-th>
-                    <x-table-th>Requested Quantity</x-table-th>
-                    <x-table-th>Stock in Warehouse</x-table-th>
-					<x-table-th>Locations (Room, Rack, Quantity)</x-table-th>
-                </tr>
-            </x-table-thead>
-            <x-table-tbody>
-                @foreach ($outboundRequest->requested_quantities as $productId => $quantity)
-                    <x-table-tr>
-                    <x-table-td>{{ $outboundRequest->sales->products->find($productId)?->name ?? 'Product not found' }}</x-table-td>
-                    <x-table-td>{{ $quantity }}</x-table-td>
-                    <x-table-td id="stock-in-warehouse-{{ $productId }}">
-                            {{ \App\Models\Inventory::where('warehouse_id', $outboundRequest->warehouse_id)
-													->where('product_id', $productId)
-													->sum('quantity') }}
-                        </x-table-td>
-						<x-table-td>
-                            <x-table-table class="table table-bordered">
-								<x-table-thead>
-									<tr>
-										<x-table-th>Room & Rack</x-table-th>
-										<x-table-th>Quantity</x-table-th>
-                                        @if ($outboundRequest->status == 'Requested')
-    										<x-table-th>Action</x-table-th>
-                                        @endif
-									</tr>
-								</x-table-thead>
-								<x-table-tbody id="locations-{{ $productId }}">
-									@if (count($outboundRequestLocations) > 0)
-                                        @foreach ($outboundRequestLocations[$productId] as $key => $location)
-                                            <x-table-tr>
-                                                <x-table-td>
-                                                    <select name="locations[{{ $location->product_id }}][{{ $key }}][location_id]" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }} required>
-                                                        @foreach ($availableLocations[$location->product_id] as $availableLocation)
-                                                            <option value="{{ $availableLocation->id }}"
-                                                                    {{ $availableLocation->id == $location->location_id ? 'selected' : '' }}>
-                                                                Room: {{ $availableLocation->room }}, Rack: {{ $availableLocation->rack }} (Available: {{ $availableLocation->quantity }})
-                                                            </option>
-                                                        @endforeach
-                                                    </select>
-                                                </x-table-td>
-                                                <x-table-td>
-                                                <x-text-input type="number" name="locations[{{ $location->product_id }}][{{ $key }}][quantity]" value="{{ $location->quantity }}" class="form-control" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }} required />
-                                                </x-table-td>
-                                                @if ($outboundRequest->status == 'Requested')
-                                                    <x-table-td>
-                                                        <button type="button" class="btn btn-danger remove-location">Remove</button>
-                                                    </x-table-td>
-                                                @endif
-                                            </x-table-tr>
-                                        @endforeach
-									@else
-										<x-table-tr>
-											<x-table-td colspan="3">No locations available</x-table-td>
-										</x-table-tr>
-									@endif
-								</x-table-tbody>
-							</x-table-table>
-                            @if ($outboundRequest->status == 'Requested')
-							    <button type="button" class="btn btn-secondary add-location" data-product-id="{{ $productId }}">Add Location</button>
-                            @endif
-                        </x-table-td>
-                    </x-table-tr>
-                @endforeach
-            </x-table-tbody>
-        </x-table-table>
+        <x-table-table id="search-table" class="border-collapse border border-slate-500">
+    <x-table-thead>
+        <tr>
+            <x-table-th rowspan="2">Product</x-table-th>
+            <x-table-th rowspan="2">Requested Quantity</x-table-th>
+            <x-table-th rowspan="2">Stock in Warehouse</x-table-th>
+            <x-table-th class="text-center" colspan="3">Locations</x-table-th>
+        </tr>
+        <tr>
+            <x-table-th class="text-center">Room & Rack</x-table-th>
+            <x-table-th class="text-center">Quantity</x-table-th>
+            <x-table-th class="text-center">Action</x-table-th>
+        </tr>
+    </x-table-thead>
+    <x-table-tbody>
+        @foreach ($outboundRequest->requested_quantities as $productId => $quantity)
+            <x-table-tr>
+                <x-table-td>{{ $outboundRequest->sales->products->find($productId)?->name ?? 'Product not found' }}</x-table-td>
+                <x-table-td>{{ $quantity }}</x-table-td>
+                <x-table-td id="stock-in-warehouse-{{ $productId }}">
+                    {{ \App\Models\Inventory::where('warehouse_id', $outboundRequest->warehouse_id)
+                        ->where('product_id', $productId)
+                        ->sum('quantity') }}
+                </x-table-td>
+                <x-table-td>
+                    <select name="locations[{{ $productId }}][room_rack]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white">
+                        @foreach ($availableLocations[$productId] ?? [] as $availableLocation)
+                            <option value="{{ $availableLocation->id }}">
+                                Room: {{ $availableLocation->room }}, Rack: {{ $availableLocation->rack }} (Available: {{ $availableLocation->quantity }})
+                            </option>
+                        @endforeach
+                    </select>
+                </x-table-td>
+                <x-table-td>
+                    <x-text-input type="number" name="locations[{{ $productId }}][quantity]" value="0" class="form-control" />
+                </x-table-td>
+                <x-table-td>
+                    @if ($outboundRequest->status == 'Requested')
+                        <button type="button" class="btn btn-danger remove-location">Remove</button>
+                    @endif
+                </x-table-td>
+            </x-table-tr>
+        @endforeach
+    </x-table-tbody>
+</x-table-table>
+
         <input type="hidden" id="deleted_locations" name="deleted_locations" value="">
             
         <div class="mb-4">
