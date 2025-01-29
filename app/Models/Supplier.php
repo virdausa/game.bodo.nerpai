@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
@@ -11,38 +13,40 @@ class Supplier extends Model
 
     protected $fillable = [
         'name',
-        'location',
-        'contact_info',
+        'address',
+        'email',
+        'phone_number',
         'status',
         'notes',
     ];
 
-    /**
-     * Get the products associated with the supplier through purchases.
-     * This defines a many-to-many relationship with the Product model.
-     *
-     * The pivot table 'purchase_product' includes additional fields:
-     * - quantity: the number of products purchased.
-     * - buying_price: the price at which the product was bought.
-     * - total_cost: the total cost for the quantity purchased.
-     *
-     * Timestamps are included for the pivot table entries.
-     */
-    // public function products()
-    // {
-    //     return $this->belongsToMany(Product::class, 'purchase_product')
-    //         ->withPivot('quantity', 'buying_price', 'total_cost')
-    //         ->withTimestamps();
-    // }
+    public function getSuppliers(): Collection
+    {
+        return $this->all();
+    }
 
-    /**
-     * Get the purchases associated with the supplier.
-     *
-     * This defines a one-to-many relationship with the Purchase model.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasManyThrough
-     */
-    public function purchases()
+    public function getSupplier($id): Supplier
+    {
+        return $this->findOrFail($id);
+    }
+
+    public function createSupplier(array $data): Supplier
+    {
+        return $this->create($data);
+    }
+
+    public function updateSupplier(array $data, Supplier $supplier): Supplier
+    {
+        $supplier->update($data);
+        return $supplier;
+    }
+
+    public function deleteSupplier(Supplier $supplier): void
+    {
+        $supplier->delete();
+    }
+
+    public function getPurchases(): HasMany
     {
         return $this->hasMany(Purchase::class);
     }
