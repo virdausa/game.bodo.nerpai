@@ -70,10 +70,12 @@ class OutboundRequestController extends Controller
 
 	public function edit($id)
 	{
+
 		$outboundRequest = OutboundRequest::with('sales', 'warehouse')->findOrFail($id);
 		$expeditions = Expedition::all(); // Fetch expeditions
 		$warehouses = Warehouse::all();
-	
+		// dd($outboundRequest);
+
 		$availableLocations = [];
 		$outboundRequestLocations = [];
 		foreach ($outboundRequest->requested_quantities as $productId => $quantity) {
