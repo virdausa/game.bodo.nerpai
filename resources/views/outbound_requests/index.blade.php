@@ -31,12 +31,14 @@
                                     </x-table-td>
                                     <x-table-td>{{ $request->notes }}</x-table-td>
                                     <x-table-td>
+                                        <div class="flex justify-center gap-2">
                                     <x-button-show :route="route('outbound_requests.show', $request->id)" />
 
                                         @if ($request->status != 'Ready to Complete' && $request->status != 'Completed')
                                         <x-button-edit :route="route('outbound_requests.edit', $request->id)" />
 
                                         @endif
+                                        </div>
                                     </x-table-td>
                                 </x-table-tr>
                             @endforeach
