@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-white">
-                    <h3 class="text-lg font-bold dark:text-white">Show Outbound Request</h3>
+                    <h3 class="text-lg font-bold dark:text-white mb-4">Show Outbound Request</h3>
                     <div class="mb-3 mt-1 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
                     <!-- Basic Details -->
@@ -77,6 +77,7 @@
                     </div>
 
                     <!-- Expedition Details -->
+                    <div class="mb-3 mt-1 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
                     <x-input-label>Expedition Details</x-input-label>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                         <div class="p-2 bg-gray-50 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
