@@ -22,6 +22,10 @@ use App\Http\Controllers\EmployeeController;
 Route::get('/', function () {
     return view('welcome');
 });
+Route::middleware('ensure.logged.in')->group(function () {
+
+
+});
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -31,9 +35,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
-
-route::resource("customers", CustomerController::class);
+    route::resource("customers", CustomerController::class);
 route::resource("purchases", PurchaseController::class);
 route::resource("locations", LocationController::class);
 
@@ -71,4 +73,7 @@ Route::resource('permissions', PermissionController::class);
 
 
 Route::resource('employees', EmployeeController::class);
+});
+
+
 require __DIR__ . '/auth.php';
