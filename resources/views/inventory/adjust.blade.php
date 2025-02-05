@@ -86,56 +86,58 @@
 
 					<!-- JavaScript for Dynamic Rack Filtering based on Room Selection -->
 					<script>
-						document.getElementById('warehouse_id').addEventListener('change', function () {
-							const warehouseId = this.value;
-							const roomSelect = document.getElementById('room');
-							const rackSelect = document.getElementById('rack');
+						document.addEventListener("DOMContentLoaded", function () {
+							document.getElementById('warehouse_id').addEventListener('change', function () {
+								const warehouseId = this.value;
+								const roomSelect = document.getElementById('room');
+								const rackSelect = document.getElementById('rack');
 
-							roomSelect.innerHTML = '<option value="">-- Select Room --</option>';
-							rackSelect.innerHTML = '<option value="">-- Select Rack --</option>';
+								roomSelect.innerHTML = '<option value="">-- Select Room --</option>';
+								rackSelect.innerHTML = '<option value="">-- Select Rack --</option>';
 
-							if (warehouseId) {
-								fetch(`{{ route('inventory.index') }}/get-locations/${warehouseId}`)
-									.then(response => response.json())
-									.then(locations => {
-										// Get unique rooms by filtering out duplicates
-										const uniqueRooms = [...new Set(locations.map(location => location.room))];
+								if (warehouseId) {
+									fetch(`{{ route('inventory.index') }}/get-locations/${warehouseId}`)
+										.then(response => response.json())
+										.then(locations => {
+											// Get unique rooms by filtering out duplicates
+											const uniqueRooms = [...new Set(locations.map(location => location.room))];
 
-										// Clear the room select options
-										roomSelect.innerHTML = '<option value="">-- Select Room --</option>';
+											// Clear the room select options
+											roomSelect.innerHTML = '<option value="">-- Select Room --</option>';
 
-										// Populate the room dropdown with unique rooms
-										uniqueRooms.forEach(room => {
-											const option = document.createElement('option');
-											option.value = room;
-											option.textContent = room;
-											roomSelect.appendChild(option);
-										});
-									});
-
-							}
-						});
-
-						document.getElementById('room').addEventListener('change', function () {
-							const selectedRoom = this.value;
-							const rackSelect = document.getElementById('rack');
-							rackSelect.innerHTML = '<option value="">-- Select Rack --</option>';
-
-							const warehouseId = document.getElementById('warehouse_id').value;
-							if (warehouseId && selectedRoom) {
-								fetch(`{{ route('inventory.index') }}/get-locations/${warehouseId}`)
-									.then(response => response.json())
-									.then(locations => {
-										locations
-											.filter(location => location.room === selectedRoom)
-											.forEach(location => {
+											// Populate the room dropdown with unique rooms
+											uniqueRooms.forEach(room => {
 												const option = document.createElement('option');
-												option.value = location.rack;
-												option.textContent = location.rack;
-												rackSelect.appendChild(option);
+												option.value = room;
+												option.textContent = room;
+												roomSelect.appendChild(option);
 											});
-									});
-							}
+										});
+
+								}
+							});
+
+							document.getElementById('room').addEventListener('change', function () {
+								const selectedRoom = this.value;
+								const rackSelect = document.getElementById('rack');
+								rackSelect.innerHTML = '<option value="">-- Select Rack --</option>';
+
+								const warehouseId = document.getElementById('warehouse_id').value;
+								if (warehouseId && selectedRoom) {
+									fetch(`{{ route('inventory.index') }}/get-locations/${warehouseId}`)
+										.then(response => response.json())
+										.then(locations => {
+											locations
+												.filter(location => location.room === selectedRoom)
+												.forEach(location => {
+													const option = document.createElement('option');
+													option.value = location.rack;
+													option.textContent = location.rack;
+													rackSelect.appendChild(option);
+												});
+										});
+								}
+							});
 						});
 					</script>
 

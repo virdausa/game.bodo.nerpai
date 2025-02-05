@@ -63,9 +63,11 @@
 
     <main class="p-4 sm:ml-64 sm:mt-12">
         {{ $slot }}
+        @include('layouts.footer')
+
     </main>
 
-    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
@@ -155,22 +157,22 @@
         </script>
     @endif
     <script>
-    $(document).ready(function () {
-        if (typeof simpleDatatables !== 'undefined' && typeof simpleDatatables.DataTable !== 'undefined') {
+        $(document).ready(function () {
+            if (typeof simpleDatatables !== 'undefined' && typeof simpleDatatables.DataTable !== 'undefined') {
 
-            const tableIds = ["search-table", "search-table1"]; // Add all unique IDs here
-            tableIds.forEach(function (id) {
-                const tableElement = document.getElementById(id);
-                if (tableElement) {
-                    new simpleDatatables.DataTable(`#${id}`, {
-                        searchable: true,
-                        sortable: true
-                    });
-                }
-            });
-        }
-    });
-</script>
+                const tableIds = ["search-table", "search-table1"]; // Add all unique IDs here
+                tableIds.forEach(function (id) {
+                    const tableElement = document.getElementById(id);
+                    if (tableElement) {
+                        new simpleDatatables.DataTable(`#${id}`, {
+                            searchable: true,
+                            sortable: true
+                        });
+                    }
+                });
+            }
+        });
+    </script>
 
     </script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -220,6 +222,7 @@
 
         });
     </script>
+
 </body>
 
 </html>

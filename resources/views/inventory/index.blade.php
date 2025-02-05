@@ -9,13 +9,13 @@
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                     
                         <div class="w-full md:w-auto flex justify-end gap-3">
-                            <x-button href="{{route('inventory.adjust')}}"
-                                class="border rounded border-gray-400 dark:border-gray-700 p-2 text-lg hover:underline text-gray-700 dark:text-gray-400">Adjust
-                                Inventory</x-button>
-                                
-                            <x-button href="{{route('inventory.history')}}"
-                                class="border rounded border-gray-400 dark:border-gray-700 p-2 text-lg hover:underline text-gray-700 dark:text-gray-400">Inventory
-                                History</x-button>
+                        <a href="{{ route('inventory.adjust') }}" class="ml-2">
+                                <x-secondary-button :route="route('inventory.adjust')">Adjust Inventory</x-secondary-button>
+                            </a>
+                            <a href="{{ route('inventory.history') }}" class="ml-2">
+                                <x-secondary-button :route="route('inventory.history')">Inventory History</x-secondary-button>
+                            </a>
+                           
                     
                         </div>
                     </div>
