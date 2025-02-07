@@ -21,7 +21,7 @@
             <div class="max-w-md p-6 bg-card shadow-lg rounded-lg flex flex-col items-center">
                 <img aria-hidden="true" alt="haebot" src="{{ asset('svg/haebot.svg') }}"
                     class="w-24 h-24 mb-4" />
-                <h1 class="text-3xl font-bold mb-2 text-center text-primary">Welcome to Haebot ERP!</h1>
+                <h1 class="text-3xl font-bold mb-2 text-center text-primary">Welcome to Nerpai!!</h1>
                 <p class="text-sm text-center text-gray-500">Your go-to destination for a highly
                     performant, highly adaptive ERP solution</p>
                 <div class="flex space-x-4 mt-4">

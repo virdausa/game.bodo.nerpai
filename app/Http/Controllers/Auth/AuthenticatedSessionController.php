@@ -28,7 +28,7 @@ class AuthenticatedSessionController extends Controller
 
     if (Auth::attempt($credentials)) {
         // return redirect()->route('dashboard')->with('success', 'Login sebagai Admin Berhasil');
-        return redirect()->route('dashboard')->with('success', 'Login Berhasil');
+        return redirect()->route('lobby')->with('success', 'Login Berhasil');
 
     }
 
