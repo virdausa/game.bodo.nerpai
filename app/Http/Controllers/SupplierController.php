@@ -2,69 +2,65 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Supplier\CreateRequest;
 use App\Models\Supplier;
-use Illuminate\Http\Request;
+use App\Services\SupplierService;
+use App\Http\Requests\Supplier\IndexRequest;
+use App\Http\Requests\Supplier\ShowRequest;
+use App\Http\Requests\Supplier\StoreRequest;
+use App\Http\Requests\Supplier\UpdateRequest;
+use App\Http\Requests\Supplier\DestroyRequest;
+use App\Http\Requests\Supplier\EditRequest;
 
 class SupplierController extends Controller
 {
-    public function index()
+    protected Supplier $supplier;
+    protected SupplierService $supplierService;
+
+    public function __construct(Supplier $supplier, SupplierService $supplierService)
     {
-        $suppliers = Supplier::all();
+        $this->supplier = $supplier;
+        $this->supplierService = $supplierService;
+    }
+
+    public function index(IndexRequest $request)
+    {
+        $suppliers = $this->supplierService->getAll();
         return view('suppliers.index', compact('suppliers'));
     }
 
-    public function create()
+    public function show(ShowRequest $request, Supplier $supplier)
+    {
+        $supplier = $this->supplierService->getOne($supplier);
+        return view('suppliers.show', compact('supplier'));
+    }
+
+    public function create(CreateRequest $request)
     {
         return view('suppliers.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'contact_info' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-        ]);
-
-        $supplier = new Supplier();
-        $supplier->fill($request->all());
-        $supplier->save();
-
-        return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully');
+        $this->supplierService->store($request->validated());
+        return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
     }
 
-    public function show(Supplier $supplier)
+    public function edit(EditRequest $request, Supplier $supplier)
     {
-        return view('suppliers.show', compact('supplier'));
-    }
-
-    public function edit(Supplier $supplier)
-    {
+        $supplier = $this->supplierService->getOne($supplier);
         return view('suppliers.edit', compact('supplier'));
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, Supplier $supplier)
     {
-        $request->validate([
-            'name' => 'nullable|string|max:255',
-            'location' => 'nullable|string|max:255',
-            'contact_info' => 'nullable|string|max:255',
-            'notes' => 'nullable|string',
-            'status' => 'nullable|string',
-        ]);
-
-        $supplier = Supplier::findOrFail($id);
-
-        $supplier->fill($request->all());
-        $supplier->save();
-
-        return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully');
+        $supplier = $this->supplierService->update($request->validated(), $supplier);
+        return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully.');
     }
 
-    public function destroy(Supplier $supplier)
+    public function destroy(DestroyRequest $request, Supplier $supplier)
     {
-        $supplier->delete();
-        return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully');
+        $this->supplierService->destroy($supplier);
+        return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
     }
 }

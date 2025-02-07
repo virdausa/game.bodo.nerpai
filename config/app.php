@@ -1,5 +1,8 @@
 <?php
 
+// use App\Providers\AppServiceProvider;
+// use App\Providers\RouteServiceProvider;
+
 return [
 
     /*
@@ -122,7 +125,11 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
-    
+
+    // 'providers' => [
+    //     // AppServiceProvider::class,
+    //     // RouteServiceProvider::class
+    // ],
 
 
 

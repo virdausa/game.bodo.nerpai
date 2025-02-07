@@ -63,7 +63,6 @@ Route::middleware('auth')->group(function () {
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
 
     Route::resource('sales', SalesController::class);
-
     Route::resource('suppliers', SupplierController::class);
     Route::resource('warehouses', WarehouseController::class);
 
@@ -85,6 +84,4 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('employees', EmployeeController::class);
 });
-
-
 require __DIR__ . '/auth.php';
