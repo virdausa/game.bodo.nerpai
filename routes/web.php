@@ -67,6 +67,7 @@ Route::get('/roles/data', [RoleController::class, 'getRolesData'])->name('roles.
 
 Route::resource('permissions', PermissionController::class);
 
-
 Route::resource('employees', EmployeeController::class);
+
+Route::resource('suppliers', SupplierController::class);
 require __DIR__ . '/auth.php';

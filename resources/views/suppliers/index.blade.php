@@ -21,8 +21,9 @@
                             <tr>
                                 <x-table-th>ID</x-table-th>
                                 <x-table-th>Name</x-table-th>
-                                <x-table-th>Location</x-table-th>
-                                <x-table-th>Contact Info</x-table-th>
+                                <x-table-th>Address</x-table-th>
+                                <x-table-th>Email</x-table-th>
+                                <x-table-th>Phone Number</x-table-th>
                                 <x-table-th>Status</x-table-th>
                                 <x-table-th>Note</x-table-th>
                                 <x-table-th>Actions</x-table-th>
@@ -33,8 +34,9 @@
                                 <x-table-tr>
                                     <x-table-td>{{ $supplier->id }}</x-table-td>
                                     <x-table-td>{{ $supplier->name }}</x-table-td>
-                                    <x-table-td>{{ $supplier->location }}</x-table-td>
-                                    <x-table-td>{{ $supplier->contact_info }}</x-table-td>
+                                    <x-table-td>{{ $supplier->address }}</x-table-td>
+                                    <x-table-td>{{ $supplier->email }}</x-table-td>
+                                    <x-table-td>{{ $supplier->phone_number }}</x-table-td>
                                     <x-table-td>{{ $supplier->status }}</x-table-td>
                                     <x-table-td>{{ $supplier->notes }}</x-table-td>
                                     <x-table-td>

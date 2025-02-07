@@ -15,12 +15,12 @@ class SupplierService
         $this->supplier = $supplier;
     }
 
-    public function index(): SupplierCollection
+    public function getAll(): SupplierCollection
     {
         return new SupplierCollection($this->supplier->getSuppliers());
     }
 
-    public function show(Supplier $supplier): SupplierResource
+    public function getOne(Supplier $supplier): SupplierResource
     {
         return new SupplierResource($supplier);
     }

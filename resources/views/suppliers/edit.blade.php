@@ -18,34 +18,48 @@
                         <!-- Supplier Name -->
                         <div class="form-group">
                             <x-input-label for="name">Supplier Name</x-input-label>
-                            <x-text-input type="text" id="name" name="name" class="w-full" value="{{ $supplier->name }}" required />
+                            <x-text-input type="text" id="name" name="name" class="w-full"
+                                value="{{ $supplier->name }}" required />
                         </div>
 
-                        <!-- Location -->
+                        <!-- Address -->
                         <div class="form-group">
-                            <x-input-label for="location">Location</x-input-label>
-                            <x-text-input type="text" id="location" name="location" class="w-full" value="{{ $supplier->location }}" />
+                            <x-input-label for="address">Address</x-input-label>
+                            <x-text-input type="text" id="address" name="address" class="w-full"
+                                value="{{ $supplier->address }}" />
                         </div>
 
-                        <!-- Contact Info -->
+                        <!-- Email -->
                         <div class="form-group">
-                            <x-input-label for="contact_info">Contact Info</x-input-label>
-                            <x-text-input type="text" id="contact_info" name="contact_info" class="w-full" value="{{ $supplier->contact_info }}" />
+                            <x-input-label for="email">Email</x-input-label>
+                            <x-text-input type="text" id="email" name="email" class="w-full"
+                                value="{{ $supplier->email }}" />
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="form-group">
+                            <x-input-label for="phone_number">Phone Number</x-input-label>
+                            <x-text-input type="text" id="phone_number" name="phone_number" class="w-full"
+                                value="{{ $supplier->phone_number }}" />
                         </div>
 
                         <!-- Status -->
                         <div class="form-group">
                             <x-input-label for="status">Status</x-input-label>
-                            <select id="status" name="status" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white">
-                                <option value="Active" {{ $supplier->status == 'Active' ? 'selected' : '' }}>Active</option>
-                                <option value="Inactive" {{ $supplier->status == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+                            <select id="status" name="status"
+                                class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white">
+                                <option value="Active" {{ $supplier->status == 'Active' ? 'selected' : '' }}>Active
+                                </option>
+                                <option value="Inactive" {{ $supplier->status == 'Inactive' ? 'selected' : '' }}>
+                                    Inactive</option>
                             </select>
                         </div>
 
                         <!-- Notes -->
                         <div class="form-group">
                             <x-input-label for="notes">Notes</x-input-label>
-                            <textarea id="notes" name="notes" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white dark:border-gray-600">{{ $supplier->notes }}</textarea>
+                            <textarea id="notes" name="notes"
+                                class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white dark:border-gray-600">{{ $supplier->notes }}</textarea>
                         </div>
 
                         <!-- Actions -->

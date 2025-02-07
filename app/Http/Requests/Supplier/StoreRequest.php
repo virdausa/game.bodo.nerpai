@@ -3,6 +3,13 @@
 namespace App\Http\Requests\Supplier;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rules\Enum;
+
+enum StatusEnum: string
+{
+    case Active = 'Active';
+    case Inactive = 'Inactive';
+}
 
 class StoreRequest extends FormRequest
 {
@@ -18,7 +25,7 @@ class StoreRequest extends FormRequest
             'address' => 'nullable|json',
             'email' => 'nullable|string|email',
             'phone_number' => 'nullable|string',
-            'status' => 'required|enum:active,inactive',
+            'status' => ['required', new Enum(StatusEnum::class)],
             'notes' => 'nullable|string',
         ];
     }
