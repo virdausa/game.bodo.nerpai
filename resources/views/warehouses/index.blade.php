@@ -17,9 +17,12 @@
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                         
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                            <x-responsive-nav-link :href="route('locations.index')" class="rounded-lg bg-emerald-800 hover:bg-emerald-600 dark:hover:bg-emerald-900 text-white text-lg ">
-                                    {{ __(key: 'Manage Location') }}
-                                </x-responsive-nav-link>
+                        
+
+                        <a href="{{ route('locations.index') }}" class="ml-2">
+                                <x-secondary-button :route="route('locations.index')">Manage Locations</x-secondary-button>
+                            </a>
+                       
                                 @include('warehouses.create')
                          </div>
                     </div>

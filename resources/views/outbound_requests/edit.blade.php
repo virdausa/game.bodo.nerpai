@@ -12,7 +12,7 @@
         <!-- Warehouse Selection -->
 		<div class="mb-4">
 			<x-input-label for="warehouse_id">Warehouse</x-input-label>
-			<select name="warehouse_id" id="warehouse_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }}>
+			<select name="warehouse_id" id="warehouse_id" class="bg-gray-100 w-1/2 px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white {{ $outboundRequest->status != 'Requested' ? 'readonly-select' : '' }}" {{ $outboundRequest->status != 'Requested' ? 'readonly' : '' }}>
 				@foreach($warehouses as $warehouse)
 				<option value="{{ $warehouse->id }}" {{ $outboundRequest->warehouse_id == $warehouse->id ? 'selected' : '' }}>
 					{{ $warehouse->name }}
@@ -22,8 +22,8 @@
 		</div>
         <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
-        <h3 class="text-lg font-bold dark:text-white">Requested Products</h3>
-        <x-table-table id="search-table" class="border-collapse border border-slate-500">
+        <x-input-label>Requested Products</x-input-label>
+        <x-table-table id="search-table" >
     <x-table-thead>
         <tr>
             <x-table-th rowspan="2">Product</x-table-th>
@@ -32,9 +32,9 @@
             <x-table-th class="text-center" colspan="3">Locations</x-table-th>
         </tr>
         <tr>
-            <x-table-th class="text-center">Room & Rack</x-table-th>
-            <x-table-th class="text-center">Quantity</x-table-th>
-            <x-table-th class="text-center">Action</x-table-th>
+            <x-table-th class="text-center border-t border-gray-400 ">Room & Rack</x-table-th>
+            <x-table-th class="text-center border-t border-gray-400 ">Quantity</x-table-th>
+            <x-table-th class="text-center border-t border-gray-400 ">Action</x-table-th>
         </tr>
     </x-table-thead>
     <x-table-tbody>
@@ -47,7 +47,7 @@
                         ->where('product_id', $productId)
                         ->sum('quantity') }}
                 </x-table-td>
-                <x-table-td>
+                <x-table-td class="p-2">
                     <select name="locations[{{ $productId }}][room_rack]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white">
                         @foreach ($availableLocations[$productId] ?? [] as $availableLocation)
                             <option value="{{ $availableLocation->id }}">
@@ -61,8 +61,11 @@
                 </x-table-td>
                 <x-table-td>
                     @if ($outboundRequest->status == 'Requested')
-                        <button type="button" class="btn btn-danger remove-location">Remove</button>
-                    @endif
+                        <button type="button"
+                             class="ml-3 bg-red-500 text-sm text-white px-4 py-1 rounded-md hover:bg-red-700 remove-location">
+                             Remove
+                        </button>
+                     @endif
                 </x-table-td>
             </x-table-tr>
         @endforeach
@@ -71,7 +74,7 @@
 
         <input type="hidden" id="deleted_locations" name="deleted_locations" value="">
             
-        <div class="mb-4">
+        <div class="my-4 ">
             <x-input-label for="notes">Notes</x-input-label>
             <x-input-textarea name="notes" class="form-control" placeholder="Optional notes">{{ $outboundRequest->notes }}</x-input-textarea>
         </div>
@@ -113,22 +116,30 @@
         @endif
 
 		<!-- Status Display -->
-        <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-		<h3 class="text-lg font-bold dark:text-white">Status Display</h3>
-        <div class="mb-4">
-            <x-input-label for="status">Sales Status</x-input-label>
-            <x-text-input type="text" class="form-control" value="{{ $outboundRequest->sales->status }}" readonly/>
-        </div>
-		<div class="mb-4">
-            <x-input-label for="status_outbound">Outbound Status</x-input-label>
-            <x-text-input type="text" class="form-control" value="{{ $outboundRequest->status }}" readonly/>
+            <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+            <div>
+
+            </div>
+            <div class="rounded-lg border border-gray-300 dark:border-gray-700 mb-4">
+
+            <div class="flex p-3 justify-between align-center">
+            <h3 class="py-1 text-md font-medium dark:text-white">Sales Status :</h3>
+                <span class="font-medium text-yellow-800 inline-block bg-yellow-200 text-black px-3 py-1 rounded-full">{{ $outboundRequest->sales->status }}</span>
+            </div>
+
+            <div class="flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+
+            <div class="flex p-3 justify-between align-center">
+            <h3 class="py-1 text-md font-medium dark:text-white">Outbound Status :</h3>
+                <span class="font-medium text-yellow-800 inline-block bg-yellow-200 text-black px-3 py-1 rounded-full" readonly>{{ $outboundRequest->status }}</span>
+            </div>
         </div>
 
         <!-- Action Buttons -->
-        <h3 class="text-lg font-bold dark:text-white">Actions</h3>
+        <div class="flex justify-end gap-4">
         @switch($outboundRequest->status)
             @case('Requested')
-            <x-primary-button type="submit">Verify Stock and Approve</x-primary-button>
+            <x-sec-button type="submit">Verify Stock and Approve</x-sec-button>
             <x-danger-button type="submit">Reject Request</x-danger-button>
             @break
 
@@ -136,7 +147,7 @@
                 @break
 
             @case('Packing & Shipping')
-                <button name='submit' type="submit" class="btn btn-warning" value="Mark as Shipped">Mark as Shipped</button>
+                <x-primary-button  name='submit' type="submit" class="btn btn-warning" value="Mark as Shipped">Mark as Shipped</x-primary-button >
                 @break
 
             @case('In Transit')
@@ -144,14 +155,17 @@
                 @break
 
             @case('Customer Complaint')
-            <x-primary-button type="submit">Resolve Quantity Problem</x-primary-button>
+            <x-sec-button type="submit">Resolve Quantity Problem</x-sec-button>
             @break
         @endswitch
+        </div>
 
-        <br><br>
-        <x-primary-button type="submit">Update Outbound Request</x-primary-button>
-        <x-button href="{{ route('outbound_requests.index') }}"
-        class="border rounded border-gray-400 dark:border-gray-700 p-2 text-lg hover:underline text-gray-700 dark:text-gray-400">Back to List</x-button>    
+        <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+        <div class="flex justify-start gap-4">
+            <x-primary-button type="submit">Update Outbound Request</x-primary-button>
+            <x-secondary-button href="{{ route('outbound_requests.index') }}"
+            class="border rounded border-gray-400 dark:border-gray-700 p-2 text-lg hover:underline text-gray-700 dark:text-gray-400">Back to List</x-secondary-button>    
+        </div>
     </form>
 	
 	<script>

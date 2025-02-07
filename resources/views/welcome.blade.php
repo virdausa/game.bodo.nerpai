@@ -19,16 +19,16 @@
     <main>
         <div class="min-h-screen flex items-center justify-center bg-background text-primary-foreground">
             <div class="max-w-md p-6 bg-card shadow-lg rounded-lg flex flex-col items-center">
-                <img aria-hidden="true" alt="haebot" src="{{ asset('svg/haebot.svg') }}"
+                <img aria-hidden="true" alt="haebot" src="{{ asset('svg/hehe.svg') }}"
                     class="w-24 h-24 mb-4" />
-                <h1 class="text-3xl font-bold mb-2 text-center text-primary">Welcome to Haebot ERP!</h1>
+                <h1 class="text-3xl font-bold mb-2 text-center text-primary">Welcome to Nerpai!!</h1>
                 <p class="text-sm text-center text-gray-500">Your go-to destination for a highly
                     performant, highly adaptive ERP solution</p>
                 <div class="flex space-x-4 mt-4">
                     @if (Route::has('login'))
                         @auth
-                            <a href="{{ route('dashboard') }}"
-                                class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/80">Dashboard</a>
+                            <a href="{{ route('lobby') }}"
+                                class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/80">Lobby</a>
                         @else
                             <a href="{{ route('login') }}"
                                 class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/80">Login</a>

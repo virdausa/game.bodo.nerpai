@@ -124,7 +124,8 @@
                         <tbody>
                             @foreach ($outboundRequest->requested_quantities as $productId => $quantity)
                                 <x-table-tr>
-                                    <x-table-td>{{ $outboundRequest->sales->products->find($productId)->name }}</x-table-td>
+                                    <x-table-td>{{  $outboundRequest->sales->products
+                                    ->where('id', $productId)->first()?->name ?? 'Product not found' }}</x-table-td>
                                     <x-table-td>{{ $quantity }}</x-table-td>
                                     <x-table-td>
                                         <input type="number" name="received_quantities[{{ $outboundRequest->id }}][{{ $productId }}]" 
