@@ -120,10 +120,8 @@
 
             </li>
 
-            @if(Auth::user()->canEmployee('user sidebar'))
-
                 <li>
-                    <a href="#"
+                    <a href="{{ route('lobby') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -137,10 +135,6 @@
                         <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
                     </a>
                 </li>
-
-            @endif
-
-            @if(Auth::user()->canEmployee('role-access sidebar'))
                 <li>
                     <a href="{{ route('roles.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -157,9 +151,6 @@
                         <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
                     </a>
                 </li>
-            @endif
-
-            @if(Auth::user()->canEmployee('permissions sidebar'))
 
                 <li>
                     <a href="{{ route('permissions.index') }}"
@@ -177,7 +168,6 @@
                         <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
                     </a>
                 </li>
-            @endif
         </ul>
     </div>
 

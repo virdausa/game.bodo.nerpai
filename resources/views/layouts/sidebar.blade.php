@@ -58,11 +58,11 @@
                             </p>
                         </div>
                         <ul class="py-1" role="none">
-                            <li>
+                            {{-- <li>
                                 <x-responsive-nav-link :href="route('profile.edit')">
                                     {{ __('Profile') }}
                                 </x-responsive-nav-link>
-                            </li>
+                            </li> --}}
 
                             <li>
                                 <form method="POST" action="{{ route('logout') }}">
