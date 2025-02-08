@@ -82,7 +82,7 @@
                         </div>
                         <ul class="py-1" role="none">
                             <li>
-                                <x-responsive-nav-link :href="route('lobby')">
+                                <x-responsive-nav-link :href="route('exit.company')">
                                     {{ __('Back to Lobby') }}
                                 </x-responsive-nav-link>
                             </li>

@@ -67,4 +67,15 @@ class CompanyController extends Controller
 
         return redirect()->route('dashboard')->with('success', "Anda masuk ke {$company->name}");
     }
+
+	public function exitCompany()
+	{
+		// Hapus session company
+		session()->forget('company_id');  
+		session()->forget('company_name');
+		session()->forget('company_database_url');  
+
+		// Redirect ke halaman lobby (atau dashboard utama)
+		return redirect()->route('lobby')->with('status', 'You have exited the company.');
+	}
 }

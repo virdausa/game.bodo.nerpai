@@ -21,6 +21,7 @@ use App\Http\Controllers\CustomerComplaintController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Middleware\SwitchCompanyDatabase;
 
 Route::get('/', function () {
     return view('welcome');
@@ -45,10 +46,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/companies/switch/{company}', [CompanyController::class, 'switchCompany'])->name('companies.switch');
 });
 
-Route::middleware(['auth', 'verified'])->group(function () {
+Route::middleware(['auth', SwitchCompanyDatabase::class])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
+    Route::get('/exit-company', [CompanyController::class, 'exitCompany'])->name('exit.company');
     
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
