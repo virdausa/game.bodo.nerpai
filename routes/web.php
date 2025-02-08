@@ -34,18 +34,22 @@ Route::get('/lobby', function () {
     return view('lobby');
 })->middleware(['auth', 'verified'])->name('lobby');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () { 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+    
     Route::resource('companies', CompanyController::class);
+    Route::post('/companies/switch/{company}', [CompanyController::class, 'switchCompany'])->name('companies.switch');
+});
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
     route::resource("locations", LocationController::class);
@@ -84,4 +88,5 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('employees', EmployeeController::class);
 });
+
 require __DIR__ . '/auth.php';
