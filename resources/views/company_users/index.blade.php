@@ -1,4 +1,4 @@
-<x-lobby-layout>
+<x-app-layout>
     <div class="py-12">
         <div class="max-w-7xl my-10 mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -11,7 +11,7 @@
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                        
                         <div class="w-full md:w-auto flex justify-end">
-                            <x-button-add :route="route('users.create')" text="Add User" />
+                            <x-button-add :route="route('company_users.create')" text="Invite User" />
                         </div>
                     </div>
                     <x-table-table id="search-table">
@@ -20,32 +20,26 @@
                                 <x-table-th>ID</x-table-th>
                                 {{-- <x-table-th>Username</x-table-th> --}}
                                 <x-table-th>Nama</x-table-th>
-                                <x-table-th>Role</x-table-th>
-                                <x-table-th>Companies</x-table-th>
+                                <x-table-th>Type</x-table-th>
+                                <x-table-th>Status</x-table-th>
                                 <x-table-th>Actions</x-table-th>
                             </tr>
                         </x-table-thead>
                         <x-table-tbody>
-                            @foreach ($users as $User)
+                            @foreach ($company_users as $user)
                                 <tr>
-                                    <x-table-td>{{ $User->id }}</x-table-td>
+                                    <x-table-td>{{ $user->id }}</x-table-td>
                                     {{-- <x-table-td>{{ $User->username }}</x-table-td> --}}
-                                    <x-table-td>{{ $User->name }}</x-table-td>
-                                    <x-table-td>{{ $User->role }}</x-table-td>
-                                    <x-table-td>
-                                        @if(count($User->companies) > 0)
-                                            @foreach ($User->companies as $company)
-                                                {{ $company->name }} : {{ $company->pivot->status }}<br>
-                                            @endforeach
-                                        @endif
-                                    </x-table-td>
+                                    <x-table-td>{{ $user->user->name }}</x-table-td>
+                                    <x-table-td>{{ $user->user_type }}</x-table-td>
+                                    <x-table-td>{{ $user->status }}</x-table-td>
                                     <x-table-td class="flex justify-center items-center gap-2">
                                     <div class="flex items-center space-x-2">
-                                            <x-button-edit :route="route('users.edit', $User->id)" />
-                                            <form action="{{ route('users.destroy', $User->id) }}" method="POST">
+                                            <x-button-edit :route="route('company_users.edit', $user->id)" />
+                                            <form action="{{ route('company_users.destroy', $user->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <x-button-delete :route="route('users.destroy', $User->id)" />
+                                                <x-button-delete :route="route('company_users.destroy', $user->id)" />
                                             </form>
                                         </div>
                                     </x-table-td>

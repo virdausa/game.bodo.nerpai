@@ -13,8 +13,11 @@ return new class extends Migration
     {
         Schema::create('companies_users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies', 'id');
+            $table->string('company_id');
+            $table->foreign('company_id')->references('id')->on('companies')->onDelete('cascade');
             $table->foreignId('user_id')->constrained('users', 'id');
+            $table->string('status')->default('requested');
+            $table->string('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

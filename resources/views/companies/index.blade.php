@@ -34,22 +34,26 @@
                             </tr>
                         </x-table-thead>
                         <x-table-tbody>
-                            @foreach ($companies as $company)
+                            @foreach (\App\Models\User::find(auth()->user()->id)->companies as $company)
                                 <x-table-tr>
                                     <x-table-td>{{ $company->id }}</x-table-td>
                                     <x-table-td>{{ $company->name }}</x-table-td>
                                     <x-table-td>{{ $company->address }}</x-table-td>
-                                    <x-table-td>{{ $company->database }}</x-table-td>
+                                    <x-table-td>{{ $company->database ? parse_url($company->database)['host'] ?? $company->database->name : 'Internal' }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
-                                            <form method="POST" action="{{ route('companies.switch', $company->id) }}">
-                                                @csrf
-            
-                                                <x-primary-button :href="route('companies.switch', $company->id)" onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
-                                                    {{ __('Masuk Company') }}
-                                                    </x-primary-button>
-                                            </form>
+                                            @if($company->pivot->status == 'approved')
+                                                <form method="POST" action="{{ route('companies.switch', $company->id) }}">
+                                                    @csrf
+                
+                                                    <x-primary-button :href="route('companies.switch', $company->id)" onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                                        {{ __('Masuk Company') }}
+                                                        </x-primary-button>
+                                                </form>
+                                            @else
+                                                <span class="text-red-500">{{ $company->pivot->status }}</span>
+                                            @endif
                                             {{-- @include('companies.edit', ['Tenant' => $company]) --}}
                                             {{-- <x-button-delete :route="route('companies.destroy', $company->id)" /> --}}
                                         </div>

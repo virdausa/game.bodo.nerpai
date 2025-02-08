@@ -19,4 +19,10 @@ class Company extends Model
         'updated_at',
         'deleted_at',
     ];
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'companies_users', 'company_id', 'user_id')
+                    ->withPivot('status');  
+    }
 }
