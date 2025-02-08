@@ -13,14 +13,14 @@ return new class extends Migration
             $table->id();
 
             // Foreign Keys
-            $table->foreignId('product_id')->constrained('products');
-            $table->foreignId('warehouse_id')->constrained('warehouses');
+            $table->foreignId('product_id')->constrained();
+            $table->foreignId('warehouse_id')->constrained();
 
             // Columns
-            $table->integer('quantity')->nullable(false);
-            $table->string('transaction_type')->nullable(false); // Possible values: 'PO', 'SO', 'ADJUST', 'MOVE'
+            $table->integer('quantity');
+            $table->string('transaction_type'); // Possible values: 'PO', 'SO', 'ADJUST', 'MOVE'
             $table->text('notes')->nullable();
-            $table->dateTime('time')->nullable(false);
+            $table->dateTime('time');
 
             // Timestamps (optional, not in schema but commonly used)
             $table->timestamps();
