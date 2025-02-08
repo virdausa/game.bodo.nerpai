@@ -15,14 +15,37 @@
                     </svg>
                 </button>
                 <a href={{ route('dashboard') }} class="flex ms-2 md:me-24">
-                    <img src="{{ asset('svg/haebot.svg') }}" class="h-8 me-3 dark:invert" alt="FlowBite Logo" />
+                    <img src="{{ asset('svg/'.session('company_id').'.svg') }}" class="h-8 me-3 dark:invert" alt="FlowBite Logo" />
                     <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">HaeBot</span>
+                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{{ session('company_name') }}</span>
                 </a>
             </div>
 
             <div class="flex items-center">
                 <div class="flex items-center ms-3">
+                    <div class="mr-3 relative" x-data="{ open: false }">
+                        <button @click="open = !open"
+                            class="flex items-center p-2 text-sm text-gray-500 rounded-lg dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:focus:ring-gray-700">
+                            <span>{{ session('company_name') }}</span>
+                            <svg class="w-4 h-4 ml-2" aria-hidden="true" fill="none" stroke="currentColor"
+                                viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
+                            </svg>
+                        </button>
+                        <div x-show="open" @click.outside="open = false"
+                        class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 dark:bg-gray-700">
+                            @foreach (\App\Models\Company::all() as $company)
+                                <form method="POST" action="{{ route('companies.switch', $company->id) }}">
+                                @csrf
+                                    <button type="submit" name="company_id" value="{{ $company->id }}"
+                                        class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600">
+                                        {{ $company->name }}
+                                    </button>
+                                </form>
+                            @endforeach
+                        </div>
+                    </div>
                     <div class="mr-3 border dark:border-gray-700 border-gray-200 rounded rounded-full">
                         <button id="theme-toggle" type="button"
                             class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 text-sm p-2.5 rounded-full">
@@ -58,13 +81,13 @@
                             </p>
                         </div>
                         <ul class="py-1" role="none">
-                            {{-- <li>
-                                <x-responsive-nav-link :href="route('profile.edit')">
-                                    {{ __('Profile') }}
-                                </x-responsive-nav-link>
-                            </li> --}}
-
                             <li>
+                                <x-responsive-nav-link :href="route('exit.company')">
+                                    {{ __('Back to Lobby') }}
+                                </x-responsive-nav-link>
+                            </li>
+
+                            {{-- <li>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
 
@@ -73,7 +96,7 @@
                                         {{ __('Log Out') }}
                                         </x-responsive-nav-link>
                                 </form>
-                            </li>
+                            </li> --}}
                         </ul>
                     </div>
                 </div>
@@ -94,7 +117,7 @@
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="#"
+                <a href="dashboard"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <svg class="w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">

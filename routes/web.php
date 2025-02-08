@@ -3,6 +3,8 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\UserController;
+
 use App\Http\Controllers\CompanyController;
 
 use App\Http\Controllers\CustomerController;
@@ -21,6 +23,7 @@ use App\Http\Controllers\CustomerComplaintController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Middleware\SwitchCompanyDatabase;
 
 Route::get('/', function () {
     return view('welcome');
@@ -34,18 +37,25 @@ Route::get('/lobby', function () {
     return view('lobby');
 })->middleware(['auth', 'verified'])->name('lobby');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
 
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth'])->group(function () { 
+    Route::resource('users', UserController::class);
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-
+    
     Route::resource('companies', CompanyController::class);
+    Route::post('/companies/switch/{company}', [CompanyController::class, 'switchCompany'])->name('companies.switch');
+});
 
+Route::middleware(['auth', SwitchCompanyDatabase::class])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    Route::get('/exit-company', [CompanyController::class, 'exitCompany'])->name('exit.company');
+    
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
     route::resource("locations", LocationController::class);
@@ -84,4 +94,5 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('employees', EmployeeController::class);
 });
+
 require __DIR__ . '/auth.php';
