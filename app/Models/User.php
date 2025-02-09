@@ -53,15 +53,17 @@ class User extends Authenticatable
                     ->wherePivot('status', 'approved');
     }
 
+
+
     // Relasi ke Employee
-    public function employee()
-    {
-        return $this->hasOne(Employee::class);
-    }
+    // public function employee()
+    // {
+    //     return $this->hasOne(Employee::class);
+    // }
 
     // Memeriksa permission berdasarkan Employee
-    public function canEmployee($permission)
-    {
-        return $this->employee->can($permission);
-    }
+    // public function canEmployee($permission)
+    // {
+    //     return $this->employee->can($permission);
+    // }
 }

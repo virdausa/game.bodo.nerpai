@@ -4,16 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;  // Pastikan Role diimport
 
 class Employee extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'id_employee'; // Custom primary key
+    use HasRoles;
+    protected $guarded = [];
+    protected $guard_name = 'company';
 
     protected $fillable = [
-        'user_id',
+        'company_user_id',
         'reg_date',
         'out_date',
         'status',
@@ -29,13 +32,13 @@ class Employee extends Model
     // Relasi ke User
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(CompanyUser::class, 'company_user_id');
     }
 
     // Relasi ke Role
     public function role()
     {
-        return $this->belongsTo(Role::class);  // Menghubungkan dengan Role
+        return $this->belongsTo(Role::class, 'role_id');  // Menghubungkan dengan Role
     }
 
     // Mengakses permissions yang terkait dengan role
