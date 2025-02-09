@@ -5,13 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Company;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
     public function index()
 	{
-		$companies = Company::all();
-		// dd($companies);
+		$user = Auth::user();
+		$companies = $user->companies;
 		return view('companies.index', compact('companies'));
 	}
 
@@ -68,7 +69,7 @@ class CompanyController extends Controller
         return redirect()->route('dashboard')->with('success', "Anda masuk ke {$company->name}");
     }
 
-	public function exitCompany()
+	public function exitCompany(Request $request, $route = 'lobby')
 	{
 		// Hapus session company
 		session()->forget('company_id');  
@@ -76,6 +77,6 @@ class CompanyController extends Controller
 		session()->forget('company_database_url');  
 
 		// Redirect ke halaman lobby (atau dashboard utama)
-		return redirect()->route('lobby')->with('status', 'You have exited the company.');
+		return redirect()->route($route)->with('status', 'You have exited the company.');
 	}
 }

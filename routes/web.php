@@ -7,6 +7,7 @@ use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\CompanyController;
 
+use App\Http\Controllers\CompanyUserController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ProductController;
@@ -23,6 +24,8 @@ use App\Http\Controllers\CustomerComplaintController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\EmployeeController;
+
+use App\Http\Middleware\LoginCompanyAccess;
 use App\Http\Middleware\SwitchCompanyDatabase;
 
 Route::get('/', function () {
@@ -38,7 +41,6 @@ Route::get('/lobby', function () {
 })->middleware(['auth', 'verified'])->name('lobby');
 
 
-
 Route::middleware(['auth'])->group(function () { 
     Route::resource('users', UserController::class);
 
@@ -50,12 +52,17 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/companies/switch/{company}', [CompanyController::class, 'switchCompany'])->name('companies.switch');
 });
 
-Route::middleware(['auth', SwitchCompanyDatabase::class])->group(function () {
+Route::middleware(['auth', 
+                SwitchCompanyDatabase::class, 
+                LoginCompanyAccess::class,
+])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-    Route::get('/exit-company', [CompanyController::class, 'exitCompany'])->name('exit.company');
+    Route::get('/exit-company/{route}', [CompanyController::class, 'exitCompany'])->name('exit.company');
     
+    Route::resource('company_users', CompanyUserController::class);
+
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
     route::resource("locations", LocationController::class);
