@@ -14,7 +14,8 @@ return new class extends Migration
 
             // Foreign Keys
             $table->foreignId('company_user_id')->constrained();
-
+            $table->foreignId('role_id')->nullable()->constrained();
+            
             // Columns
             $table->date('reg_date');
             $table->date('out_date')->nullable();
