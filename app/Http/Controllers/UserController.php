@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\User;
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -12,7 +14,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('Roles')->get();
+        $users = User::with('role', 'companies')->get();
+
         return view('users.index', compact('users'));
     }
 
@@ -67,6 +70,9 @@ class UserController extends Controller
             'role_id' => $request->role_id,
         ]);
 
+        $role = Role::find($request->role_id);
+        $user->syncRoles($role);
+
         return redirect()->route('users.index')->with('success', "User {$user->name} updated successfully!");
     }
 
@@ -75,6 +81,9 @@ class UserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $user = User::find($id);
+        $user->delete();
+        
+        return redirect()->route('users.index')->with('success', "User {$user->name} deleted successfully!");
     }
 }

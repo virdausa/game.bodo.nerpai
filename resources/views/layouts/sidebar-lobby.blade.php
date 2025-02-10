@@ -107,6 +107,7 @@
                 </a>
             </li>
 
+            @can('company sidebar')
             <li>
                 <a href="{{ route('companies.index') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -117,9 +118,10 @@
                     </svg>
                     <span class="flex-1 ms-3 whitespace-nowrap">Our Company</span>
                 </a>
-
             </li>
-
+            @endcan
+            
+            @can('user sidebar', 'web')
                 <li>
                     <a href="{{ route('users.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -135,6 +137,9 @@
                         <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
                     </a>
                 </li>
+            @endcan    
+
+            @can('roles sidebar')
                 <li>
                     <a href="{{ route('roles.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -151,7 +156,9 @@
                         <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
                     </a>
                 </li>
+            @endcan
 
+            @can('permissions sidebar')
                 <li>
                     <a href="{{ route('permissions.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('permissions.index') ? 'activated' : '' }}"
@@ -168,6 +175,7 @@
                         <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Admin</span>
                     </a>
                 </li>
+            @endcan
         </ul>
     </div>
 
