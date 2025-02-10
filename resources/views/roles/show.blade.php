@@ -18,6 +18,11 @@
                         @endforeach
                     </ul>
 
+                    <a href="{{ route('roles.index') }}">
+                        <x-secondary-button type="button">
+                            Back to List
+                        </x-button>
+                    </a>
                     <a href="{{ route('roles.edit', $role->id) }}" class="mt-4 inline-block text-blue-500 hover:text-blue-700">Edit Role</a>
                 </div>
             </div>
