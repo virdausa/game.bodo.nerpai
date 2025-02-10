@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
 use App\Models\CompanyUser;
+use Illuminate\Support\Facades\Session;
 
 class LoginCompanyAccess
 {
@@ -21,7 +22,7 @@ class LoginCompanyAccess
         $companyId = session('company_id');
 
         if(!$companyId){
-            return redirect()->route('company.index')->with('error', 'Anda belum memilih perusahaan');
+            return redirect()->route('companies.index')->with('error', 'Anda belum memilih perusahaan');
         }
 
         $isAuthorized = CompanyUser::where('user_id', $user->id)
@@ -29,7 +30,18 @@ class LoginCompanyAccess
                         ->exists();
 
         if (!$isAuthorized) {
-            return redirect()->route('exit.company', 'companies')->with('error', 'Anda tidak memiliki akses ke perusahaan ini');
+            // Hapus session company
+            session()->forget('company_id');  
+            session()->forget('company_name');
+            session()->forget('company_database_url');  
+
+            return redirect()->route('companies.index')->with('error', 'Anda tidak memiliki akses ke perusahaan ini');
+        }
+
+        $companyUser = CompanyUser::where('user_id', $user->id)->first();
+        Session::put('companyUser_id', $companyUser->id);
+        if($companyUser->employee()->exists()){
+            Session::put('employee', $companyUser->employee);
         }
 
         return $next($request);

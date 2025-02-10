@@ -13,7 +13,7 @@
                         Edit Employee
                     </h1>
 
-                    <form action="{{ route('employees.update', $employee->id_employee) }}" method="POST">
+                    <form action="{{ route('employees.update', $employee->id) }}" method="POST">
                         @csrf
                         @method('PUT')
 

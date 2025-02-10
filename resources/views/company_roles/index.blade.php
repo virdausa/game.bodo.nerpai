@@ -1,4 +1,4 @@
-<x-lobby-layout>
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Roles') }}
@@ -10,7 +10,7 @@
             <div
                 class="bg-white bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900">
-                    <h3 class="text-lg dark:text-white font-bold">Role Access</h3>
+                    <h3 class="text-lg dark:text-white font-bold">Company Role Access</h3>
                     <p class="text-sm dark:text-gray-200 mb-4">Atur role dan permission setiap fitur</p>
 
                     <div class="mx-auto max-w-screen-xl">
@@ -39,7 +39,7 @@
                                 </div>
                                 <div
                                     class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                    <x-button-add :route="route('roles.create')" text="Add Role" />
+                                    <x-button-add :route="route('company_roles.create')" text="Add Role" />
                                 </div>
                             </div>
                             <x-table-table id="roles-table">
@@ -52,7 +52,7 @@
                                     </tr>
                                 </x-table-thead>
                                 <tbody>
-                                    @foreach ($roles as $role)
+                                    @foreach ($company_roles as $role)
                                                     <x-table-tr>
                                                         <x-table-td>{{ $loop->iteration }}</x-table-td>
                                                         <x-table-th class="dark:text-white">{{ $role->name }}</x-table-th>
@@ -66,8 +66,8 @@
                                                         </x-table-td>
                                                         <x-table-td>
                                                             <div class="flex inline">
-                                                                <x-button-edit :route="route('roles.edit', $role->id)" />
-                                                                <x-button-delete :route="route('roles.destroy', $role->id)" />
+                                                                <x-button-edit :route="route('company_roles.edit', $role->id)" />
+                                                                <x-button-delete :route="route('company_roles.destroy', $role->id)" />
                                                             </div>
                                                         </x-table-td>
                                         </x-table-tr>
@@ -83,4 +83,4 @@
     </div>
 
 
-</x-lobby-layout>
+</x-app-layout>

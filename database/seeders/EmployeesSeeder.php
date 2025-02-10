@@ -17,7 +17,7 @@ class EmployeesSeeder extends Seeder
     public function run(): void
     {
         $employee1 = Employee::create([
-            'user_id' => '1',
+            'company_user_id' => '1',
             'reg_date' => now(),
             'status' => true,
             'role_id' => '1',   // Owner

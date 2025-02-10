@@ -48,10 +48,12 @@
                                 </form>
                             @endforeach
                             <hr class="dark:border-gray-600 border-gray-200">
-                            <button type="submit" :href="route('exit.company', 'companies')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600">
-                                {{ __('List Perusahaan') }}
-                            </button>
+                            <a href="{{ route('exit.company', 'companies.index') }}">
+                                <button type="button"
+                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    {{ __('List Perusahaan') }}
+                                </button>
+                            </a>
                         </div>
                     </div>
                     <div class="mr-3 border dark:border-gray-700 border-gray-200 rounded rounded-full">
@@ -138,7 +140,7 @@
                 </a>
             </li>
 
-            @if(Auth::user()->canEmployee('purchases sidebar'))
+            @if(session('employee')?->can('purchases sidebar'))
                 <li>
                     <a href="{{ route('purchases.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -153,10 +155,9 @@
                     </a>
 
                 </li>
-
             @endif
 
-            @if(Auth::user()->canEmployee('suppliers sidebar'))
+            @if(session('employee')?->can('suppliers sidebar'))
                 <li>
                     <a href="{{ route('suppliers.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -172,7 +173,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('customers sidebar'))
+            @if(session('employee')?->can('customers sidebar'))
 
                 <li>
                     <a href={{ route('customers.index') }}
@@ -187,7 +188,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('products sidebar'))
+            @if(session('employee')?->can('products sidebar'))
                 <li>
                     <a href="{{ route('products.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -216,7 +217,7 @@
                 </a>
             </li>
 
-            @if(Auth::user()->canEmployee('inventory sidebar'))
+            @if(session('employee')?->can('inventory sidebar'))
                 <li>
                     <a href="{{ route('inventory.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -230,7 +231,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('warehouses sidebar'))
+            @if(session('employee')?->can('warehouses sidebar'))
 
                 <li>
                     <a href="{{ route('warehouses.index') }}"
@@ -245,7 +246,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('sales sidebar'))
+            @if(session('employee')?->can('sales sidebar'))
 
                 <li>
                     <a href="{{ route('sales.index') }}"
@@ -264,7 +265,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('customer-complaints sidebar'))
+            @if(session('employee')?->can('customer-complaints sidebar'))
 
                 <li>
                     <a href="{{ route('customer_complaints.index') }}"
@@ -282,7 +283,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('inbound-request sidebar'))
+            @if(session('employee')?->can('inbound-request sidebar'))
                 <li>
                     <a href="{{ route('inbound_requests.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -299,7 +300,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('inbound-request sidebar'))
+            @if(session('employee')?->can('inbound-request sidebar'))
 
                 <li>
                     <a href="{{ route('outbound_requests.index') }}"
@@ -317,7 +318,7 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('employees sidebar'))
+            @if(session('employee')?->can('employees sidebar'))
 
                 <li>
                     <a href={{ route('employees.index') }}
@@ -335,8 +336,8 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('user sidebar'))
-
+            
+            @if(session('employee')?->can('user sidebar'))
                 <li>
                     <a href="{{ route('company_users.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -353,9 +354,9 @@
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('role-access sidebar'))
+            @if(session('employee')?->can('role-access sidebar'))
                 <li>
-                    <a href="{{ route('roles.index') }}"
+                    <a href="{{ route('company_roles.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                         <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                             aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -365,15 +366,14 @@
                             <path
                                 d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
                         </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Role Access</span>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Company Roles</span>
                     </a>
                 </li>
             @endif
 
-            @if(Auth::user()->canEmployee('permissions sidebar'))
-
+            @if(session('employee')?->can('permissions sidebar'))
                 <li>
-                    <a href="{{ route('permissions.index') }}"
+                    <a href="{{ route('company_permissions.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('permissions.index') ? 'activated' : '' }}"
                         onclick="setActive(this)">
                         <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -384,11 +384,13 @@
                             <path
                                 d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
                         </svg>
-                        <span class="flex-1 ms-3 whitespace-nowrap">Permissions</span>
+                        <span class="flex-1 ms-3 whitespace-nowrap">Company Permissions</span>
                     </a>
                 </li>
             @endif
         </ul>
     </div>
+
+
 
 </aside>

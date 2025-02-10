@@ -1,4 +1,4 @@
-<x-lobby-layout>
+<x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Permissions') }}
@@ -13,7 +13,7 @@
 
                     <div class="px-6">
                         <h3 class="text-lg dark:text-white font-bold">Manage Permission</h3>
-                        <p class="text-sm dark:text-gray-200 mb-4">Atur role dan permission setiap fitur</p>
+                        <p class="text-sm dark:text-gray-200 mb-4">Atur data permission setiap fitur</p>
                     </div>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
@@ -34,13 +34,15 @@
                                 <x-table-table id="search-table">
                                     <x-table-thead class="mt-3">
                                         <tr>
+                                            <x-table-th>Id</x-table-th>
                                             <x-table-th>Nama Permission</x-table-th>
                                             <x-table-th>Aksi</x-table-th>
                                         </tr>
                                     </x-table-thead>
                                     <tbody>
-                                        @foreach($permissions as $permission)
+                                        @foreach($company_permissions as $permission)
                                             <x-table-tr>
+                                                <x-table-td>{{ $permission->id }}</x-table-td>
                                                 <x-table-td>{{ $permission->name }}</x-table-td>
                                                 <x-table-td>
                                                     <div class="flex inline">
@@ -64,4 +66,4 @@
 
 
 
-</x-lobby-layout>
+</x-app-layout>

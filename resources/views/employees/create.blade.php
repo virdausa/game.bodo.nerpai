@@ -13,7 +13,7 @@
                             <x-input-label for="user_id" class="block text-sm font-medium text-gray-700">Select User</x-input-label>
                             <select name="user_id" id="user_id" class="w-full px-4 py-2 border rounded">
                                 @foreach ($users as $user)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                    <option value="{{ $user->id }}">{{ $user->user->name }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -21,7 +21,7 @@
                         <div class="mb-4">
                             <x-input-label for="reg_date" class="block text-sm font-medium text-gray-700">Registration
                                 Date</x-input-label>
-                            <x-text-input type="date" name="reg_date" id="reg_date" class="w-full px-4 py-2 border rounded"></x-text-input>
+                            <x-text-input type="date" name="reg_date" id="reg_date" class="w-full px-4 py-2 border rounded" value="{{ Date('Y-m-d'); }}"></x-text-input>
                         </div>
 
                         <div class="mb-4">
@@ -32,9 +32,13 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        <x-button type="submit"
-                            class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Save</x-button>
+                        
+                        <div class="mt-6">
+                            <button type="submit"
+                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Create</button>
+                            <a href="{{ route('employees.index') }}"
+                                class="ml-4 text-gray-500 hover:text-gray-700">Cancel</a>
+                        </div>    
                     </form>
                 </div>
             </div>
