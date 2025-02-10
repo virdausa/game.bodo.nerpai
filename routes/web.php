@@ -78,6 +78,8 @@ Route::middleware(['auth',
 
     Route::resource('company_permissions', CompanyPermissionController::class);
 
+    Route::resource('employees', EmployeeController::class);
+
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
     route::resource("locations", LocationController::class);
@@ -106,8 +108,6 @@ Route::middleware(['auth',
     Route::put('sales/{sale}', [SalesController::class, 'update'])->name('sales.update');
     Route::resource('customer_complaints', CustomerComplaintController::class);
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
-
-    Route::resource('employees', EmployeeController::class);
 });
 
 require __DIR__ . '/auth.php';

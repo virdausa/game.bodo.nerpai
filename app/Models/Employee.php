@@ -9,9 +9,12 @@ use Spatie\Permission\Models\Role;  // Pastikan Role diimport
 
 class Employee extends Model
 {
+    protected $connection = 'tenant';
+
     use HasFactory;
 
     use HasRoles;
+    
     protected $guarded = [];
     protected $guard_name = 'company';
 
@@ -30,9 +33,14 @@ class Employee extends Model
     ];
 
     // Relasi ke User
-    public function user()
+    public function companyuser()
     {
         return $this->belongsTo(CompanyUser::class, 'company_user_id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     // Relasi ke Role

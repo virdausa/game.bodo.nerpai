@@ -5,6 +5,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Database\Eloquent\Model;
+use Spatie\Permission\Models\Role;  // Pastikan Role diimport
 
 class User extends Authenticatable
 {
@@ -14,6 +16,8 @@ class User extends Authenticatable
 
     use HasFactory, Notifiable, HasRoles;
 
+    protected $guard_name = 'web';
+
     // Kolom dan relasi yang ada di User tidak berubah
     protected $fillable = [
         'name',
@@ -21,9 +25,9 @@ class User extends Authenticatable
         'password',
         'tgl_lahir',  
         'alamat',    
-        'no_hp',     
-        'role',      
-        'tgl_keluar', 
+        'no_hp',  
+        'tgl_keluar',
+        'role_id', 
     ];
 
     protected $hidden = [
@@ -54,16 +58,13 @@ class User extends Authenticatable
     }
 
 
-
-    // Relasi ke Employee
-    // public function employee()
-    // {
-    //     return $this->hasOne(Employee::class);
-    // }
-
-    // Memeriksa permission berdasarkan Employee
-    // public function canEmployee($permission)
-    // {
-    //     return $this->employee->can($permission);
-    // }
+    public function companyusers()
+    {
+        return $this->hasMany(CompanyUser::class);
+    }
+    
+    public function role()
+    {
+        return $this->belongsTo(Role::class, 'role_id');
+    }
 }

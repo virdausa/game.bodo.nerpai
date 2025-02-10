@@ -48,10 +48,12 @@
                                 </form>
                             @endforeach
                             <hr class="dark:border-gray-600 border-gray-200">
-                            <button type="submit" :href="route('exit.company', 'companies')"
-                            class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600">
-                                {{ __('List Perusahaan') }}
-                            </button>
+                            <a href="{{ route('exit.company', 'companies.index') }}">
+                                <button type="button"
+                                class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600">
+                                    {{ __('List Perusahaan') }}
+                                </button>
+                            </a>
                         </div>
                     </div>
                     <div class="mr-3 border dark:border-gray-700 border-gray-200 rounded rounded-full">
@@ -334,6 +336,8 @@
                 </li>
             @endif
 
+            
+            @if(session('employee')?->can('user sidebar'))
                 <li>
                     <a href="{{ route('company_users.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -348,7 +352,9 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Company User</span>
                     </a>
                 </li>
+            @endif
 
+            @if(session('employee')?->can('role-access sidebar'))
                 <li>
                     <a href="{{ route('company_roles.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -363,7 +369,9 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Company Roles</span>
                     </a>
                 </li>
+            @endif
 
+            @if(session('employee')?->can('permissions sidebar'))
                 <li>
                     <a href="{{ route('company_permissions.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('permissions.index') ? 'activated' : '' }}"
@@ -379,6 +387,7 @@
                         <span class="flex-1 ms-3 whitespace-nowrap">Company Permissions</span>
                     </a>
                 </li>
+            @endif
         </ul>
     </div>
 

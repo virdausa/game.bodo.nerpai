@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('company_users', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id'); // foreign key to users table in main database
+            $table->bigIntegerUnsigned('user_id'); // foreign key to users table in main database
             $table->string('user_type')->default('guest');  // admin, employee, guest
             $table->string('status')->default('requested');  // requested, approved, rejected
             $table->timestamps();

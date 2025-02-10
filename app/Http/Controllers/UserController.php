@@ -12,7 +12,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::all();
+        $users = User::with('Roles')->get();
         return view('users.index', compact('users'));
     }
 
@@ -45,15 +45,29 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = User::find($id);
+        $roles = \Spatie\Permission\Models\Role::all();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'status' => 'required|string|max:255',
+            'role_id' => 'required|exists:roles,id',
+        ]);
+
+        $user->update([
+            'name' => $request->name,
+            'status' => $request->status,
+            'role_id' => $request->role_id,
+        ]);
+
+        return redirect()->route('users.index')->with('success', "User {$user->name} updated successfully!");
     }
 
     /**

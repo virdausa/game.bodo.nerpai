@@ -24,6 +24,7 @@ return new class extends Migration
             $table->string('id_card_number')->nullable();
             $table->json('address')->nullable();
             $table->string('phone_number')->nullable();
+            $table->string('status')->default('active');    // active or inactive
             $table->timestamps();
             $table->softDeletes();
         });

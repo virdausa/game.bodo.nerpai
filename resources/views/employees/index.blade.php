@@ -18,7 +18,7 @@
                         
                         <div class="w-full md:w-auto flex justify-end">
                             <a href="{{ route('employees.create') }}">
-                                <x-button-add :route="route('employees.create')" text="Add Purchases" />
+                                <x-button-add :route="route('employees.create')" text="Add Employees" />
                             </a>
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                             @foreach ($employees as $employee)
                                 <x-table-tr>
                                     <x-table-td>{{ $loop->iteration }}</x-table-td>
-                                    <x-table-td>{{ $employee->user->name }}</x-table-td>
+                                    <x-table-td>{{ $employee->companyuser->user->name }}</x-table-td>
                                     <x-table-td>{{ $employee->reg_date->format('Y-m-d') }}</x-table-td>
                                     <x-table-td>{{ $employee->out_date ? $employee->out_date->format('Y-m-d') : '-' }}</x-table-td>
                                     <x-table-td>
@@ -49,11 +49,11 @@
                                     <x-table-td>
                                     <div class="flex items-center space-x-2">
                                             
-                                            <x-button-edit :route="route('employees.edit', $employee->id_employee)" />
-                                            <form action="{{ route('employees.destroy', $employee->id_employee) }}" method="POST">
+                                            <x-button-edit :route="route('employees.edit', $employee->id)" />
+                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <x-button-delete :route="route('employees.destroy', $employee->id_employee)" />
+                                                <x-button-delete :route="route('employees.destroy', $employee->id)" />
                                             </form>
                                         </div>
                                     </x-table-td>
