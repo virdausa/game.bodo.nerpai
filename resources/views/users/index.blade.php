@@ -43,11 +43,7 @@
                                     <x-table-td class="flex justify-center items-center gap-2">
                                     <div class="flex items-center space-x-2">
                                             <x-button-edit :route="route('users.edit', $user->id)" />
-                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('users.destroy', $user->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('users.destroy', $user->id)" />
                                         </div>
                                     </x-table-td>
                                 </tr>

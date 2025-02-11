@@ -27,7 +27,6 @@ class Employee extends Model
     ];
 
     protected $casts = [
-        'status' => 'boolean',
         'reg_date' => 'date',
         'out_date' => 'date',
     ];

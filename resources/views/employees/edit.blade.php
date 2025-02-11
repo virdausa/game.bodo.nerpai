@@ -47,10 +47,12 @@
                             </select>
                         </div>
                         <div class="mt-6">
-                            <button type="submit"
-                                class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700">Update</button>
-                            <a href="{{ route('employees.index') }}"
-                                class="ml-4 text-gray-500 hover:text-gray-700">Cancel</a>
+                            <x-primary-button>Simpan</x-primary-button>
+                            <a href="{{ route('employees.index') }}">
+                                <x-secondary-button type="button">
+                                    Cancel
+                                </x-button>
+                            </a>
                         </div>
                     </form>
                 </div>
