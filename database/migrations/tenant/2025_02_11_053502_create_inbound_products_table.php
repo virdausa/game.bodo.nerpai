@@ -26,6 +26,7 @@ return new class extends Migration
 
             // Timestamps (optional, not in ERD but commonly used)
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
