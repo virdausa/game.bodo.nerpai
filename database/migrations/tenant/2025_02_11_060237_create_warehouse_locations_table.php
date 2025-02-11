@@ -11,11 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('company_users', function (Blueprint $table) {
+        Schema::create('warehouse_locations', function (Blueprint $table) {
+            // Primary key
             $table->id();
-            $table->unsignedBigInteger('user_id');
-            $table->string('user_type')->default('guest');
-            $table->string('status')->default('requested');
+
+            // Foreign key
+            $table->foreignId('warehouse_id')->constrained();
+
+            // Columns
+            $table->string('room');
+            $table->string('rack');
+            $table->string('notes')->nullable();
+
+            // Timestamps (optional, not in ERD but commonly used)
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +34,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('company_users');
+        Schema::dropIfExists('warehouse_locations');
     }
 };
