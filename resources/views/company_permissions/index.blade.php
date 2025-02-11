@@ -46,8 +46,8 @@
                                                 <x-table-td>{{ $permission->name }}</x-table-td>
                                                 <x-table-td>
                                                     <div class="flex inline">
-                                                        <x-button-edit :route="route('permissions.edit', $permission->id)" />
-                                                        {{-- <x-button-delete :route="route('permissions.destroy', $permission->id)" /> --}}
+                                                        <x-button-edit :route="route('company_permissions.edit', $permission->id)" />
+                                                        {{-- <x-button-delete :route="route('company_permissions.destroy', $permission->id)" /> --}}
                                                     </div>
                                                 </x-table-td>
                                             </x-table-tr>

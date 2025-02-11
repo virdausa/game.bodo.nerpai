@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CompanyPermissionController extends Controller
 {
@@ -32,18 +33,21 @@ class CompanyPermissionController extends Controller
     }
 
     // Menampilkan form untuk mengedit permission
-    public function edit(Permission $permission)
+    public function edit(string $id)
     {
+        $permission = Permission::findOrFail($id);
         return view('company_permissions.edit', compact('permission'));
     }
 
     // Mengupdate permission
-    public function update(Request $request, Permission $permission)
+    public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|unique:company_permissions,name,' . $permission->id,
+            'name' => 'required|unique:permissions,name,' . $id,
         ]);
 
+        $permission = Permission::findOrFail($id);
+        
         $permission->update(['name' => $request->name]);
 
         return redirect()->route('company_permissions.index')->with('success', 'Permission updated successfully!');

@@ -53,23 +53,23 @@
                                 </x-table-thead>
                                 <tbody>
                                     @foreach ($company_roles as $role)
-                                                    <x-table-tr>
-                                                        <x-table-td>{{ $loop->iteration }}</x-table-td>
-                                                        <x-table-th class="dark:text-white">{{ $role->name }}</x-table-th>
-                                                        <x-table-td>
-                                                            @foreach ($role->permissions as $permission)
-                                                                <span
-                                                                    class="inline-block px-2 py-1 bg-blue-100 text-blue-600 text-xs font-medium rounded-lg mr-1 mb-1">
-                                                                    {{ $permission->name }}
-                                                                </span>
-                                                            @endforeach
-                                                        </x-table-td>
-                                                        <x-table-td>
-                                                            <div class="flex inline">
-                                                                <x-button-edit :route="route('company_roles.edit', $role->id)" />
-                                                                <x-button-delete :route="route('company_roles.destroy', $role->id)" />
-                                                            </div>
-                                                        </x-table-td>
+                                        <x-table-tr>
+                                            <x-table-td>{{ $role->id }}</x-table-td>
+                                            <x-table-th class="dark:text-white">{{ $role->name }}</x-table-th>
+                                            <x-table-td>
+                                                @foreach ($role->permissions as $permission)
+                                                    <span
+                                                        class="inline-block px-2 py-1 bg-blue-100 text-blue-600 text-xs font-medium rounded-lg mr-1 mb-1">
+                                                        {{ $permission->name }}
+                                                    </span>
+                                                @endforeach
+                                            </x-table-td>
+                                            <x-table-td>
+                                                <div class="flex inline">
+                                                    <x-button-edit :route="route('company_roles.edit', $role->id)" />
+                                                    <x-button-delete :route="route('company_roles.destroy', $role->id)" />
+                                                </div>
+                                            </x-table-td>
                                         </x-table-tr>
                                     @endforeach
                         </tbody>

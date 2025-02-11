@@ -44,7 +44,7 @@ class CompanyRoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('roles.create', compact('groupedPermissions'));
+        return view('company_roles.create', compact('groupedPermissions'));
     }
 
     public function store(Request $request)
@@ -62,27 +62,29 @@ class CompanyRoleController extends Controller
             $role->syncPermissions($permissions);
         }
     
-        return redirect()->route('roles.index')->with('success', 'Role created successfully!');
+        return redirect()->route('company_roles.index')->with('success', 'Role created successfully!');
     }
-    public function edit(Role $role)
+    public function edit(string $id)
     {
         $permissions = Permission::all();
 
+        $role = Role::with('permissions')->findOrFail($id);
         $groupedPermissions = $permissions->groupBy(function ($permission) {
             $parts = explode(' ', $permission->name); // Pisahkan nama permission berdasarkan spasi
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('roles.edit', compact('role', 'groupedPermissions'));
+        return view('company_roles.edit', compact('role', 'groupedPermissions'));
     }
 
-    public function update(Request $request, Role $role)
+    public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|unique:roles,name,' . $role->id,
+            'name' => 'required|unique:roles,name,' . $id,
             'permissions' => 'array|exists:permissions,id', // Validate permission IDs
         ]);
 
+        $role = Role::findOrFail($id);
         $role->update(['name' => $request->name]);
 
         // Convert permission IDs to names before syncing
@@ -91,12 +93,14 @@ class CompanyRoleController extends Controller
             $role->syncPermissions($permissions);
         }
 
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully!');
+        return redirect()->route('company_roles.index')->with('success', 'Role updated successfully!');
     }
 
-    public function destroy(Role $role)
+    public function destroy(string $id)
     {
+        $role = Role::findOrFail($id);
         $role->delete();
-        return redirect()->route('roles.index')->with('success', 'Role deleted successfully!');
+
+        return redirect()->route('company_roles.index')->with('success', 'Role deleted successfully!');
     }
 }

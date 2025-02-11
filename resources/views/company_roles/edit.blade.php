@@ -12,7 +12,7 @@
                     <h3 class="text-lg dark:text-white font-bold">Edit Role</h3>
                     <p class="text-sm dark:text-gray-200 mb-4">{{ $role->name }}</p>
 
-                    <form action="{{ route('roles.update', $role->id) }}" method="POST">
+                    <form action="{{ route('company_roles.update', $role->id) }}" method="POST">
                         @csrf
                         @method('PUT')
                         <div class="mb-4">
@@ -40,6 +40,11 @@
                         </div>
 
                         <x-primary-button>Update</x-primary-button>
+                        <a href="{{ route('company_roles.index') }}">
+                            <x-secondary-button type="button">
+                                Cancel
+                            </x-button>
+                        </a>
                     </form>
                 </div>
             </div>

@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900 dark:text-white">
                     <h3 class="text-lg fdark:text-white font-bold">Edit Permission</h3>
                     <p class="text-sm dark:text-gray-200 mb-4">{{ $permission->name }}</p>
-                    <form action="{{ route('permissions.update', $permission->id) }}" method="POST" class="mt-4">
+                    <form action="{{ route('company_permissions.update', $permission->id) }}" method="POST" class="mt-4">
                         @csrf
                         @method('PUT')
                         <div class="mb-4">
@@ -20,6 +20,11 @@
                         </div>
 
                         <x-primary-button>Update</x-primary-button>
+                        <a href="{{ route('company_permissions.index') }}">
+                            <x-secondary-button type="button">
+                                Cancel
+                            </x-button>
+                        </a>
                     </form>
                 </div>
             </div>
