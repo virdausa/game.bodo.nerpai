@@ -18,9 +18,9 @@ return new class extends Migration
             // Foreign keys
             $table->foreignId('warehouse_id')->constrained();
             // $table->foreignId('shipment_id')->constrained();
+            $table->foreignId('employee_id')->constrained();
 
             // Columns
-            $table->integer('team')->nullable();
             $table->string('notes')->nullable();
             $table->string('status');
             $table->date('inbound_date');
