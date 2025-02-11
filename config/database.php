@@ -42,6 +42,11 @@ return [
             'synchronous' => null,
         ],
 
+        'nerpai' => [
+            'driver' => 'mysql',
+            'url' => env('DB_URL'),
+        ],
+
         'mysql' => [
             'driver' => 'mysql',
             'url' => env('DB_URL'),

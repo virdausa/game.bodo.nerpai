@@ -29,4 +29,9 @@ class CompanyUser extends Model
     {
         return $this->employee->can($permission);
     }
+
+    public function company()
+    {
+        return $this->belongsTo(Company::class);
+    }
 }

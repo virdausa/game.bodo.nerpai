@@ -54,7 +54,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('companies', CompanyController::class);
     Route::post('/companies/switch/{company}', [CompanyController::class, 'switchCompany'])->name('companies.switch');
     Route::get('/exit-company/{route}', [CompanyController::class, 'exitCompany'])->name('exit.company');
-    
+    Route::post('/companies/acceptInvite/{id}', [CompanyController::class, 'acceptInvite'])->name('companies.acceptInvite');
+
     Route::resource('roles', RoleController::class);
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');
     Route::get('/roles/data', [RoleController::class, 'getRolesData'])->name('roles.data');
@@ -71,6 +72,7 @@ Route::middleware(['auth',
     })->name('dashboard');
     
     Route::resource('company_users', CompanyUserController::class);
+    Route::delete('/company_users/cancelInvite/{id}', [CompanyUserController::class, 'cancelInvite'])->name('company_users.cancelInvite');
 
     Route::resource('company_roles', CompanyRoleController::class);
     Route::get('/company_roles', [CompanyRoleController::class, 'index'])->name('company_roles.index');

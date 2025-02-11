@@ -30,6 +30,7 @@
                                 <x-table-th>Name</x-table-th>
                                 <x-table-th>Location</x-table-th>
                                 <x-table-th>Database</x-table-th>
+                                <x-table-th>Status</x-table-th>
                                 <x-table-th>Actions</x-table-th>
                             </tr>
                         </x-table-thead>
@@ -40,6 +41,7 @@
                                     <x-table-td>{{ $company->name }}</x-table-td>
                                     <x-table-td>{{ $company->address }}</x-table-td>
                                     <x-table-td>{{ $company->database ? parse_url($company->database)['host'] ?? $company->database->name : 'Internal' }}</x-table-td>
+                                    <x-table-td>{{ $company->pivot->status }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                             @if($company->pivot->status == 'approved')
@@ -51,8 +53,15 @@
                                                         {{ __('Masuk Company') }}
                                                         </x-primary-button>
                                                 </form>
-                                            @else
-                                                <span class="text-red-500">{{ $company->pivot->status }}</span>
+                                            @elseif($company->pivot->status == 'invited')
+                                            <form method="POST" action="{{ route('companies.acceptInvite', $company->id) }}">
+                                                    @csrf
+                
+                                                    <x-primary-button :href="route('companies.acceptInvite', $company->id)" onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                                        {{ __('Approve Invitation') }}
+                                                        </x-primary-button>
+                                                </form>
                                             @endif
                                             {{-- @include('companies.edit', ['Tenant' => $company]) --}}
                                             {{-- <x-button-delete :route="route('companies.destroy', $company->id)" /> --}}

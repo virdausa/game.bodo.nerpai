@@ -8,11 +8,12 @@
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
                     <!-- Search and Add New Supplier -->
+                     
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
-                       
-                        <div class="w-full md:w-auto flex justify-end">
-                            <x-button-add :route="route('company_users.create')" text="Invite User" />
-                        </div>
+                        
+                        <div class="flex flex-col md:flex-row items-center space-x-3">
+                                @include('company_users.create')
+                         </div>
                     </div>
                     <x-table-table id="search-table">
                         <x-table-thead >
@@ -35,12 +36,20 @@
                                     <x-table-td>{{ $user->status }}</x-table-td>
                                     <x-table-td class="flex justify-center items-center gap-2">
                                     <div class="flex items-center space-x-2">
-                                            <x-button-edit :route="route('company_users.edit', $user->id)" />
-                                            <form action="{{ route('company_users.destroy', $user->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('company_users.destroy', $user->id)" />
-                                            </form>
+                                            <!-- <x-button-edit :route="route('company_users.edit', $user->id)" /> -->
+                                            @if($user->status == 'invited') 
+                                                <form action="{{ route('company_users.cancelInvite', $user->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-secondary-button type="submit">Cancel Invite</x-secondary-button>
+                                                </form> 
+                                            @else
+                                                <form action="{{ route('company_users.destroy', $user->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <x-button-delete :route="route('company_users.destroy', $user->id)" />
+                                                </form>
+                                            @endif
                                         </div>
                                     </x-table-td>
                                 </tr>
