@@ -18,6 +18,14 @@ return new class extends Migration
         Schema::table('inbound_products', function (Blueprint $table) {
             $table->foreignId('warehouse_location_id')->constrained('warehouse_locations');
         });
+
+        Schema::table('inventory_movement', function (Blueprint $table) {
+            $table->foreignId('warehouse_location_id')->constrained('warehouse_locations');
+        });
+
+        Schema::table('sales', function (Blueprint $table) {
+            $table->foreignId('warehouse_location_id')->constrained('warehouse_locations');
+        });
     }
 
     /**
@@ -32,6 +40,16 @@ return new class extends Migration
 
         Schema::table('inbound_products', function (Blueprint $table) {
             $table->dropForeign('inbound_products_warehouse_location_id_foreign');
+            $table->dropColumn('warehouse_location_id');
+        });
+
+        Schema::table('inventory_movement', function (Blueprint $table) {
+            $table->dropForeign('inventory_movement_warehouse_location_id_foreign');
+            $table->dropColumn('warehouse_location_id');
+        });
+
+        Schema::table('sales', function (Blueprint $table) {
+            $table->dropForeign('sales_warehouse_location_id_foreign');
             $table->dropColumn('warehouse_location_id');
         });
     }
