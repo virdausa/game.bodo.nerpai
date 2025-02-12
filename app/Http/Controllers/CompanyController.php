@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Company;
+use App\Models\CompanyUser;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Artisan;
 
 class CompanyController extends Controller
 {
@@ -26,13 +29,18 @@ class CompanyController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
+			'id' => 'required|string|max:255',
 			'name' => 'required|string|max:255',
-			'location' => 'nullable|string|max:255',
+			'address' => 'nullable|string|max:255',
+			'database' => 'nullable|string|max:255',
 		]);
+		
+		$company = Company::create($request->all());
+		$company->id = $request->id;
+		
+		$this->setupNewCompany($company);
 
-		Company::create($request->all());
-
-		return redirect()->route('companies.index')->with('success', 'Company created successfully.');
+		return redirect()->route('companies.index')->with('success', "Company {$company->name} created successfully.");
 	}
 
 	public function edit(Company $Company)
@@ -61,7 +69,10 @@ class CompanyController extends Controller
 
 	public function switchCompany(Request $request, $companyId)
     {
-        $company = Company::findOrFail($companyId);
+		// forget company before
+		$this->forgetCompany();
+
+		$company = Company::findOrFail($companyId);
 
         // Simpan informasi perusahaan yang dipilih di session
         Session::put('company_id', $company->id);
@@ -74,15 +85,25 @@ class CompanyController extends Controller
 	public function exitCompany(Request $request, $route = 'lobby')
 	{
 		// Hapus session company
-		session()->forget('company_id');  
-		session()->forget('company_name');
-		session()->forget('company_database_url');  
+		$this->forgetCompany();
 
 		// Redirect ke halaman lobby (atau dashboard utama)
 		return redirect()->route($route)->with('status', 'You have exited the company.');
 	}
 
-	public function configTenant($id){
+	public function forgetCompany()
+	{
+		// to forget from what company had
+		session()->forget('company_id');
+		session()->forget('company_name');
+		session()->forget('company_database_url');
+
+		session()->forget('employee');
+		session()->forget('companyUser');
+	}
+
+	public function configTenant($id)
+	{
 		$company = Company::findOrFail($id);
 
 		$dbUrl = env('DB_URL');
@@ -107,6 +128,7 @@ class CompanyController extends Controller
 			'strict'    => true,
 			'engine'    => null,
 		]);
+
 	}
 
 	public function acceptInvite(Request $request, $id)
@@ -174,4 +196,73 @@ class CompanyController extends Controller
 
         return redirect()->route('companies.index')->with('success', "Invite {$company->name} ditolak successfully.");
     }
+
+	public function createDatabase($databaseName)
+	{
+		$db_name = env('DB_DATABASE') . '_' . $databaseName;
+		DB::statement("CREATE DATABASE $db_name");
+
+		return $db_name;
+	}
+
+	public function migrateDatabase($database, $path)
+	{
+		Artisan::call('migrate', [
+			'--database' => $database,
+			'--path' => 'database/migrations/' . $path, // Sesuaikan path migration
+			'--force' => true
+		]);
+	}
+	
+	public function seedDatabase($database, $seeder_class)
+	{
+		Artisan::call('db:seed', [
+			'--database' => $database,
+			'--class' => $seeder_class, // Sesuaikan dengan seeder untuk perusahaan
+			'--force' => true
+		]);
+	}
+
+	public function setupNewCompany(Company $company)
+	{
+		// create database
+		$db_name = $this->createDatabase($company->id, 'tenant');
+		
+		// config tenant
+		$this->configTenant($company->id);
+
+		// migrate database
+		$this->migrateDatabase('tenant', 'tenant');
+
+		
+		// seed database
+		$this->seedDatabase('tenant', 'CompanySeeder');
+		
+		
+		// create new companies_users
+		Auth::user()->companies()->attach($company->id, ['status' => 'approved']);
+
+		// create new ke company user
+		$companyUserId = DB::connection('tenant')
+					->table('company_users')
+					->insertGetId([
+						'user_id' => Auth::user()->id,
+						'user_type' => 'admin',
+						'status' => 'approved',
+						'created_at' => now(),
+						'updated_at' => now(),
+					]);
+
+		// create new employee to be owner
+		$employeeId = DB::connection('tenant')
+					->table('employees')
+					->insertGetId([
+						'company_user_id' => $companyUserId,
+						'reg_date' => now(),
+						'status' => 'active',
+						'role_id' => 1, 		// assume its owner
+						'created_at' => now(),
+						'updated_at' => now(),
+					]);
+	}
 }

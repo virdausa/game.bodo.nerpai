@@ -13,11 +13,8 @@
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
                     <!-- Actions -->
-                   
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
-                        
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                       
                                 @include('companies.create')
                          </div>
                     </div>
