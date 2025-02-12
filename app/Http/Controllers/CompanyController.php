@@ -141,4 +141,37 @@ class CompanyController extends Controller
 
 		return redirect()->route('companies.index')->with('success', 'Invite accepted successfully.');
 	}
+
+	public function rejectInvite(string $id)
+    {
+		$company = Company::findOrFail($id);
+		$user = Auth::user();
+		
+		$this->configTenant($company->id);
+
+		$userExist = DB::connection('tenant')
+			->table('company_users')
+			->where('user_id', $user->id)
+			->exists();
+
+		if (!$userExist) {
+			// delete data dari companies_users
+			$user->companies()->detach($company->id);
+
+			return redirect()->route('companies.index')->with('error', 'Invitation tidak valid');
+		}
+
+		// update data ke companies_users
+		$user->companies()->updateExistingPivot($company->id, ['status' => 'rejected']);
+
+		// update data ke company_user
+		DB::connection('tenant')
+			->table('company_users')
+			->where('user_id', $user->id)
+			->update([
+				'status' => 'rejected',
+			]);
+
+        return redirect()->route('companies.index')->with('success', "Invite {$company->name} ditolak successfully.");
+    }
 }

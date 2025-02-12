@@ -55,6 +55,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/companies/switch/{company}', [CompanyController::class, 'switchCompany'])->name('companies.switch');
     Route::get('/exit-company/{route}', [CompanyController::class, 'exitCompany'])->name('exit.company');
     Route::post('/companies/acceptInvite/{id}', [CompanyController::class, 'acceptInvite'])->name('companies.acceptInvite');
+    Route::post('/companies/rejectInvite/{id}', [CompanyController::class, 'rejectInvite'])->name('companies.rejectInvite');
 
     Route::resource('roles', RoleController::class);
     Route::get('/roles', [RoleController::class, 'index'])->name('roles.index');

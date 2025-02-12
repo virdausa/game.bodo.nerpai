@@ -18,7 +18,9 @@ class EmployeeController extends Controller
     }
     public function create()
     {
-        $users = CompanyUser::whereDoesntHave('employee')->get(); // List all users which not employees
+        $users = CompanyUser::whereDoesntHave('employee')
+            ->where('status', 'approved')
+            ->get(); // List all users which not employees
         $roles = \Spatie\Permission\Models\Role::all(); // List all roles
         return view('employees.create', compact('users', 'roles'));
     }

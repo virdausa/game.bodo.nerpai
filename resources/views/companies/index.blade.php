@@ -54,9 +54,12 @@
                                                         </x-primary-button>
                                                 </form>
                                             @elseif($company->pivot->status == 'invited')
-                                            <form method="POST" action="{{ route('companies.acceptInvite', $company->id) }}">
+                                                <form action="{{ route('companies.rejectInvite', $company->id) }}" method="POST">
                                                     @csrf
-                
+                                                    <x-secondary-button type="submit">Reject Invite</x-secondary-button>
+                                                </form>
+                                                <form method="POST" action="{{ route('companies.acceptInvite', $company->id) }}">
+                                                    @csrf
                                                     <x-primary-button :href="route('companies.acceptInvite', $company->id)" onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                                         {{ __('Approve Invitation') }}

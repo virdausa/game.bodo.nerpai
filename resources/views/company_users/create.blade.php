@@ -11,7 +11,7 @@
         <div class="form-group mb-4">
             <x-input-label for="user_id" class="block text-sm font-medium text-gray-700">Select User</x-input-label>
             <select name="user_id" id="user_id" class="w-full px-4 py-2 border rounded">
-                @foreach ($users->whereNotIn('id', $company_users->pluck('user_id')) as $user)
+                @foreach ($users_to_invite as $user)
                     <option value="{{ $user->id }}">{{ $user->name }}</option>
                 @endforeach
             </select>

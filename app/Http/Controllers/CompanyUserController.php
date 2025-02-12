@@ -15,8 +15,10 @@ class CompanyUserController extends Controller
     {
         $company_users = CompanyUser::all();
         $users = User::all();
-        
-        return view('company_users.index', compact('company_users', 'users'));
+        $rejected_users = $company_users->where('status', '!=','rejected');
+        $users_to_invite = $users->whereNotIn('id', $rejected_users->pluck('user_id'));
+
+        return view('company_users.index', compact('company_users', 'users', 'users_to_invite'));
     }
 
     /**
@@ -41,14 +43,20 @@ class CompanyUserController extends Controller
             return redirect()->route('company_users.index')->with('error', "User tidak ditemukan!");
         }
 
-        CompanyUser::create([
+        $company_user = CompanyUser::updateOrCreate([
             'user_id' => $request->user_id,
             'user_type' => 'guest',
-            'status' => 'invited',
         ]);
 
+        $company_user->status = 'invited';
+        $company_user->save();
+
         // update data ke companies_users
-        $user->companies()->attach(session('company_id'), ['status' => 'invited']);
+        if($user->companies()->where('company_id', session('company_id'))->exists()){
+            $user->companies()->updateExistingPivot(session('company_id'), ['status' => 'invited']);
+        } else {
+            $user->companies()->attach(session('company_id'), ['status' => 'invited']);
+        }
 
         return redirect()->route('company_users.index')->with('success', "User {$user->name} has been invited successfully!");
     }
@@ -82,7 +90,15 @@ class CompanyUserController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $company_user = CompanyUser::with('user')->findOrFail($id);
+
+        // lepas dari companies users
+        $user = $company_user->user;
+        $user->companies()->detach(session('company_id'));
+
+        $company_user->delete();
+
+        return redirect()->route('company_users.index')->with('success', 'Guest removed successfully.');
     }
 
     public function cancelInvite(string $id)

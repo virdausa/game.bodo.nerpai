@@ -44,11 +44,10 @@
                                                     <x-secondary-button type="submit">Cancel Invite</x-secondary-button>
                                                 </form> 
                                             @else
-                                                <form action="{{ route('company_users.destroy', $user->id) }}" method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
+                                                @if($user->user_type == 'guest')
                                                     <x-button-delete :route="route('company_users.destroy', $user->id)" />
-                                                </form>
+                                            
+                                                @endif
                                             @endif
                                         </div>
                                     </x-table-td>
