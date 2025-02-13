@@ -16,13 +16,8 @@ class CompanySeeder extends Seeder
     {
         // User::factory(10)->create();
 
-        $CompanyUser1 = CompanyUser::create([
-            'user_id' => '1',
-            'user_type' => 'admin',
-            'status' => 'approved',
-        ]);
-
         $this->call([
+            CompanyUserSeeder::class,
             // ExpeditionsTableSeeder::class,
             CompanyPermissionSeeder::class,
             EmployeesSeeder::class,
