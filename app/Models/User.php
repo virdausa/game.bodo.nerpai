@@ -7,6 +7,7 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;  // Pastikan Role diimport
+use Spatie\Permission\Models\Permission;
 
 class User extends Authenticatable
 {
@@ -65,6 +66,6 @@ class User extends Authenticatable
     
     public function role()
     {
-        return $this->belongsTo(Role::class, 'role_id');
+        return $this->belongsTo(Role::class);
     }
 }

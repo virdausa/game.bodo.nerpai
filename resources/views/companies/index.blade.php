@@ -13,11 +13,8 @@
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
                     <!-- Actions -->
-                   
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
-                        
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                       
                                 @include('companies.create')
                          </div>
                     </div>
@@ -30,6 +27,7 @@
                                 <x-table-th>Name</x-table-th>
                                 <x-table-th>Location</x-table-th>
                                 <x-table-th>Database</x-table-th>
+                                <x-table-th>Status</x-table-th>
                                 <x-table-th>Actions</x-table-th>
                             </tr>
                         </x-table-thead>
@@ -40,6 +38,7 @@
                                     <x-table-td>{{ $company->name }}</x-table-td>
                                     <x-table-td>{{ $company->address }}</x-table-td>
                                     <x-table-td>{{ $company->database ? parse_url($company->database)['host'] ?? $company->database->name : 'Internal' }}</x-table-td>
+                                    <x-table-td>{{ $company->pivot->status }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                             @if($company->pivot->status == 'approved')
@@ -51,8 +50,18 @@
                                                         {{ __('Masuk Company') }}
                                                         </x-primary-button>
                                                 </form>
-                                            @else
-                                                <span class="text-red-500">{{ $company->pivot->status }}</span>
+                                            @elseif($company->pivot->status == 'invited')
+                                                <form action="{{ route('companies.rejectInvite', $company->id) }}" method="POST">
+                                                    @csrf
+                                                    <x-secondary-button type="submit">Reject Invite</x-secondary-button>
+                                                </form>
+                                                <form method="POST" action="{{ route('companies.acceptInvite', $company->id) }}">
+                                                    @csrf
+                                                    <x-primary-button :href="route('companies.acceptInvite', $company->id)" onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                                        {{ __('Approve Invitation') }}
+                                                        </x-primary-button>
+                                                </form>
                                             @endif
                                             {{-- @include('companies.edit', ['Tenant' => $company]) --}}
                                             {{-- <x-button-delete :route="route('companies.destroy', $company->id)" /> --}}

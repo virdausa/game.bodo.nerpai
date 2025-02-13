@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-lobby-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Edit Permission') }}
@@ -20,9 +20,14 @@
                         </div>
 
                         <x-primary-button>Update</x-primary-button>
+                        <a href="{{ route('permissions.index') }}">
+                            <x-secondary-button type="button">
+                                Cancel
+                            </x-button>
+                        </a>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-lobby-layout>

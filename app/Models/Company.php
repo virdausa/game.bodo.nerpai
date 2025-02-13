@@ -25,4 +25,8 @@ class Company extends Model
         return $this->hasMany(User::class, 'companies_users', 'company_id', 'user_id')
                     ->withPivot('status');  
     }
+
+    public function companyusers(){
+        return $this->hasMany(CompanyUser::class);
+    }
 }

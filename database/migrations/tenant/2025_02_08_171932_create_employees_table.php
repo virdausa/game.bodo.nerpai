@@ -13,13 +13,13 @@ return new class extends Migration
             $table->id();
 
             // Foreign Keys
-            $table->foreignId('company_user_id')->constrained();
+            $table->foreignId('company_user_id')->nullable()->constrained();
             $table->foreignId('role_id')->nullable()->constrained();
             
             // Columns
             $table->date('reg_date');
             $table->date('out_date')->nullable();
-            $table->string('status');
+            $table->string('status')->default('active');    // active or inactive
 
             // Timestamps (optional, not in schema but commonly used)
             $table->timestamps();

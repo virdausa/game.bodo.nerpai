@@ -38,23 +38,17 @@
                         <tbody>
                             @foreach ($employees as $employee)
                                 <x-table-tr>
-                                    <x-table-td>{{ $loop->iteration }}</x-table-td>
+                                    <x-table-td>{{ $employee->id }}</x-table-td>
                                     <x-table-td>{{ $employee->companyuser->user->name }}</x-table-td>
                                     <x-table-td>{{ $employee->reg_date->format('Y-m-d') }}</x-table-td>
                                     <x-table-td>{{ $employee->out_date ? $employee->out_date->format('Y-m-d') : '-' }}</x-table-td>
-                                    <x-table-td>
-                                        {{ $employee->status ? 'Active' : 'Inactive' }}
-                                    </x-table-td>
+                                    <x-table-td>{{ $employee->status }}</x-table-td>
                                     <x-table-td>{{ $employee->role->name }}</x-table-td>
                                     <x-table-td>
                                     <div class="flex items-center space-x-2">
                                             
                                             <x-button-edit :route="route('employees.edit', $employee->id)" />
-                                            <form action="{{ route('employees.destroy', $employee->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('employees.destroy', $employee->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('employees.destroy', $employee->id)" />
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>

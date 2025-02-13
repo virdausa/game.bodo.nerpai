@@ -15,9 +15,8 @@
                     </svg>
                 </button>
                 <a href={{ route('dashboard') }} class="flex ms-2 md:me-24">
-                    <img src="{{ asset('svg/'.session('company_id').'.svg') }}" class="h-8 me-3 dark:invert" alt="FlowBite Logo" />
-                    <span
-                        class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{{ session('company_name') }}</span>
+                    <img src="{{ asset('svg/'.session('company_id').'.svg') }}" class="h-8 me-3 dark:invert" alt="HEHE" />
+                    <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">{{ session('company_name'); }}</span>
                 </a>
             </div>
 

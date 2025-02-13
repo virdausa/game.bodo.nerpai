@@ -10,8 +10,8 @@ return new class extends Migration {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->json('address');
-            $table->string('database');
+            $table->json('address')->nullable();
+            $table->string('database')->nullable();
             $table->timestamps(); // Otomatis buat created_at & updated_at
             $table->softDeletes(); // Untuk deleted_at
         });

@@ -4,7 +4,7 @@
             {{ __('Tambah Role') }}
         </h2>
     </x-slot>
-
+    
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white bg-white dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow-lg sm:rounded-lg">
@@ -12,7 +12,7 @@
                 <h3 class="text-lg dark:text-white font-bold">Tambah Role Access</h3>
                 <p class="text-sm dark:text-gray-200 mb-4">Atur role dan permission setiap fitur</p>
 
-                    <form action="{{ route('roles.store') }}" method="POST">
+                    <form action="{{ route('company_roles.store') }}" method="POST">
                         @csrf
                         <div class="mb-4">
                             <x-input-label for="name" class="block">Nama Role</x-input-label>
@@ -37,6 +37,11 @@
                         </div>
 
                         <x-primary-button>Simpan</x-primary-button>
+                        <a href="{{ route('company_roles.index') }}">
+                            <x-secondary-button type="button">
+                                Cancel
+                            </x-button>
+                        </a>
                     </form>
                 </div>
             </div>

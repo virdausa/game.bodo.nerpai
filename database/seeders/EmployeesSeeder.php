@@ -19,7 +19,7 @@ class EmployeesSeeder extends Seeder
         $employee1 = Employee::create([
             'company_user_id' => '1',
             'reg_date' => now(),
-            'status' => true,
+            'status' => 'active', 
             'role_id' => '1',   // Owner
         ]);
     }

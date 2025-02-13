@@ -23,10 +23,10 @@
                             <div
                                 class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 px-6">
 
-                                {{-- <div
+                                <div
                                     class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                                    <x-button-add :route="route('permissions.create')" text="Add Permission}" />
-                                </div> --}}
+                                    <x-button-add :route="route('permissions.create')" text="Create Permission" />
+                                </div>
                             </div>
                             <div class="p-6 text-gray-900 dark:text-white">
 

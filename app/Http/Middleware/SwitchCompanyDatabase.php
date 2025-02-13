@@ -46,6 +46,9 @@ class SwitchCompanyDatabase
                 DB::purge('tenant');
                 DB::setDefaultConnection('tenant');
             }
+        } else {
+            // Jika tidak ada perusahaan dipilih, hapus koneksi database sesi
+            Config::set('database.connections.tenant', []);
         }
 
         return $next($request);

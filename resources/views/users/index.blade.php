@@ -7,13 +7,14 @@
                     <p class="text-sm dark:text-gray-200 mb-6">Create, edit, and manage your users listings.</p>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
-                    <!-- Search and Add New Supplier -->
-                    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
+                    <!-- Search and Add New User -->
+                    <!-- <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                        
                         <div class="w-full md:w-auto flex justify-end">
                             <x-button-add :route="route('users.create')" text="Add user" />
                         </div>
-                    </div>
+                    </div> -->
+                    
                     <x-table-table id="search-table">
                         <x-table-thead >
                             <tr>
@@ -42,11 +43,7 @@
                                     <x-table-td class="flex justify-center items-center gap-2">
                                     <div class="flex items-center space-x-2">
                                             <x-button-edit :route="route('users.edit', $user->id)" />
-                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('users.destroy', $user->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('users.destroy', $user->id)" />
                                         </div>
                                     </x-table-td>
                                 </tr>
