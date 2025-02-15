@@ -6,22 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Location extends Model
 {
-    protected $fillable = [
-        'warehouse_id', 
-        'room', 
-        'rack'
-    ];
-	
+	protected $table = 'warehouse_locations';
+
+	protected $fillable = [
+		'warehouse_id',
+		'room',
+		'rack'
+	];
+
 	public function warehouse()
 	{
 		return $this->belongsTo(Warehouse::class);
 	}
 
 	public function inventory()
-    {
-        return $this->hasMany(Inventory::class);
-    }
-	
+	{
+		return $this->hasMany(Inventory::class);
+	}
+
 	public function locations()
 	{
 		return $this->hasMany(OutboundRequestLocation::class);
