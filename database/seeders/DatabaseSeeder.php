@@ -23,7 +23,8 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            PermissionSeeder::class,
+            // TODO: Create permission seeder
+            // PermissionSeeder::class,
         ]);
     }
 }
