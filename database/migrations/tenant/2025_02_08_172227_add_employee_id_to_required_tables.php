@@ -22,10 +22,6 @@ return new class extends Migration
         Schema::table('inventory_movement', function (Blueprint $table) {
             $table->foreignId('employee_id')->constrained();
         });
-
-        Schema::table('warehouses', function (Blueprint $table) {
-            $table->foreignId('employee_id')->constrained();
-        });
     }
 
     /**
