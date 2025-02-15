@@ -60,11 +60,35 @@ class CompanyController extends Controller
 		return redirect()->route('companies.index')->with('success', 'Company updated successfully.');
 	}
 
-	public function destroy(Company $Company)
+	public function destroy(string $id)
 	{
-		$Company->delete();
+		$company = Company::findOrFail($id);
+		$user = Auth::user();
+		
+		// config tenant
+		$this->configTenant($company->id);
 
-		return redirect()->route('companies.index')->with('success', 'Company deleted successfully.');
+		// is authorized to delete company
+		$company_user = DB::connection('tenant')
+			->table('company_users')
+			->where('user_id', $user->id)
+			->first();
+
+        if (!$company_user) {
+            // Hapus session company
+            return redirect()->route('companies.index')->with('error', 'Anda tidak memiliki akses ke perusahaan ini');
+        }
+
+		if($company_user->user_type != 'admin'){
+			return redirect()->route('companies.index')->with('error', 'Anda tidak memiliki akses Hapus perusahaan ini');
+		}
+
+		// drop database
+		$this->dropDatabase($company->id);
+
+		$company->delete();
+
+		return redirect()->route('companies.index')->with('success', "company {$company->name} deleted successfully.");
 	}
 
 	public function switchCompany(Request $request, $companyId)
@@ -196,6 +220,14 @@ class CompanyController extends Controller
 
         return redirect()->route('companies.index')->with('success', "Invite {$company->name} ditolak successfully.");
     }
+
+	public function dropDatabase($databaseName)
+	{
+		$db_name = env('DB_DATABASE') . '_' . $databaseName;
+		DB::statement("DROP DATABASE IF EXISTS $db_name");
+
+		return $db_name;
+	}
 
 	public function createDatabase($databaseName)
 	{

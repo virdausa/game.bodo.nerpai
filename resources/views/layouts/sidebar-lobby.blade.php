@@ -14,7 +14,7 @@
                         </path>
                     </svg>
                 </button>
-                <a href={{ route('lobby') }} class="flex ms-2 md:me-24">
+                <a href="{{ route('lobby') }}" class="flex ms-2 md:me-24">
                     <img src="{{ asset('svg/hehe.svg') }}" class="h-8 me-3 dark:invert" alt="FlowBite Logo" />
                     <span
                         class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Nerpai</span>
@@ -107,7 +107,6 @@
                 </a>
             </li>
 
-            @can('company sidebar')
             <li>
                 <a href="{{ route('companies.index') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -119,7 +118,6 @@
                     <span class="flex-1 ms-3 whitespace-nowrap">Our Company</span>
                 </a>
             </li>
-            @endcan
             
             @can('user sidebar', 'web')
                 <li>

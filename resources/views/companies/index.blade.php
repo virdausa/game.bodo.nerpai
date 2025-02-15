@@ -64,7 +64,7 @@
                                                 </form>
                                             @endif
                                             {{-- @include('companies.edit', ['Tenant' => $company]) --}}
-                                            {{-- <x-button-delete :route="route('companies.destroy', $company->id)" /> --}}
+                                            <x-button-delete :route="route('companies.destroy', $company->id)" />
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>
