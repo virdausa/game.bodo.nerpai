@@ -29,9 +29,9 @@ class SupplierController extends Controller
         return view('suppliers.index', compact('suppliers'));
     }
 
-    public function show(ShowRequest $request, Supplier $supplier)
+    public function show(ShowRequest $request, String $id)
     {
-        $supplier = $this->supplierService->getOne($supplier);
+        $supplier = $this->supplierService->getOne($id);
         return view('suppliers.show', compact('supplier'));
     }
 
@@ -46,9 +46,9 @@ class SupplierController extends Controller
         return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
     }
 
-    public function edit(EditRequest $request, Supplier $supplier)
+    public function edit(EditRequest $request, String $id)
     {
-        $supplier = $this->supplierService->getOne($supplier);
+        $supplier = $this->supplierService->getOne($id);
         return view('suppliers.edit', compact('supplier'));
     }
 

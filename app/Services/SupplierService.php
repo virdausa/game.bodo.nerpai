@@ -20,8 +20,9 @@ class SupplierService
         return new SupplierCollection($this->supplier->getSuppliers());
     }
 
-    public function getOne(Supplier $supplier): SupplierResource
+    public function getOne(String $id): SupplierResource
     {
+        $supplier = $this->supplier->getSupplier($id);
         return new SupplierResource($supplier);
     }
 
