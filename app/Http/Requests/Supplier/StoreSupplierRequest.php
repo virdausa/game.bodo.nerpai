@@ -11,7 +11,7 @@ enum StatusEnum: string
     case Inactive = 'Inactive';
 }
 
-class StoreRequest extends FormRequest
+class StoreSupplierRequest extends FormRequest
 {
     public function authorize(): bool
     {

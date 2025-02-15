@@ -2,15 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\Supplier\CreateRequest;
 use App\Models\Supplier;
 use App\Services\SupplierService;
-use App\Http\Requests\Supplier\IndexRequest;
-use App\Http\Requests\Supplier\ShowRequest;
-use App\Http\Requests\Supplier\StoreRequest;
-use App\Http\Requests\Supplier\UpdateRequest;
-use App\Http\Requests\Supplier\DestroyRequest;
-use App\Http\Requests\Supplier\EditRequest;
+use App\Http\Requests\Supplier\StoreSupplierRequest;
+use App\Http\Requests\Supplier\UpdateSupplierRequest;
 
 class SupplierController extends Controller
 {
@@ -23,44 +18,44 @@ class SupplierController extends Controller
         $this->supplierService = $supplierService;
     }
 
-    public function index(IndexRequest $request)
+    public function index()
     {
         $suppliers = $this->supplierService->getAll();
         return view('suppliers.index', compact('suppliers'));
     }
 
-    public function show(ShowRequest $request, String $id)
+    public function show(String $id)
     {
         $supplier = $this->supplierService->getOne($id);
         return view('suppliers.show', compact('supplier'));
     }
 
-    public function create(CreateRequest $request)
+    public function create()
     {
         return view('suppliers.create');
     }
 
-    public function store(StoreRequest $request)
+    public function store(StoreSupplierRequest $request)
     {
         $this->supplierService->store($request->validated());
         return redirect()->route('suppliers.index')->with('success', 'Supplier created successfully.');
     }
 
-    public function edit(EditRequest $request, String $id)
+    public function edit(String $id)
     {
         $supplier = $this->supplierService->getOne($id);
         return view('suppliers.edit', compact('supplier'));
     }
 
-    public function update(UpdateRequest $request, Supplier $supplier)
+    public function update(UpdateSupplierRequest $request, String $id)
     {
-        $supplier = $this->supplierService->update($request->validated(), $supplier);
+        $this->supplierService->update($request->validated(), $id);
         return redirect()->route('suppliers.index')->with('success', 'Supplier updated successfully.');
     }
 
-    public function destroy(DestroyRequest $request, Supplier $supplier)
+    public function destroy(String $id)
     {
-        $this->supplierService->destroy($supplier);
+        $this->supplierService->destroy($id);
         return redirect()->route('suppliers.index')->with('success', 'Supplier deleted successfully.');
     }
 }

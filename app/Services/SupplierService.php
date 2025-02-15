@@ -31,13 +31,15 @@ class SupplierService
         return new SupplierResource($this->supplier->createSupplier($data));
     }
 
-    public function update(array $data, Supplier $supplier): SupplierResource
+    public function update(array $data, String $id): SupplierResource
     {
+        $supplier = $this->supplier->getSupplier($id);
         return new SupplierResource($supplier->updateSupplier($data, $supplier));
     }
 
-    public function destroy(Supplier $supplier): void
+    public function destroy(String $id): void
     {
+        $supplier = $this->supplier->getSupplier($id);
         $this->supplier->deleteSupplier($supplier);
     }
 }
