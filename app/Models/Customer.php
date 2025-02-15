@@ -11,6 +11,8 @@ class Customer extends Model
 
     public $timestamps = true;
 
+    protected $table = 'customers';
+
     protected $fillable = [
         'name',
         'email',

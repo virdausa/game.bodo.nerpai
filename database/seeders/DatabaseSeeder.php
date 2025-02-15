@@ -18,14 +18,12 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name' => 'Owner',
             'email' => 'owner@gmail.com',
-            'role' => 'user',
+            'role' => 'admin',
             'password' => '$2y$12$yMFFZY8/jMOtJiz3jQAiUuBvYCwbMoUbkNINHoCWQzt/sILsr28oG',   // owner123
         ]);
 
         $this->call([
-            ExpeditionsTableSeeder::class,
             PermissionSeeder::class,
-            EmployeesSeeder::class,
         ]);
     }
 }

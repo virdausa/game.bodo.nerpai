@@ -58,6 +58,8 @@ class CompanyUserController extends Controller
             $user->companies()->attach(session('company_id'), ['status' => 'invited']);
         }
 
+        // notify user
+
         return redirect()->route('company_users.index')->with('success', "User {$user->name} has been invited successfully!");
     }
 

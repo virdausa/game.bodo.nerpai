@@ -18,9 +18,13 @@ class CompanySeeder extends Seeder
 
         $this->call([
             CompanyUserSeeder::class,
-            // ExpeditionsTableSeeder::class,
             CompanyPermissionSeeder::class,
             EmployeesSeeder::class,
+            ProductSeeder::class,
+            WarehouseSeeder::class,
+            CustomerSeeder::class,
+            SupplierSeeder::class,
+            // ExpeditionsTableSeeder::class,
         ]);
     }
 }

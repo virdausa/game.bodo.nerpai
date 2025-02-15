@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('company_users', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id');              // reference to users db utama
             $table->string('user_type')->default('guest');
             $table->string('status')->default('requested');
             $table->timestamps();

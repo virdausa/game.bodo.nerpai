@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('sku')->unique();
             $table->string('name');
-            $table->decimal('price', 10, 2);
+            $table->decimal('price', 12, 2);
             $table->decimal('weight', 10, 2);
             $table->json('dimension')->nullable();
-            $table->string('status');
+            $table->string('status')->default('active');
             $table->text('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();

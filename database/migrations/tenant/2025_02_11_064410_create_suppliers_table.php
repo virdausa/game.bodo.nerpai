@@ -20,7 +20,7 @@ return new class extends Migration
             $table->json('address');
             $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
-            $table->string('status');
+            $table->string('status')->default('active');
             $table->text('notes')->nullable();
 
             // Timestamps

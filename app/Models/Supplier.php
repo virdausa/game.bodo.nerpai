@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Supplier extends Model
 {
+    protected $connection = 'tenant';
+
     use HasFactory;
 
     protected $fillable = [

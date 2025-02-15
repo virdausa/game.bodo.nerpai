@@ -15,7 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->json("address")->nullable();
-            $table->string("status");
+            $table->string("status")->default("active");
+            $table->foreignId("employee_id")->nullable()->constrained();
             $table->string("notes")->nullable();
             $table->timestamps();
             $table->softDeletes();
