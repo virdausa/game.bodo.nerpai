@@ -3,60 +3,49 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
+use App\Services\ProductService;
+use App\Http\Requests\Product\StoreProductRequest;
+use App\Http\Requests\Product\UpdateProductRequest;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class ProductController extends Controller
 {
-    // Display all products
+    protected $product;
+    protected $productService;
+
+    public function __construct(Product $product, ProductService $productService)
+    {
+        $this->product = $product;
+        $this->productService = $productService;
+    }
+
     public function index()
     {
-        $products = Product::all();
+        $products = $this->productService->getProducts();
         return view('products.index', compact('products'));
     }
 
-    // Show form to create a new product
     public function create()
     {
         return view('products.create');
     }
 
     // Store the new product in the database
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'sku' => 'required|string|max:255',
-                'price' => 'required|numeric|min:0',
-                'weight' => 'required|numeric|min:0',
-                'status' => 'required|in:Active,Inactive',
-                'notes' => 'nullable|string',
-            ]);
+            $this->productService->createProduct($request->validated());
 
-            // Create the product
-            $product = Product::create([
-                'name' => $request->name,
-                'sku' => $request->sku,
-                'price' => $request->price,
-                'weight' => $request->weight,
-                'status' => $request->status,
-                'notes' => $request->notes,
-            ]);
             return redirect()->route('products.index')->with('success', 'Product created successfully.');
         } catch (ValidationException $e) {
-            // Log validation errors
             Log::error('Validation failed', [
                 'errors' => $e->errors(),
                 'inputs' => $request->all(),
             ]);
 
-            // Re-throw the exception for the default Laravel error handling
             throw $e;
         } catch (\Exception $e) {
-            // Log unexpected errors
             Log::error('Unexpected error occurred', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -68,43 +57,30 @@ class ProductController extends Controller
 
     public function show($id)
     {
-        $product = Product::with('purchases')->findOrFail($id);
+        $product = $this->productService->getProduct($id);
         return view('products.show', compact('product'));
     }
 
-    public function edit(Product $product)
+    public function edit(String $id)
     {
+        $product = $this->productService->getProduct($id);
         return view('products.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, String $id)
     {
         try {
-            // Validate the request
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'sku' => 'required|string|max:255',
-                'price' => 'required|numeric|min:0',
-                'weight' => 'required:numeric|min:0',
-                'status' => 'required|in:Active,Inactive',
-                'notes' => 'nullable|string',
-            ]);
-
-            // Update the product
-            $product->update($request->all());
+            $this->productService->updateProduct($id, $request->validated());
 
             return redirect()->route('products.index')->with('success', 'Product updated successfully.');
         } catch (ValidationException $e) {
-            // Log validation errors
             Log::error('Validation failed', [
                 'errors' => $e->errors(),
                 'inputs' => $request->all(),
             ]);
 
-            // Re-throw the exception for the default Laravel error handling
             throw $e;
         } catch (\Exception $e) {
-            // Log unexpected errors
             Log::error('Unexpected error occurred', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
@@ -114,10 +90,9 @@ class ProductController extends Controller
         }
     }
 
-    public function destroy(Product $product)
+    public function destroy(string $id)
     {
-        $product->delete();
-
+        $this->productService->deleteProduct($id);
         return redirect()->route('products.index')->with('success', 'Product deleted successfully.');
     }
 }

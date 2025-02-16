@@ -22,14 +22,24 @@ class Product extends Model
 		'notes'
 	];
 
+	protected $casts = [
+		'dimension' => 'array',
+	];
+
 	public function getProducts(): Collection
 	{
 		return $this->all();
 	}
 
-	public function getProduct($id): Product
+	public function getProduct(String $id, $with = []): Product
 	{
-		return $this->findOrFail($id);
+		$query = $this->newQuery();
+
+		if (!empty($with)) {
+			$query->with($with);
+		}
+
+		return $query->findOrFail($id);
 	}
 
 	public function createProduct(array $data): Product
