@@ -20,8 +20,8 @@ return new class extends Migration
             $table->foreignId('account_id')->nullable()->constrained('accounts', 'id');
 
             // Columns
-            $table->decimal('debit', 10, 2)->default(0);
-            $table->decimal('credit', 10, 2)->default(0);
+            $table->decimal('debit', 15, 2)->default(0);
+            $table->decimal('credit', 15, 2)->default(0);
             $table->text('notes')->nullable();
 
             // Timestamps

@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('purchase_id')->constrained();
             $table->foreignId('product_id')->constrained();
             $table->integer('quantity');
-            $table->decimal('buying_price', 10, 2)->nullable();
-            $table->decimal('total_cost', 10, 2)->nullable();
+            $table->decimal('buying_price', 15, 2)->nullable();
+            $table->decimal('total_cost', 25, 2)->default(0);
             $table->string('notes')->nullable();
             $table->timestamps();
             $table->softDeletes();

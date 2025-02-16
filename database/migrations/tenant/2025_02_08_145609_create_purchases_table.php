@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
-            $table->decimal('total_amount', 15, 2)->default(0);
-            $table->string('status');
+            $table->decimal('total_amount', 30, 2)->default(0);
+            $table->string('status')->default('PO_Planned');
             $table->string('admin_notes')->nullable();
             $table->string('supplier_notes')->nullable();
             $table->timestamps();

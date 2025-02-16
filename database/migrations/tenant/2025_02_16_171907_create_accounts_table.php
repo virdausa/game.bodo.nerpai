@@ -21,8 +21,8 @@ return new class extends Migration
             // Columns
             $table->string('code')->unique();
             $table->string('name');
-            $table->string('status');
-            $table->decimal('balance', 10, 2)->default(0);
+            $table->string('status')->default('active');
+            $table->decimal('balance', 25, 2)->default(0);
 
             // Timestamps
             $table->timestamps();
