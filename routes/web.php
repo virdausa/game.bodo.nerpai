@@ -83,6 +83,8 @@ Route::middleware(['auth',
 
     Route::resource('employees', EmployeeController::class);
 
+    Route::resource('stores', StoreController::class);
+
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
     route::resource("locations", LocationController::class);

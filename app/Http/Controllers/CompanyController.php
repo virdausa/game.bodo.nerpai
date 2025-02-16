@@ -28,14 +28,14 @@ class CompanyController extends Controller
 
 	public function store(Request $request)
 	{
-		$request->validate([
+		$validated = $request->validate([
 			'id' => 'required|string|max:255',
 			'name' => 'required|string|max:255',
 			'address' => 'nullable|string|max:255',
 			'database' => 'nullable|string|max:255',
 		]);
 		
-		$company = Company::create($request->all());
+		$company = Company::updateOrCreate($validated);
 		$company->id = $request->id;
 		
 		$this->setupNewCompany($company);
@@ -232,7 +232,7 @@ class CompanyController extends Controller
 	public function createDatabase($databaseName)
 	{
 		$db_name = env('DB_DATABASE') . '_' . $databaseName;
-		DB::statement("CREATE DATABASE $db_name");
+		DB::statement("CREATE DATABASE IF NOT EXISTS $db_name");
 
 		return $db_name;
 	}
