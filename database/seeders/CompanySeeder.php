@@ -2,10 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use App\Models\CompanyUser;
 
 class CompanySeeder extends Seeder
 {
@@ -17,14 +14,15 @@ class CompanySeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            CompanyUserSeeder::class,
-            CompanyPermissionSeeder::class,
-            EmployeesSeeder::class,
-            ProductSeeder::class,
-            WarehouseSeeder::class,
-            CustomerSeeder::class,
-            SupplierSeeder::class,
+            // CompanyUserSeeder::class,
+            // CompanyPermissionSeeder::class,
+            // EmployeesSeeder::class,
+            // ProductSeeder::class,
+            // WarehouseSeeder::class,
+            // CustomerSeeder::class,
+            // SupplierSeeder::class,
             // ExpeditionsTableSeeder::class,
+            AccountSeeder::class,
         ]);
     }
 }
