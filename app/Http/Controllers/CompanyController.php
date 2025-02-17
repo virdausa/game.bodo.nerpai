@@ -267,12 +267,13 @@ class CompanyController extends Controller
 
 		// migrate database
 		$this->migrateDatabase('tenant', 'tenant');
-
 		
 		// seed database
 		$this->seedDatabase('tenant', 'CompanySeeder');
 		
-		
+		// berikan akses user admin utama ke companies_users
+		$company->users()->attach('1', ['status' => 'approved']);
+
 		// create new companies_users
 		Auth::user()->companies()->attach($company->id, ['status' => 'approved']);
 
