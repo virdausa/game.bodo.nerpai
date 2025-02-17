@@ -14,15 +14,15 @@ class CompanySeeder extends Seeder
         // User::factory(10)->create();
 
         $this->call([
-            // CompanyUserSeeder::class,
-            // CompanyPermissionSeeder::class,
-            // EmployeesSeeder::class,
-            // ProductSeeder::class,
-            // WarehouseSeeder::class,
-            // CustomerSeeder::class,
-            // SupplierSeeder::class,
-            // ExpeditionsTableSeeder::class,
+            CompanyUserSeeder::class,
+            CompanyPermissionSeeder::class,
+            EmployeesSeeder::class,
+            ProductSeeder::class,
+            WarehouseSeeder::class,
+            CustomerSeeder::class,
+            SupplierSeeder::class,
             AccountSeeder::class,
+            StoreSeeder::class,
         ]);
     }
 }

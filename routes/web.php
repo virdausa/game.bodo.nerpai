@@ -11,6 +11,8 @@ use App\Http\Controllers\CompanyUserController;
 use App\Http\Controllers\CompanyRoleController;
 use App\Http\Controllers\CompanyPermissionController;
 
+use App\Http\Controllers\StoreController;
+
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\ProductController;
@@ -84,6 +86,11 @@ Route::middleware(['auth',
     Route::resource('employees', EmployeeController::class);
 
     Route::resource('stores', StoreController::class);
+    Route::post('/stores/switch/{stores}', [StoreController::class, 'switchStore'])->name('stores.switch');
+    Route::get('/exit-store/{route}', [StoreController::class, 'exitStore'])->name('exit.store');
+    Route::get('/dashboard-store', function () {
+        return view('dashboard-store');
+    })->name('dashboard-store');
 
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
@@ -97,7 +104,6 @@ Route::middleware(['auth',
 
     Route::resource('sales', SalesController::class);
     Route::get('sales/{sale}/status/{status}', [SalesController::class, 'updateStatus'])->name('sales.updateStatus');
-    Route::put('sales/{sale}', [SalesController::class, 'update'])->name('sales.update');
     Route::resource('customer_complaints', CustomerComplaintController::class);
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
 
@@ -108,11 +114,6 @@ Route::middleware(['auth',
     Route::resource('inventory', InventoryController::class)->except(['show']);
     Route::get('/inventory/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
     Route::get('/inventory/history', [InventoryController::class, 'history'])->name('inventory.history');
-
-    Route::get('sales/{sale}/status/{status}', [SalesController::class, 'updateStatus'])->name('sales.updateStatus');
-    Route::put('sales/{sale}', [SalesController::class, 'update'])->name('sales.update');
-    Route::resource('customer_complaints', CustomerComplaintController::class);
-    Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
 });
 
 require __DIR__ . '/auth.php';

@@ -118,12 +118,14 @@ class CompanyController extends Controller
 	public function forgetCompany()
 	{
 		// to forget from what company had
-		session()->forget('company_id');
-		session()->forget('company_name');
-		session()->forget('company_database_url');
+		foreach(session()->all() as $key => $value) {
+			if(str_contains($key, 'company')) {
+				session()->forget($key);				
+			}
+		}
 
 		session()->forget('employee');
-		session()->forget('companyUser');
+		//session()->forget('companyUser');
 	}
 
 	public function configTenant($id)
