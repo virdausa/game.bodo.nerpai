@@ -59,4 +59,9 @@ class Employee extends Model
     {
         return $this->permissions()->contains('name', $permission);  // Memeriksa apakah role memiliki permission
     }
+
+    public function store_employee()
+    {
+        return $this->hasMany(StoreEmployee::class);
+    }
 }

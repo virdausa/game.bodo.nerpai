@@ -12,6 +12,7 @@ use App\Http\Controllers\CompanyRoleController;
 use App\Http\Controllers\CompanyPermissionController;
 
 use App\Http\Controllers\StoreController;
+use App\Http\Controllers\StoreEmployeeController;
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
@@ -91,6 +92,8 @@ Route::middleware(['auth',
     Route::get('/dashboard-store', function () {
         return view('dashboard-store');
     })->name('dashboard-store');
+
+    Route::resource('store_employees', StoreEmployeeController::class);
 
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
