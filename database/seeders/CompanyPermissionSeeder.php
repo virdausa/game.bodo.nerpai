@@ -67,7 +67,7 @@ class CompanyPermissionSeeder extends Seeder
 
         // Create permissions
         foreach ($permissions as $permission) {
-            Permission::firstOrCreate(['name' => $permission]);
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'company']);
         }
 
         // Define roles and their permissions
@@ -284,9 +284,10 @@ class CompanyPermissionSeeder extends Seeder
             ],
             ];
 
-        // Create roles and assign permissions
+        
+            // Create roles and assign permissions
         foreach ($roles as $roleName => $rolePermissions) {
-            $role = Role::firstOrCreate(['name' => $roleName]);
+            $role = Role::firstOrCreate(['name' => $roleName, 'guard_name' => 'company']);
             $role->syncPermissions($rolePermissions);
         }
     }
