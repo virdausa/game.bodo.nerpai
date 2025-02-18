@@ -21,4 +21,11 @@ class Store extends Model
         'manager',
         'notes',
     ];
+
+    public function employees()
+    {
+        return $this->belongsToMany(Employee::class, 'store_employees', 'store_id', 'employee_id')
+                    ->withPivot('status')
+                    ->withTimestamps();
+    }
 }

@@ -60,8 +60,12 @@ class Employee extends Model
         return $this->permissions()->contains('name', $permission);  // Memeriksa apakah role memiliki permission
     }
 
-    public function store_employee()
+    public function store()
     {
-        return $this->hasMany(StoreEmployee::class);
+        return $this->belongsToMany(Store::class, 'store_employees', 'employee_id', 'store_id')
+            ->withPivot('status')
+            ->wherePivot('deleted_at', null)
+            ->withTimestamps();
+
     }
 }

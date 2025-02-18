@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Store;
+use App\Models\Employee;
 use Illuminate\Support\Facades\Session;
 
 class StoreController extends Controller
@@ -13,7 +15,10 @@ class StoreController extends Controller
      */
     public function index()
     {
-        $stores = Store::all();
+        $employeeId = session('employee')?->id;
+        $employee = Employee::with('store')->find($employeeId);
+        $stores = $employee->store;
+
         return view('stores.index', compact('stores'));
     }
 
@@ -22,7 +27,7 @@ class StoreController extends Controller
      */
     public function create()
     {
-        //
+        
     }
 
     /**
@@ -30,7 +35,20 @@ class StoreController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'address' => 'nullable|string|max:255',
+        ]);
+
+        $store = Store::updateOrCreate(
+            ['code' => $validated['code']],
+            $validated
+        );
+
+        $this->setupNewStore($store);
+
+        return redirect()->route('stores.index')->with('success', "Store {$store->name} created successfully.");
     }
 
     /**
@@ -92,5 +110,32 @@ class StoreController extends Controller
                 session()->forget($key);				
             }
         }
+    }
+
+
+    public function seedDatabase($database, $seeder_class)
+	{
+		Artisan::call('db:seed', [
+			'--database' => $database,
+			'--class' => $seeder_class, // Sesuaikan dengan seeder untuk perusahaan
+			'--force' => true
+		]);
+	}
+
+
+    public function setupNewStore($store)
+    {
+        $employee_id = session('employee')->id;
+
+        // seed store
+        $this->seedDatabase('tenant', 'StoreSeeder');
+
+        // berikan akses employee sbg store manager
+        $store_employee = StoreEmployee::create([
+            'store_id' => $store->id,
+            'employee_id' => $employee_id,
+            'store_role_id' => '1',             // assume its store manager
+            'status' => 'active',
+        ]);
     }
 }

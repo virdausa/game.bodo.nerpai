@@ -39,12 +39,25 @@ class StoreEmployeeController extends Controller
             'employee_id' => 'required|exists:employees,id',
         ]);
 
-        $store_employee = StoreEmployee::create([
-            'store_id' => Session::get('company_store_id'),
-            'employee_id' => $validated['employee_id'],
-            'role' => 'guest',
-            'status' => 'active',
-        ]);
+        $store_id = Session::get('company_store_id');
+
+        // cek wheter udh pernah dihapus
+        $store_employee = StoreEmployee::withTrashed()
+            ->where('store_id', $store_id)
+            ->where('employee_id', $validated['employee_id'])
+            ->first();
+
+        if ($store_employee) {
+            $store_employee->restore();
+        } else {
+            $store_employee = StoreEmployee::create([
+                'store_id' => $store_id,
+                'employee_id' => $validated['employee_id'],
+                'role' => 'guest',
+                'status' => 'active',
+            ]);
+        }
+
 
         return redirect()->route('store_employees.index')->with('success', "{$store_employee->employee->companyuser->user->name} assigned to be Store employee successfully!");
     }
