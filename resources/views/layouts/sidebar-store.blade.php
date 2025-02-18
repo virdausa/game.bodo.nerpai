@@ -24,8 +24,7 @@
                 </a>
             </li>
 
-            @if(session('employee')?->can('purchases sidebar') ||
-                session('employee')?->can('suppliers sidebar'))
+            @if(session('employee')?->can('purchases sidebar'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                         onclick="toggleDropdown('purchase-menu')">
@@ -43,7 +42,7 @@
                         </svg>
                     </button>
                     <ul class="mt-1 space-y-1 ms-6 
-                                {{ Request::routeIs('purchases*') || Request::routeIs('suppliers*') ? 'block' : 'hidden' }}" id="purchase-menu">
+                                {{ Request::routeIs('purchases*') ? 'block' : 'hidden' }}" id="purchase-menu">
                         @if(session('employee')?->can('purchases sidebar'))
                             <li>
                                 <a href="{{ route('purchases.index') }}"
@@ -53,24 +52,9 @@
                                         <path
                                             d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
                                     </svg>
-                                    <span class="flex-1 ms-3 whitespace-nowrap">Purchases</span>
+                                    <span class="flex-1 ms-3 whitespace-nowrap">Restock</span>
                                     <span
                                         class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
-                                </a>
-                            </li>
-                        @endif
-                        @if(session('employee')?->can('suppliers sidebar'))
-                            <li>
-                                <a href="{{ route('suppliers.index') }}"
-                                    class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-                                    <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-                                        aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-                                        <path
-                                            d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z" />
-                                    </svg>
-                                    <span class="flex-1 ms-3 whitespace-nowrap">Suppliers</span>
-                                    <span
-                                        class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
                                 </a>
                             </li>
                         @endif
@@ -297,7 +281,7 @@
                                  Request::routeIs('company_permissions*') ? 'block' : 'hidden' }}" id="access-menu">
                         @if(session('employee')?->can('role-access sidebar'))
                             <li>
-                                <a href="{{ route('company_roles.index') }}"
+                                <a href="{{ route('store_roles.index') }}"
                                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                                     <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -307,14 +291,14 @@
                                         <path
                                             d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
                                     </svg>
-                                    <span class="flex-1 ms-3 whitespace-nowrap">Company Roles</span>
+                                    <span class="flex-1 ms-3 whitespace-nowrap">Store Roles</span>
                                 </a>
                             </li>
                         @endif
 
                         @if(session('employee')?->can('permissions sidebar'))
                             <li>
-                                <a href="{{ route('company_permissions.index') }}"
+                                <a href="{{ route('store_permissions.index') }}"
                                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group {{ request()->routeIs('permissions.index') ? 'activated' : '' }}"
                                     onclick="setActive(this)">
                                     <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
@@ -325,7 +309,7 @@
                                         <path
                                             d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z" />
                                     </svg>
-                                    <span class="flex-1 ms-3 whitespace-nowrap">Company Permissions</span>
+                                    <span class="flex-1 ms-3 whitespace-nowrap">Store Permissions</span>
                                 </a>
                             </li>
                         @endif
