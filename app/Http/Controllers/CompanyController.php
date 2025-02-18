@@ -35,7 +35,10 @@ class CompanyController extends Controller
 			'database' => 'nullable|string|max:255',
 		]);
 		
-		$company = Company::updateOrCreate($validated);
+		$company = Company::updateOrCreate(
+			['id' => $request->id],
+			$validated
+		);
 		$company->id = $request->id;
 		
 		$this->setupNewCompany($company);
