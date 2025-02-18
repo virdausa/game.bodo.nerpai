@@ -3,10 +3,14 @@
 namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
+
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Artisan;
+
 use App\Models\Store;
 use App\Models\Employee;
-use Illuminate\Support\Facades\Session;
+use App\Models\Store\StoreEmployee;
 
 class StoreController extends Controller
 {
@@ -80,7 +84,26 @@ class StoreController extends Controller
      */
     public function destroy(string $id)
     {
-        
+        $store = Store::findOrFail($id);
+        $employee_id = session('employee')->id;
+
+        // is authorized to delete store?
+        $store_employee = StoreEmployee::where('store_id', $store->id)
+            ->where('employee_id', $employee_id)
+            ->first();
+
+        if (!$store_employee) {
+            return redirect()->route('stores.index')->with('error', 'Anda tidak memiliki akses ke store ini !');
+        }
+
+        if($store_employee->store_role_id != '1'){
+            return redirect()->route('stores.index')->with('error', 'Anda tidak memiliki akses hapus store ini !');
+        }
+
+        // force delete store
+        $store->forceDelete();
+
+        return redirect()->route('stores.index')->with('success', "Store {$store->name} deleted successfully.");
     }
 
     public function switchStore(Request $request, $id)

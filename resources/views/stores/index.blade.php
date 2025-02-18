@@ -51,7 +51,6 @@
                                                     {{ __('Masuk Store') }}
                                                     </x-primary-button>
                                             </form>
-                                            {{-- @include('stores.edit', ['Tenant' => $store]) --}}
                                             <x-button-delete :route="route('stores.destroy', $store->id)" />
                                         </div>
                                     </x-table-td>

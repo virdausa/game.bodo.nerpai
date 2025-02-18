@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('code')->unique();
             $table->string('name');
-            $table->json('address');
+            $table->json('address')->nullable();
             $table->string('status')->default('active');
             $table->foreignId('manager')->nullable()->constrained('employees', 'id')->onDelete('set null');
             $table->string('notes')->nullable();
@@ -25,7 +25,7 @@ return new class extends Migration
 
         Schema::create('store_employees', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_id')->constrained();
+            $table->foreignId('store_id')->constrained()->onDelete('cascade');
             $table->foreignId('employee_id')->constrained();
             $table->foreignId('store_role_id')->nullable()->constrained('store_roles', 'id')->onDelete('set null');
             $table->string('status')->default('active');
