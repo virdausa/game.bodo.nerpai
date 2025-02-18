@@ -1,7 +1,7 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfileController;
 
 use App\Http\Controllers\UserController;
 
@@ -10,9 +10,6 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\CompanyUserController;
 use App\Http\Controllers\CompanyRoleController;
 use App\Http\Controllers\CompanyPermissionController;
-
-use App\Http\Controllers\StoreController;
-use App\Http\Controllers\StoreEmployeeController;
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PurchaseController;
@@ -31,8 +28,9 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\PermissionController;
 use App\Http\Controllers\EmployeeController;
 
-use App\Http\Middleware\LoginCompanyAccess;
-use App\Http\Middleware\SwitchCompanyDatabase;
+use App\Http\Controllers\StoreController;
+
+use App\Http\Middleware\CompanyMiddleware;
 
 Route::get('/', function () {
     return view('welcome');
@@ -67,9 +65,12 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('permissions', PermissionController::class);
 });
 
+foreach (glob(base_path('routes/custom/*.php')) as $file) {
+    require $file;
+}
+
 Route::middleware(['auth', 
-                SwitchCompanyDatabase::class, 
-                LoginCompanyAccess::class,
+                CompanyMiddleware::class,
 ])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard');
@@ -86,14 +87,12 @@ Route::middleware(['auth',
 
     Route::resource('employees', EmployeeController::class);
 
+    // Stores
     Route::resource('stores', StoreController::class);
+    
     Route::post('/stores/switch/{stores}', [StoreController::class, 'switchStore'])->name('stores.switch');
     Route::get('/exit-store/{route}', [StoreController::class, 'exitStore'])->name('exit.store');
-    Route::get('/dashboard-store', function () {
-        return view('dashboard-store');
-    })->name('dashboard-store');
 
-    Route::resource('store_employees', StoreEmployeeController::class);
 
     route::resource("customers", CustomerController::class);
     route::resource("purchases", PurchaseController::class);
