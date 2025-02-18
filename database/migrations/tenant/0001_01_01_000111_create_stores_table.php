@@ -27,7 +27,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('store_id')->constrained();
             $table->foreignId('employee_id')->constrained();
-            $table->string('role')->nullable();
+            $table->foreignId('store_role_id')->nullable()->constrained('store_roles', 'id')->onDelete('set null');
             $table->string('status')->default('active');
             $table->timestamps();
             $table->softDeletes();
@@ -39,7 +39,7 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('stores');
         Schema::dropIfExists('store_employees');
+        Schema::dropIfExists('stores');
     }
 };

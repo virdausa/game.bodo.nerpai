@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use Database\Seeders\Store\StoreRolePermissionSeeder;
+
 class CompanySeeder extends Seeder
 {
     /**
@@ -22,7 +24,9 @@ class CompanySeeder extends Seeder
             CustomerSeeder::class,
             SupplierSeeder::class,
             AccountSeeder::class,
-            StoreSeeder::class,
+
+            // stores
+            StoreRolePermissionSeeder::class,
         ]);
     }
 }
