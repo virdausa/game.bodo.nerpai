@@ -5,8 +5,8 @@ use App\Http\Middleware\CompanyMiddleware;
 use App\Http\Middleware\StoreMiddleware;
 
 use App\Http\Controllers\Store\StoreEmployeeController;
-use App\Http\Controllers\StoreRoleController;
-use App\Http\Controllers\StorePermissionController;
+use App\Http\Controllers\Store\StoreRoleController;
+use App\Http\Controllers\Store\StorePermissionController;
 
 Route::middleware([
     'auth',

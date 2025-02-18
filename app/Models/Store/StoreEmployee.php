@@ -1,9 +1,12 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Store;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Models\Employee;
+use App\Models\Store;
 
 class StoreEmployee extends Model
 {
@@ -16,7 +19,7 @@ class StoreEmployee extends Model
     protected $fillable = [
         'store_id',
         'employee_id',
-        'role',
+        'store_role_id',
         'status',
     ];
 
@@ -28,5 +31,10 @@ class StoreEmployee extends Model
     public function store()
     {
         return $this->belongsTo(Store::class);
+    }
+
+    public function store_role()
+    {
+        return $this->belongsTo(StoreRole::class);
     }
 }

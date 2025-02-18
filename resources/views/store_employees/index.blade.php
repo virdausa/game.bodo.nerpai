@@ -37,11 +37,11 @@
                                     <x-table-td>{{ $employee->employee->companyuser->user->name }}</x-table-td>
                                     <x-table-td>{{ $employee->status }}</x-table-td>
                                     <x-table-td>{{ $employee->employee->role->name }}</x-table-td>
-                                    <x-table-td>{{ $employee->role }}</x-table-td>
+                                    <x-table-td>{{ $employee->store_role->name }}</x-table-td>
                                     <x-table-td>
                                     <div class="flex items-center space-x-2">
                                             
-                                            @include('store_employees.edit', ['employee' => $employee])
+                                            @include('store_employees.edit', ['employee' => $employee, 'store_roles' => $store_roles])
                                             <x-button-delete :route="route('store_employees.destroy', $employee->id)" />
                                         </div>
                                     </x-table-td>
