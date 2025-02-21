@@ -12,6 +12,7 @@ class PaymentDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
+        'invoice_id',
         'payment_id',
         'amount',
         'notes'
@@ -24,5 +25,10 @@ class PaymentDetail extends Model
     public function payment(): BelongsTo
     {
         return $this->belongsTo(Payment::class);
+    }
+
+    public function invoice(): BelongsTo
+    {
+        return $this->morphTo();
     }
 }
