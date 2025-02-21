@@ -10,27 +10,28 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 
-        'sale_date', 
+        'courier_id',
+        'customer_id',
+        'sale_date',
         'employee_id',
-        'total_amount', 
-        'warehouse_id', 
-        'status', 
-        'customer_notes', 
+        'total_amount',
+        'warehouse_id',
+        'status',
+        'customer_notes',
         'admin_notes',
-		'expedition_id',
-		'estimated_shipping_fee',
+        'expedition_id',
+        'estimated_shipping_fee',
         'shipping_fee_discount',
     ];
 
     public function products()
     {
         return $this->belongsToMany(Product::class, 'sales_products')
-                    ->withPivot('quantity', 'price', 'note')
-                    ->withTimestamps();
+            ->withPivot('quantity', 'price', 'note')
+            ->withTimestamps();
     }
 
-	// Relationship with Product
+    // Relationship with Product
     public function salesProducts()
     {
         return $this->belongsTo(SalesProduct::class);
@@ -40,36 +41,41 @@ class Sale extends Model
     {
         return $this->belongsTo(Warehouse::class);
     }
-	
-	public function productQuantities()
-	{
-		return $this->products->mapWithKeys(function ($product) {
-			return [$product->id => $product->pivot->quantity];
-		});
-	}
+
+    public function productQuantities()
+    {
+        return $this->products->mapWithKeys(function ($product) {
+            return [$product->id => $product->pivot->quantity];
+        });
+    }
 
 
-	// Get Status Name (optional helper method for status display)
+    // Get Status Name (optional helper method for status display)
     public function getStatusLabelAttribute()
     {
         return ucfirst(strtolower(str_replace('_', ' ', $this->status)));
     }
-	
-	
-	public function expedition()
-	{
-		return $this->belongsTo(Expedition::class);
-	}
-	
-	
-	public function outboundRequests()
-	{
-		return $this->hasMany(outboundRequest::class, 'sales_order_id');
-	}
+
+
+    public function expedition()
+    {
+        return $this->belongsTo(Expedition::class);
+    }
+
+
+    public function outboundRequests()
+    {
+        return $this->hasMany(outboundRequest::class, 'sales_order_id');
+    }
 
 
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function courier()
+    {
+        return $this->hasOne(Courier::class);
     }
 }
