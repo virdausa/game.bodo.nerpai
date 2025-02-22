@@ -32,7 +32,7 @@ class Warehouse extends Model
 
 	public function locations(): HasMany
 	{
-		return $this->hasMany(Location::class);
+		return $this->hasMany(WarehouseLocation::class);
 	}
 
 	public function employee()

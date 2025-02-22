@@ -4,35 +4,42 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Inventory extends Model
+class StockOpname extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
-    protected $table = 'inventory';
+    protected $table = 'stock_opnames';
+
+    protected $timestamps = true;
 
     protected $fillable = [
         'product_id',
         'warehouse_id',
-		'location_id',
-        'quantity',
-        'reserved_quantity',
-        'in_transit_quantity',
+        'warehouse_location',
+        'system_quantity',
+        'physical_quantity',
+        'adjustment_quantity',
+        'adjustment_value',
+        'notes',
+        'date'
     ];
 
-    // Relationship with Product
+    protected $casts = [    
+        'adjustment_value' => 'decimal:2',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);
     }
 
-    // Relationship with Warehouse
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
     }
-	
-	// Define relationship with Location
+
     public function location()
     {
         return $this->belongsTo(WarehouseLocation::class);
