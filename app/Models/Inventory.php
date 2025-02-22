@@ -35,6 +35,6 @@ class Inventory extends Model
 	// Define relationship with Location
     public function location()
     {
-        return $this->belongsTo(Location::class);
+        return $this->belongsTo(WarehouseLocation::class);
     }
 }
