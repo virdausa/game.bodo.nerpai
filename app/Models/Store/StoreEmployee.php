@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Employee;
 use App\Models\Store;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StoreEmployee extends Model
 {
@@ -36,5 +37,25 @@ class StoreEmployee extends Model
     public function store_role()
     {
         return $this->belongsTo(StoreRole::class);
+    }
+
+    public function storeRestocks(): HasMany
+    {
+        return $this->hasMany(StoreRestock::class);
+    }
+
+    public function storePos(): HasMany
+    {
+        return $this->hasMany(StorePos::class);
+    }
+
+    public function storeInbounds(): HasMany
+    {
+        return $this->hasMany(StoreInbound::class);
+    }
+
+    public function storeOutbounds(): HasMany
+    {
+        return $this->hasMany(StoreOutbound::class);
     }
 }

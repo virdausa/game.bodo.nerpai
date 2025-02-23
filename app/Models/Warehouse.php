@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Store\StoreWarehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -49,4 +50,9 @@ class Warehouse extends Model
 	{
 		return $query->where('status', 'inactive');
 	}
+
+	public function storeWarehouses(): HasMany
+    {
+        return $this->hasMany(StoreWarehouse::class);
+    }
 }
