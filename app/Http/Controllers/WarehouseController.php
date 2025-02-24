@@ -22,7 +22,7 @@ class WarehouseController extends Controller
 	{
 		$request->validate([
 			'name' => 'required|string|max:255',
-			'location' => 'nullable|string|max:255',
+			'address' => 'nullable|string|max:255',
 		]);
 
 		Warehouse::create($request->all());
@@ -30,28 +30,39 @@ class WarehouseController extends Controller
 		return redirect()->route('warehouses.index')->with('success', 'Warehouse created successfully.');
 	}
 
-	public function edit(Warehouse $warehouse)
+	public function show(string $id)
 	{
+		$warehouse = Warehouse::with('locations')->findOrFail($id);
+		return view('warehouses.show', compact('warehouse'));
+	}
+
+	public function edit(string $id)
+	{
+		$warehouse = Warehouse::findOrFail($id);
 		return view('warehouses.edit', compact('warehouse'));
 	}
 
-	public function update(Request $request, Warehouse $warehouse)
+	public function update(Request $request, string $id)
 	{
 		$request->validate([
 			'name' => 'required|string|max:255',
-			'location' => 'nullable|string|max:255',
+			'address' => 'nullable|string|max:255',
 		]);
+
+		$warehouse = Warehouse::findOrFail($id);
 
 		$warehouse->update($request->all());
 
-		return redirect()->route('warehouses.index')->with('success', 'Warehouse updated successfully.');
+		return redirect()->route('warehouses.index')->with('success', "Warehouse {$warehouse->name} updated successfully.");
 	}
 
-	public function destroy(Warehouse $warehouse)
+	public function destroy(string $id)
 	{
+		$warehouse = Warehouse::findOrFail($id);
+
 		$warehouse->delete();
 
-		return redirect()->route('warehouses.index')->with('success', 'Warehouse deleted successfully.');
+		return redirect()->route('warehouses.index')->with('success', "Warehouse {$warehouse->name} deleted successfully.");
 	}
 
 }

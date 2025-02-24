@@ -9,10 +9,10 @@
             <x-text-input type="text" id="name" name="name" class="w-full" value="{{ $warehouse->name }}" required />
         </div>
 
-        <!-- Location -->
+        <!-- Address -->
         <div class="form-group">
-            <x-input-label for="location">Location</x-input-label>
-            <x-text-input type="text" id="location" name="location" class="w-full" value="{{ $warehouse->location }}" />
+            <x-input-label for="address">Address</x-input-label>
+            <x-text-input type="text" id="address" name="address" class="w-full" value="{{ $warehouse->address }}" />
         </div>
 
         <!-- Actions -->

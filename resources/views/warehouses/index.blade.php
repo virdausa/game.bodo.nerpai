@@ -15,15 +15,11 @@
                     <!-- Actions -->
                    
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
-                        
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                        
-
-                        <a href="{{ route('locations.index') }}" class="ml-2">
+                            <!-- <a href="{{ route('locations.index') }}" class="ml-2">
                                 <x-secondary-button :route="route('locations.index')">Manage Locations</x-secondary-button>
-                            </a>
-                       
-                                @include('warehouses.create')
+                            </a> -->
+                            @include('warehouses.create')
                          </div>
                     </div>
 
@@ -42,11 +38,11 @@
                                 <x-table-tr>
                                     <x-table-td>{{ $warehouse->id }}</x-table-td>
                                     <x-table-td>{{ $warehouse->name }}</x-table-td>
-                                    <x-table-td>{{ $warehouse->location }}</x-table-td>
+                                    <x-table-td>{{ $warehouse->address }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
-                                            
-                                            @include('warehouses.edit', ['warehouse' => $warehouse])
+                                            <x-button-show :route="route('warehouses.show', $warehouse->id)" />
+                                            @include('warehouses.edit', ['id' => $warehouse->id])
                                             <x-button-delete :route="route('warehouses.destroy', $warehouse->id)" />
                                         </div>
                                     </x-table-td>

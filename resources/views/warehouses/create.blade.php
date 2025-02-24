@@ -3,15 +3,15 @@
         @csrf
 
         <!-- Warehouse Name -->
-        <div class="form-group">
+        <div class="form-group mb-4">
             <x-input-label for="name">Warehouse Name</x-input-label>
             <x-text-input type="text" id="name" name="name" class="w-full" required placeholder="Masukkan nama gudang" />
         </div>
 
-        <!-- Location -->
-        <div class="form-group">
-            <x-input-label for="location">Location</x-input-label>
-            <x-text-input type="text" id="location" name="location" class="w-full" placeholder="Dimanakah lokasi gudangnya?"/>
+        <!-- Address -->
+        <div class="form-group mb-4">
+            <x-input-label for="address">Address</x-input-label>
+            <x-text-input type="text" id="address" name="address" class="w-full" placeholder="Dimanakah lokasi gudangnya?"/>
         </div>
 
         <!-- Actions -->
