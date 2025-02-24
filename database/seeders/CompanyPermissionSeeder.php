@@ -74,6 +74,7 @@ class CompanyPermissionSeeder extends Seeder
         $roles = [
             'Owner' => [
                 'purchases sidebar',
+                'inventory sidebar',
                 'suppliers sidebar',
                 'customers sidebar',
                 'products sidebar',
@@ -102,6 +103,7 @@ class CompanyPermissionSeeder extends Seeder
             ],
             'General Manager' => [
                 'purchases sidebar',
+                'inventory sidebar',
                 'suppliers sidebar',
                 'customers sidebar',
                 'products sidebar',
@@ -130,6 +132,7 @@ class CompanyPermissionSeeder extends Seeder
             ],
             'Data Master' => [
                'purchases sidebar',
+                'inventory sidebar',
                 'suppliers sidebar',
                 'customers sidebar',
                 'products sidebar',
