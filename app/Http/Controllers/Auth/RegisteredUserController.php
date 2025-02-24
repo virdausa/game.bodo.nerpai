@@ -47,7 +47,7 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         // assign role user
-        $role = Role::find(1);          // 1 is id role user
+        $role = Role::where('name', 'Guest')->first();          // 1 is id role user
         $user->syncRoles($role);
 
         return redirect(route('lobby', absolute: false));

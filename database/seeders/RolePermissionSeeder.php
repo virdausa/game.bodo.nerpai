@@ -37,6 +37,9 @@ class RolePermissionSeeder extends Seeder
 
         // Define roles and their permissions
         $roles = [
+            'Guest' => [
+
+            ],
             'User' => [
                 'company sidebar',
 

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Location;
+use App\Models\WarehouseLocation;
 use App\Models\Warehouse;
 use Illuminate\Database\Seeder;
 
@@ -41,13 +41,13 @@ class WarehouseSeeder extends Seeder
 
         for ($room = 1; $room <= 3; $room++) {
             for ($rack = 1; $rack <= 2; $rack++) {
-                Location::create([
+                WarehouseLocation::create([
                     'warehouse_id' => $warehouse1->id,
                     'room' => 'Room ' . $room,
                     'rack' => 'Rack ' . $rack,
                     'notes' => 'Seeder',
                 ]);
-                Location::create([
+                WarehouseLocation::create([
                     'warehouse_id' => $warehouse2->id,
                     'room' => 'Room ' . $room,
                     'rack' => 'Rack ' . $rack,
