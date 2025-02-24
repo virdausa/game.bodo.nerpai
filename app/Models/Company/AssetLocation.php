@@ -13,7 +13,7 @@ class AssetLocation extends Model
     use HasFactory;
 
     protected $table = 'asset_locations';
-    protected $timestamps = true;
+    public $timestamps = true;
 
     protected $fillable = [
         'name',

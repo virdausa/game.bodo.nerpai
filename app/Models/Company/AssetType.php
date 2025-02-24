@@ -11,7 +11,7 @@ class AssetType extends Model
     use HasFactory;
 
     protected $table = 'asset_types';
-    protected $timestamps = true;
+    public $timestamps = true;
 
     protected $fillable = [
         'name',
