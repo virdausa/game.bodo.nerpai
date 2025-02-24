@@ -22,4 +22,15 @@ Route::middleware([
     
     Route::resource('store_roles', StoreRoleController::class);
     Route::resource('store_permissions', StorePermissionController::class);
+
+    Route::resource('store_restocks', StorePermissionController::class);
+
+    Route::resource('store_customers', StorePermissionController::class);
+    Route::resource('store_pos', StorePermissionController::class);
+
+    Route::resource('store_products', StorePermissionController::class);
+    Route::resource('store_warehouses', StorePermissionController::class);
+    Route::resource('store_inventories', StorePermissionController::class);
+    Route::resource('store_inbounds', StorePermissionController::class);
+    Route::resource('store_outbounds', StorePermissionController::class);
 });
