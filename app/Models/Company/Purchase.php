@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -8,12 +8,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Models\Employee;
+use App\Models\Product;
+use App\Models\Supplier;
+use App\Models\Warehouse;
+
 class Purchase extends Model
 {
+    protected $table = 'purchases';
+
     use HasFactory;
 
     protected $fillable = [
-        'purchase_date',
+        'po_number',
+        'po_date',
         'supplier_id',
         'warehouse_id',
         'employee_id',
@@ -24,13 +32,13 @@ class Purchase extends Model
     ];
 
     protected $casts = [
-        'purchase_date' => 'date',
+        'po_date' => 'date',
         'total_amount' => 'decimal:2',
     ];
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class, 'purchase_product')
+        return $this->belongsToMany(Product::class, 'purchase_products')
             ->withPivot('quantity', 'buying_price', 'total_cost')
             ->withTimestamps();
     }
@@ -50,13 +58,21 @@ class Purchase extends Model
         return $this->belongsTo(Employee::class);
     }
 
-    public function inboundRequests(): HasMany
+    public function shipments(): HasMany
     {
-        return $this->hasMany(InboundRequest::class, 'purchase_order_id');
+        // shipment with type = "PO" and id = purchase_id
+        return $this->hasMany(Shipment::class, 'transaction_id', 'id')
+                    ->where('transaction_type', 'PO');
     }
 
     public function scopeWithStatus($query, $status)
     {
         return $query->where('status', $status);
+    }
+
+    public function generatePoNumber(): string
+    {
+        $this->po_number = 'PO-' . ($this->po_date)->format('Y-m-d') . '-' . $this->id;
+        return $this->po_number;
     }
 }

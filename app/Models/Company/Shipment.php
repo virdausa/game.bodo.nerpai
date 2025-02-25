@@ -52,6 +52,7 @@ class Shipment extends Model
         return $this->morphTo();
     }
 
+
     public function transaction(): MorphTo
     {
         return $this->morphTo();

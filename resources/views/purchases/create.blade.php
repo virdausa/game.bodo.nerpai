@@ -27,8 +27,8 @@
 							</div>
 
 							<div class="mb-4">
-								<x-input-label for="purchase_date">Purchase Date</x-input-label>
-								<input type="date" name="purchase_date"
+								<x-input-label for="po_date">Purchase Date</x-input-label>
+								<input type="date" name="po_date"
 									class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"
 									required  value="<?= date('Y-m-d'); ?>">
 							</div>

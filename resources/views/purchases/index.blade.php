@@ -21,11 +21,12 @@
 						<x-table-thead class="thead-dark">
 							<tr>
 								<x-table-th>ID</x-table-th>
+								<x-table-th>PO</x-table-th>
+								<x-table-th>Date</x-table-th>
 								<x-table-th>Supplier</x-table-th>
-								<x-table-th>Purchase Date</x-table-th>
 								<x-table-th>Warehouse</x-table-th>
 								<x-table-th>Total Amount</x-table-th>
-								<x-table-th>Product List</x-table-th>
+								<x-table-th>Team</x-table-th>
 								<x-table-th>Status</x-table-th> <!-- New column -->
 								<x-table-th>Actions</x-table-th>
 							</tr>
@@ -34,16 +35,12 @@
 							@foreach ($purchases as $purchase)
 								<x-table-tr>
 									<x-table-td>{{ $purchase->id }}</x-table-td>
-									<x-table-td>{{ $purchase->supplier->name ?? '' }}</x-table-td>
-									<x-table-td>{{ $purchase->purchase_date }}</x-table-td>
-									<x-table-td>{{ $purchase->warehouse->name ?? '' }}</x-table-td>
+									<x-table-td>{{ $purchase->po_number }}</x-table-td>
+									<x-table-td>{{ $purchase->po_date }}</x-table-td>
+									<x-table-td>{{ $purchase->supplier->name ?? 'N/A' }}</x-table-td>
+									<x-table-td>{{ $purchase->warehouse->name ?? 'N/A' }}</x-table-td>
 									<x-table-td>{{ $purchase->total_amount }}</x-table-td>
-									<x-table-td>
-										@foreach ($purchase->products as $product)
-											{{ $product->name }} (x{{ $product->pivot->quantity }})<br>
-										@endforeach
-									</x-table-td>
-
+									<x-table-td>{{ $purchase->employee->companyuser->user->name }}</x-table-td>
 									<x-table-td>
 										@if ($purchase->status == 'Quantity Discrepancy')
 											<span class="badge badge-warning">Quantity Discrepancy</span>

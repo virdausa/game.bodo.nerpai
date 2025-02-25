@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
-use App\Models\Purchase; // Ensure you import the Purchase model
+use App\Models\Company\Purchase; // Ensure you import the Purchase model
 use App\Models\Product;
 use App\Models\Warehouse;
 use App\Models\InventoryHistory;
@@ -10,13 +10,15 @@ use App\Models\InboundRequest;
 use App\Models\Supplier;
 use Illuminate\Http\Request;
 
+use App\Http\Controllers\Controller;
+
 class PurchaseController extends Controller
 {
 	// Method to show all purchases
 	public function index()
 	{
 		//$purchases = Purchase::all(); // Retrieve all purchase records
-		$purchases = Purchase::with('inboundRequests')->orderBy('id', 'desc')->get();
+		$purchases = Purchase::with('shipments', 'employee')->orderBy('id', 'desc')->get();
 		return view('purchases.index', compact('purchases')); // Pass data to the view
 	}
 
@@ -37,7 +39,7 @@ class PurchaseController extends Controller
 		// dd($request->all());
 		$request->validate([
 			'supplier_id' => 'required|exists:suppliers,id',
-			'purchase_date' => 'required|date',
+			'po_date' => 'required|date',
 			'warehouse_id' => 'required|exists:warehouses,id',
 			'products.*.product_id' => 'required|exists:products,id',
 			'products.*.quantity' => 'required|numeric|min:1',
@@ -50,12 +52,15 @@ class PurchaseController extends Controller
 		}
 
 		$purchase = Purchase::create([
+			'po_date' => $request->po_date,
 			'supplier_id' => $request->supplier_id,
-			'purchase_date' => $request->purchase_date,
 			'warehouse_id' => $request->warehouse_id,
 			'total_amount' => $totalAmount,
 			'status' => 'Planned',
+			'employee_id' => session('employee')->id,
 		]);
+		$purchase->generatePoNumber();
+		$purchase->save();
 
 		foreach ($request->products as $productData) {
 			$purchase->products()->attach($productData['product_id'], [
@@ -65,13 +70,13 @@ class PurchaseController extends Controller
 			]);
 		}
 
-		return redirect()->route('purchases.index')->with('success', 'Purchase created successfully.');
+		return redirect()->route('purchases.index')->with('success', "Purchase {$purchase->po_number} created successfully.");
 	}
 
 
 	public function show($id)
 	{
-		$purchase = Purchase::with(['products', 'warehouse', 'inboundRequests'])->findOrFail($id);
+		$purchase = Purchase::with(['products', 'warehouse', 'shipments'])->findOrFail($id);
 		return view('purchases.show', compact('purchase'));
 	}
 
@@ -92,57 +97,33 @@ class PurchaseController extends Controller
 	{
 		$request->validate([
 			'supplier_id' => 'required',
-			'purchase_date' => 'required|date',
+			'po_date' => 'required|date',
 			'warehouse_id' => 'required|exists:warehouses,id',
 			'products.*.product_id' => 'required|exists:products,id',
 			'products.*.quantity' => 'required|numeric|min:1',
 			'products.*.buying_price' => 'required|numeric|min:0',
-			'shipped_date' => 'nullable|date', // new field for shipped date
-			'expedition' => 'nullable|string', // new field for expedition
-			'tracking_no' => 'nullable|string', // new field for tracking number
 		]);
 
 		$purchase = Purchase::findOrFail($id);
 		$purchase->update([
 			'supplier_id' => $request->supplier_id,
-			'purchase_date' => $request->purchase_date,
+			'po_number' => $purchase->generatePoNumber(),
+			'po_date' => $request->po_date,
 			'warehouse_id' => $request->warehouse_id,
-			'notes' => $request->notes,
-			'shipped_date' => $request->shipped_date,
-			'expedition' => $request->expedition,
-			'tracking_no' => $request->tracking_no,
+			'supplier_notes' => $request->supplier_notes,
+			'admin_notes' => $request->admin_notes,
+			'supplier_notes' => $request->supplier_notes,
 		]);
-
-		// Automatically set status to "In Transit" if shipment details are filled
-		if ($purchase->status == 'Planned' && $request->shipped_date && $request->expedition && $request->tracking_no) {
-			$purchase->status = 'In Transit';
-			$purchase->save();
-
-			// Create an inbound request when moving to "In Transit"
-			$requestedQuantities = [];
-			foreach ($purchase->products as $product) {
-				$requestedQuantities[$product->id] = $product->pivot->quantity;
-			}
-
-			InboundRequest::create([
-				'purchase_order_id' => $purchase->id,
-				'warehouse_id' => $purchase->warehouse_id,
-				'requested_quantities' => $requestedQuantities,
-				'received_quantities' => [],
-				'status' => 'In Transit',
-				'notes' => 'Inbound request created upon status change to In Transit',
-			]);
-		}
 
 		$totalAmount = 0;
 
-		$productQuantities = [];
+		$purchaseProducts = [];
 		foreach ($request->products as $product) {
 			$quantity = $product['quantity'];
 			$buyingPrice = $product['buying_price'];
 			$totalCost = $quantity * $buyingPrice;
 
-			$productQuantities[$product['product_id']] = [
+			$purchaseProducts[$product['product_id']] = [
 				'quantity' => $quantity,
 				'buying_price' => $buyingPrice,
 				'total_cost' => $totalCost,
@@ -152,14 +133,13 @@ class PurchaseController extends Controller
 		}
 
 		// Sync products with updated pivot data
-		$purchase->products()->sync($productQuantities);
+		$purchase->products()->sync($purchaseProducts);
 
 		// Update total amount
 		$purchase->total_amount = $totalAmount;
 		$purchase->save();
 
-		return redirect()->route('purchases.index')
-			->with('success', 'Purchase updated successfully.');
+		return redirect()->route('purchases.index')->with('success', "Purchase {$purchase->po_number} updated successfully.");
 	}
 
 
@@ -170,7 +150,6 @@ class PurchaseController extends Controller
 		$purchase = Purchase::findOrFail($id);
 		$purchase->delete();
 
-		return redirect()->route('purchases.index')
-			->with('success', 'Purchase deleted successfully.');
+		return redirect()->route('purchases.index')->with('success', "Purchase {$purchase->po_number} deleted successfully.");
 	}
 }

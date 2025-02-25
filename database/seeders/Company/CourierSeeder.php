@@ -2,7 +2,7 @@
 
 namespace Database\Seeders\Company;
 
-use App\Models\Courier;
+use App\Models\Company\Courier;
 use Illuminate\Database\Seeder;
 
 class CourierSeeder extends Seeder

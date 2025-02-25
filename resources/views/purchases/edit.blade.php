@@ -21,8 +21,8 @@
                             </div>
 
                             <div class="mb-4">
-                                <x-input-label for="purchase_date">Purchase Date</x-input-label>
-                                <input type="date" name="purchase_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $purchase->purchase_date }}" {{ $purchase->status != 'Planned' ? 'readonly' : '' }}>
+                                <x-input-label for="po_date">Purchase Date</x-input-label>
+                                <input type="date" name="po_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ ($purchase->po_date)->format('Y-m-d') }}" {{ $purchase->status != 'Planned' ? 'readonly' : '' }}>
                             </div>
 
                             <div class="mb-4">
@@ -39,26 +39,14 @@
                                 <input type="text" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" name="status" value="{{ $purchase->status }}" readonly>
                             </div>
 
-                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                <div class="mb-4">
-                                    <x-input-label for="shipped_date">Shipped Date</x-input-label>
-                                    <input type="date" name="shipped_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $purchase->shipped_date }}" {{ $purchase->status == 'Planned' ? '' : 'readonly' }}>
-                                </div>
-
-                                <div class="mb-4">
-                                    <x-input-label for="expedition">Expedition</x-input-label>
-                                    <input type="text" name="expedition" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $purchase->expedition }}" {{ $purchase->status == 'Planned' ? '' : 'readonly' }}>
-                                </div>
-
-                                <div class="mb-4">
-                                    <x-input-label for="tracking_no">Tracking Number</x-input-label>
-                                    <input type="text" name="tracking_no" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $purchase->tracking_no }}" {{ $purchase->status == 'Planned' ? '' : 'readonly' }}>
-                                </div>
+                            <div class="mb-4">
+                                <x-input-label for="supplier_notes">Supplier Notes</x-input-label>
+                                <textarea name="supplier_notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" {{ $purchase->status == 'Completed' ? 'readonly' : '' }}>{{ $purchase->notes }}</textarea>
                             </div>
 
                             <div class="mb-4">
-                                <x-input-label for="notes">Notes</x-input-label>
-                                <textarea name="notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" {{ $purchase->status == 'Completed' ? 'readonly' : '' }}>{{ $purchase->notes }}</textarea>
+                                <x-input-label for="admin_notes">Admin Notes</x-input-label>
+                                <textarea name="admin_notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" {{ $purchase->status == 'Completed' ? 'readonly' : '' }}>{{ $purchase->notes }}</textarea>
                             </div>
 
                             <h3 class="text-lg font-bold mt-6">Products</h3>
@@ -90,12 +78,16 @@
                                 @endforeach
                             </div>
 							<!-- <x-button type="button" id="add-product" class="mr-3" >Add Another Product</x-button> -->
-                            <button class="px-3 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90" type="button" id="add-product" class="mr-3" {{ $purchase->status != 'Planned' ? 'disabled' : '' }}>
-    Add Another Product
-</button>
+                            <button class="m-4 px-3 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90" type="button" id="add-product" class="mr-3" {{ $purchase->status != 'Planned' ? 'disabled' : '' }}>
+                                Add Another Product
+                            </button>
 
-                            <x-primary-button>Update Purchase</x-primary-button>
-                            <a href="{{ route('purchases.index') }}" class="border rounded border-gray-400 dark:border-gray-700 p-2 ml-3 text-sm hover:underline text-gray-700 dark:text-gray-400">Cancel</a>
+                            <div class="m-4">
+                                <a href="{{ route('purchases.index') }}">
+                                    <x-secondary-button type="button">Cancel</x-secondary-button>
+                                </a>
+                                <x-primary-button>Update Purchase</x-primary-button>
+                            </div>
                         </form>
 
                         <script>
@@ -137,11 +129,11 @@
                                     productIndex++;
                                 });
                                 productSelection.addEventListener('click', function (event) {
-            if (event.target && event.target.classList.contains('remove-product')) {
-                const productDiv = event.target.closest('.product-item');
-                productDiv.remove(); // Remove the product div
-            }
-        });
+                                    if (event.target && event.target.classList.contains('remove-product')) {
+                                        const productDiv = event.target.closest('.product-item');
+                                        productDiv.remove(); // Remove the product div
+                                    }
+                                });
                             });
                         </script>
 

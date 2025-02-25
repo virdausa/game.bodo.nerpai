@@ -9,7 +9,7 @@ use App\Http\Controllers\CompanyPermissionController;
 
 use App\Http\Controllers\EmployeeController;
 
-use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\Company\PurchaseController;
 use App\Http\Controllers\SupplierController;
 
 use App\Http\Controllers\SalesController;

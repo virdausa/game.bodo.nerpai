@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('purchases', function (Blueprint $table) {
             $table->id();
+            $table->string('po_number')->unique()->nullable();
+            $table->date('po_date');
             $table->decimal('total_amount', 30, 2)->default(0);
             $table->string('status')->default('PO_Planned');
             $table->string('admin_notes')->nullable();
