@@ -24,6 +24,7 @@ use App\Http\Controllers\Company\InboundController;
 use App\Http\Controllers\Company\OutboundController;
 
 use App\Http\Controllers\Company\ShipmentController;
+use App\Http\Controllers\Company\CourierController;
 
 // Company
 Route::middleware(['auth', 
@@ -63,4 +64,5 @@ Route::middleware(['auth',
 
 
     Route::resource("shipments", ShipmentController::class);
+    Route::resource("couriers", CourierController::class);
 });

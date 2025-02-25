@@ -22,7 +22,7 @@ class ProductService
 
     public function getproduct(String $id): ProductResource
     {
-        $product = $this->product->getProduct($id, ['purchases']);
+        $product = $this->product->getProduct($id);
         return new ProductResource($product);
     }
 

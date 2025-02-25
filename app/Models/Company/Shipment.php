@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use App\Models\Store\StoreInbound;
 use App\Models\Store\StoreOutbound;
@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Shipment extends Model
 {
+    protected $table = 'shipments';
+
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
