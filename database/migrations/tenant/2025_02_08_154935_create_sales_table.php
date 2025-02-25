@@ -16,13 +16,14 @@ return new class extends Migration
             $table->foreignId('warehouse_id')->constrained('warehouses');
 
             // Columns
+            $table->string('so_number')->unique()->nullable();
             $table->date('sale_date');
-            $table->decimal('total_amount')->default(0);
+            $table->decimal('total_amount', 30, 2)->default(0);
             $table->string('status')->default('SO_OFFER');
             $table->text('customer_notes')->nullable();
             $table->text('admin_notes')->nullable();
-            $table->decimal('estimated_shipping_fee')->nullable();
-            $table->decimal('shipping_fee_discount')->default(0);
+            $table->decimal('estimated_shipping_fee', 15, 2)->default(0);
+            $table->decimal('shipping_fee_discount', 15, 2)->default(0);
 
             // Timestamps (optional, not in schema but commonly used)
             $table->timestamps();

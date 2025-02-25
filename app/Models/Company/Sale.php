@@ -1,33 +1,46 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Product;
+use App\Models\Warehouse;
+use App\Models\Customer;
+use App\Models\Employee;
+
 class Sale extends Model
 {
+    protected $table = 'sales';
+
     use HasFactory;
 
     protected $fillable = [
-        'courier_id',
-        'customer_id',
+        'so_number',
         'sale_date',
         'employee_id',
-        'total_amount',
+        'customer_id',
         'warehouse_id',
+        'total_amount',
         'status',
         'customer_notes',
         'admin_notes',
-        'expedition_id',
+        'courier_id',
         'estimated_shipping_fee',
         'shipping_fee_discount',
     ];
 
+    public function generateSoNumber(): string
+    {
+        $this->so_number = 'SO-' . $this->sale_date . '-' . $this->id;
+        return $this->so_number;
+    }
+
     public function products()
     {
         return $this->belongsToMany(Product::class, 'sales_products')
-            ->withPivot('quantity', 'price', 'note')
+            ->withPivot('quantity', 'price', 'total_cost', 'notes')
             ->withTimestamps();
     }
 
@@ -56,19 +69,6 @@ class Sale extends Model
         return ucfirst(strtolower(str_replace('_', ' ', $this->status)));
     }
 
-
-    public function expedition()
-    {
-        return $this->belongsTo(Expedition::class);
-    }
-
-
-    public function outboundRequests()
-    {
-        return $this->hasMany(outboundRequest::class, 'sales_order_id');
-    }
-
-
     public function customer()
     {
         return $this->belongsTo(Customer::class);
@@ -76,6 +76,11 @@ class Sale extends Model
 
     public function courier()
     {
-        return $this->hasOne(Courier::class);
+        return $this->belongsTo(Courier::class);
+    }
+
+    public function employee()
+    {
+        return $this->belongsTo(Employee::class);
     }
 }

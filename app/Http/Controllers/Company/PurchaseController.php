@@ -56,7 +56,6 @@ class PurchaseController extends Controller
 			'supplier_id' => $request->supplier_id,
 			'warehouse_id' => $request->warehouse_id,
 			'total_amount' => $totalAmount,
-			'status' => 'Planned',
 			'employee_id' => session('employee')->id,
 		]);
 		$purchase->generatePoNumber();
@@ -84,8 +83,8 @@ class PurchaseController extends Controller
 	// Show form to edit a specific purchase
 	public function edit($id)
 	{
-		$suppliers = Supplier::all();
 		$purchase = Purchase::with('products')->findOrFail($id);
+		$suppliers = Supplier::all();
 		$warehouses = Warehouse::all();
 		$products = Product::all(); // Fetch all available products
 

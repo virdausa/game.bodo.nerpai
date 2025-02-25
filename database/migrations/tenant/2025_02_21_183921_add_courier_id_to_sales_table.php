@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('sales', function (Blueprint $table) {
             // Primary keys
-            $table->foreignId('courier_id')->constrained();
+            $table->foreignId('courier_id')->nullable()->constrained()->nullOnDelete();
         });
     }
 

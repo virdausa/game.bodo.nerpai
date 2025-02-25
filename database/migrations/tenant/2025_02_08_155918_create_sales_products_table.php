@@ -13,13 +13,13 @@ return new class extends Migration
             $table->id('id');
 
             // Foreign Keys
-            $table->foreignId('sale_id')->constrained();
+            $table->foreignId('sale_id')->constrained()->onDelete('cascade');
             $table->foreignId('product_id')->constrained();
 
             // Columns
             $table->integer('quantity');
-            $table->decimal('price', 10, 2);
-            $table->decimal('total_cost', 10, 2)->nullable();
+            $table->decimal('price', 15, 2);
+            $table->decimal('total_cost', 25, 2)->default(0);
             $table->string('notes')->nullable();
 
             // Timestamps (optional, not in schema but commonly used)

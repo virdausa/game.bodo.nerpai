@@ -12,7 +12,7 @@ use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\Company\PurchaseController;
 use App\Http\Controllers\SupplierController;
 
-use App\Http\Controllers\SalesController;
+use App\Http\Controllers\Company\SaleController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerComplaintController;
 
@@ -47,8 +47,8 @@ Route::middleware(['auth',
     
 
     route::resource("customers", CustomerController::class);
-    Route::resource('sales', SalesController::class);
-    Route::get('sales/{sale}/status/{status}', [SalesController::class, 'updateStatus'])->name('sales.updateStatus');
+    Route::resource('sales', SaleController::class);
+    Route::get('sales/{sale}/status/{status}', [SaleController::class, 'updateStatus'])->name('sales.updateStatus');
     Route::resource('customer_complaints', CustomerComplaintController::class);
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
     

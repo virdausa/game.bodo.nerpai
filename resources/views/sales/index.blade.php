@@ -19,49 +19,42 @@
 
                         <div class="w-full md:w-auto flex justify-end">
                             <a href="{{ route('sales.create') }}">
-                                <x-button-add :route="route('sales.create')" text="Add Sale" />
+                                <x-button-add :route="route('sales.create')" text="Tambah Sales Order" />
                             </a>
-                            <a href="{{ route('customer_complaints.index') }}" class="ml-2">
+                            <!-- <a href="{{ route('customer_complaints.index') }}" class="ml-2">
                                 <x-secondary-button :route="route('customer_complaints.index')">Customer Complaint</x-secondary-button>
-                            </a>
+                            </a> -->
                         </div>
                     </div>
 
                     <x-table-table id="search-table">
                         <x-table-thead>
                             <tr>
+								<x-table-th>SO</x-table-th>
+								<x-table-th>Date</x-table-th>
                                 <x-table-th>Customer</x-table-th>
-                                <x-table-th>Sale Date</x-table-th>
-                                <x-table-th>Warehouse</x-table-th>
-                                <x-table-th>Total Amount</x-table-th>
-                                <x-table-th>Products</x-table-th>
-                                <x-table-th>Status</x-table-th>
-                                <x-table-th>Actions</x-table-th>
+								<x-table-th>Warehouse</x-table-th>
+								<x-table-th>Total Amount</x-table-th>
+								<x-table-th>Team</x-table-th>
+								<x-table-th>Status</x-table-th> <!-- New column -->
+								<x-table-th>Actions</x-table-th>
                             </tr>
                         </x-table-thead>
                         <x-table-tbody>
                             @foreach ($sales as $sale)
                                 <x-table-tr>
-                                    <x-table-td>{{ $sale->customer->name ?? '' }}</x-table-td>
+                                    <x-table-td>{{ $sale->so_number }}</x-table-td>
                                     <x-table-td>{{ $sale->sale_date }}</x-table-td>
+                                    <x-table-td>{{ $sale->customer->name ?? 'N/A' }}</x-table-td>
                                     <x-table-td>{{ $sale->warehouse->name }}</x-table-td>
-                                    <x-table-td>${{ $sale->total_amount }}</x-table-td>
-                                    <x-table-td>
-                                        <ul>
-                                            @foreach ($sale->products as $product)
-                                                <li>{{ $product->name }} - {{ $product->pivot->quantity }} pcs @
-                                                    {{ $product->pivot->price }}
-                                                    ({{ $product->pivot->note ?? 'No Note' }})
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                    </x-table-td>
+                                    <x-table-td>{{ $sale->total_amount }}</x-table-td>
+                                    <x-table-td>{{ $sale->employee->companyuser->user->name ?? 'N/A' }}</x-table-td>
                                     <x-table-td>{{ $sale->status }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                             <x-button-show :route="route('sales.show', $sale->id)" />
                                             <x-button-edit :route="route('sales.edit', $sale->id)" />
-                                            @if ($sale->status == 'Planned')
+                                            @if ($sale->status == 'SO_OFFER')
                                                 <form action="{{ route('sales.destroy', $sale->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf

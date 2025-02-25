@@ -10,14 +10,27 @@
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                         <div
                             class="p-2 bg-gray-50 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
-                            <p class="text-sm text-gray-500 dark:text-gray-300">Customer Name</p>
-                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $sale->customer->name }}
+                            <p class="text-sm text-gray-500 dark:text-gray-300">SO Number</p>
+                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $sale->so_number }}
                             </p>
                         </div>
                         <div
                             class="p-2 bg-gray-50 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
                             <p class="text-sm text-gray-500 dark:text-gray-300">Sale Date</p>
                             <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $sale->sale_date }}
+                            </p>
+                        </div>
+                        
+                        <div
+                            class="p-2 bg-gray-50  border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
+                            <p class="text-sm text-gray-500 dark:text-gray-300">Status</p>
+                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($sale->status) }}
+                            </p>
+                        </div>
+                        <div
+                            class="p-2 bg-gray-50 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
+                            <p class="text-sm text-gray-500 dark:text-gray-300">Customer Name</p>
+                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ $sale->customer->name }}
                             </p>
                         </div>
                         <div
@@ -28,8 +41,9 @@
                         </div>
                         <div
                             class="p-2 bg-gray-50  border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
-                            <p class="text-sm text-gray-500 dark:text-gray-300">Status</p>
-                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">{{ ucfirst($sale->status) }}
+                            <p class="text-sm text-gray-500 dark:text-gray-300">Admin</p>
+                            <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                {{ $sale->employee->companyuser->user->name ?? 'N/A' }}
                             </p>
                         </div>
                         <div
@@ -77,14 +91,14 @@
                     </div>
 
                     <div class="mb-3 mt-1 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
-                    <h3 class="text-lg font-bold my-3">Expedition Details</h3>
+                    <h3 class="text-lg font-bold my-3">Shipment Details</h3>
 
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                         <div
                             class="p-2 bg-gray-50  border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
-                            <p class="text-sm text-gray-500 dark:text-gray-300">Expedition</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-300">Courier</p>
                             <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                                {{ optional($sale->expedition)->name ?? 'N/A' }}
+                                {{ optional($sale->courier)->name ?? 'N/A' }}
                             </p>
                         </div>
                         <div

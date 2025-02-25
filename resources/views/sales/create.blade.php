@@ -86,9 +86,13 @@
 
 
                             <x-button2 type="button" id="add-product" class="mr-3 bg-blue-700">Add Another Product</x-button>
-                            <x-primary-button>Create Sale</x-primary-button>
-                            <a href="{{ route('sales.index') }}"
-                                class="border rounded border-gray-400 dark:border-gray-700 p-2 ml-3 text-sm hover:underline text-gray-700 dark:text-gray-400">Cancel</a>
+                            
+                            <div class="m-4">
+                                <a href="{{ route('sales.index') }}">
+                                    <x-secondary-button type="button">Cancel</x-secondary-button>
+                                </a>
+                                <x-primary-button>Create Sale</x-primary-button>
+                            </div>
                         </form>
                     </div>
                 </div>
