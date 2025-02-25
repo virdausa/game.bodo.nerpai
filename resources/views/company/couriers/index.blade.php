@@ -13,14 +13,11 @@
                     <p class="text-sm dark:text-gray-200 mb-6">Create, edit, and manage your courier listings.</p>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
-                    <div
-                        class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
-                        
-                        <div class="w-full md:w-auto flex justify-end">
-                            <a href="{{ route('couriers.create') }}">
-                                <x-button-add :route="route('couriers.create')" text="Tambah Kurir" />
-                            </a>
-                        </div>
+                    <!-- Actions -->
+                    <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
+                        <div class="flex flex-col md:flex-row items-center space-x-3">
+                                @include('company.couriers.create')
+                         </div>
                     </div>
 
                     <x-table-table id="search-table">
@@ -48,13 +45,9 @@
                                     <x-table-td>{{ $courier->notes }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
-                                            <x-button-show :route="route('couriers.show', $courier->id)" />
+                                            <!-- <x-button-show :route="route('couriers.show', $courier->id)" /> -->
                                             <x-button-edit :route="route('couriers.edit', $courier->id)" />
-                                            <form action="{{ route('couriers.destroy', $courier->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('couriers.destroy', $courier->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('couriers.destroy', $courier->id)" />
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>

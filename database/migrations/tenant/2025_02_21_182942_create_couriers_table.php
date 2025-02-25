@@ -14,8 +14,8 @@ return new class extends Migration {
             // Attributes
             $table->string('code')->unique();
             $table->string('name');
-            $table->string('contact_info');
-            $table->string('website');
+            $table->string('contact_info')->nullable();
+            $table->string('website')->nullable();
             $table->string('status')->default('active');
             $table->text('notes')->nullable();
 

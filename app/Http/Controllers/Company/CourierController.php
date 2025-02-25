@@ -31,7 +31,17 @@ class CourierController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'contact_info' => 'nullable|string|max:255',
+        ]);
+
+        $validated['website'] = 'hehe';
+
+        Courier::create($validated);
+
+        return redirect()->route('couriers.index')->with('success', "Courier {$validated['name']} created successfully.");
     }
 
     /**
@@ -47,7 +57,8 @@ class CourierController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $courier = Courier::findOrFail($id);
+        return view('company.couriers.edit', compact('courier'));
     }
 
     /**
@@ -55,7 +66,19 @@ class CourierController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'code' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
+            'contact_info' => 'nullable|string|max:255',
+            'website' => 'nullable|string|max:255',
+            'status' => 'required|string|max:50',
+            'notes' => 'nullable|string',
+        ]);
+
+        $courier = Courier::findOrFail($id);
+        $courier->update($validated);
+
+        return redirect()->route('couriers.index')->with('success', "Courier {$validated['name']} updated successfully.");
     }
 
     /**
@@ -63,6 +86,9 @@ class CourierController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $courier = Courier::findOrFail($id);
+        $courier->forceDelete();
+
+        return redirect()->route('couriers.index')->with('success', "Courier {$courier->name} deleted successfully.");
     }
 }
