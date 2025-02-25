@@ -17,8 +17,8 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerComplaintController;
 
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\WarehouseController;
-use App\Http\Controllers\LocationController;
+use App\Http\Controllers\Company\WarehouseController;
+use App\Http\Controllers\Company\WarehouseLocationController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Company\InboundController;
 use App\Http\Controllers\Company\OutboundController;
@@ -54,10 +54,10 @@ Route::middleware(['auth',
     
 
     route::resource("products", controller: ProductController::class);
-    route::resource("locations", LocationController::class);
+    Route::resource('warehouses', WarehouseController::class);
+    route::resource("warehouse_locations", WarehouseLocationController::class);
     route::resource("inbounds", controller: InboundController::class);
     route::resource("outbounds", controller: OutboundController::class);
-    Route::resource('warehouses', WarehouseController::class);
     Route::resource('inventory', InventoryController::class)->except(['show']);
     Route::get('/inventory/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
     Route::get('/inventory/history', [InventoryController::class, 'history'])->name('inventory.history');

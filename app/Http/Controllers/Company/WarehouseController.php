@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
 use Illuminate\Http\Request;
-use App\Models\Warehouse;
+use App\Models\Company\Warehouse;
+
+use App\Http\Controllers\Controller;
 
 class WarehouseController extends Controller
 {
@@ -32,7 +34,7 @@ class WarehouseController extends Controller
 
 	public function show(string $id)
 	{
-		$warehouse = Warehouse::with('locations')->findOrFail($id);
+		$warehouse = Warehouse::with('warehouse_locations')->findOrFail($id);
 		return view('warehouses.show', compact('warehouse'));
 	}
 

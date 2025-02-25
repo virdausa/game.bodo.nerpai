@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use App\Models\Store\StoreWarehouse;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -13,11 +13,13 @@ class Warehouse extends Model
 	use HasFactory;
 
 	protected $fillable = [
+		'code',
 		'name',
 		'address',
 		'status',
 		'employee_id',
-		'notes'
+		'notes',
+		'valuation_method',
 	];
 
 	protected $casts = [
@@ -31,7 +33,7 @@ class Warehouse extends Model
 			->withTimestamps();
 	}
 
-	public function locations(): HasMany
+	public function warehouse_locations(): HasMany
 	{
 		return $this->hasMany(WarehouseLocation::class);
 	}
@@ -40,6 +42,7 @@ class Warehouse extends Model
 	{
 		return $this->belongsTo(Employee::class, 'employee_id');
 	}
+
 
 	public function scopeActive($query)
 	{

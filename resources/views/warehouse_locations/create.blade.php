@@ -9,7 +9,7 @@
 		<div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
 			<div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
 				<div class="p-6 text-gray-900 dark:text-white">
-					<form action="{{ route('locations.store') }}" method="POST">
+					<form action="{{ route('warehouse_locations.store') }}" method="POST">
 						@csrf
 						<div class="mb-4">
 						<x-input-label for="warehouse_id">Warehouse</x-input-label>
@@ -27,7 +27,7 @@
 						<select name="existing_room" id="existing-room-select"
 								class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white">
 								@foreach($warehouses as $warehouse)
-									@foreach($warehouse->locations->unique('room') as $location)
+									@foreach($warehouse->warehouse_locations->unique('room') as $location)
 										<option value="{{ $location->room }}" data-warehouse="{{ $warehouse->id }}">
 											{{ $location->room }}
 										</option>
@@ -49,7 +49,7 @@
 						</div>
 						<div class="flex justify-end">
 							<x-primary-button>Add Location</x-primary-button>
-							<a href="{{ route('locations.index') }}"
+							<a href="{{ route('warehouse_locations.index') }}"
 								class="border rounded border-gray-400 dark:border-gray-700 p-2 ml-3 text-sm hover:underline text-gray-700 dark:text-gray-400">Cancel</a>
 						</div>
 					</form>

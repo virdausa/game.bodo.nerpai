@@ -16,8 +16,8 @@
                    
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                            <!-- <a href="{{ route('locations.index') }}" class="ml-2">
-                                <x-secondary-button :route="route('locations.index')">Manage Locations</x-secondary-button>
+                            <!-- <a href="{{ route('warehouse_locations.index') }}" class="ml-2">
+                                <x-secondary-button :route="route('warehouse_locations.index')">Manage Locations</x-secondary-button>
                             </a> -->
                             @include('warehouses.create')
                          </div>

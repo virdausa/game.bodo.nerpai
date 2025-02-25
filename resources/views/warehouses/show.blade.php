@@ -69,7 +69,7 @@
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                         <div class="w-full md:w-auto flex justify-end">
                             <a href="">
-                                <x-button-add :route="route('locations.create')" text="Add New Location" />
+                                <x-button-add :route="route('warehouse_locations.create')" text="Add New Location" />
                             </a>
                         </div>
                     </div>
@@ -84,18 +84,18 @@
                             </tr>
                         </x-table-thead>
                         <x-table-tbody>
-                            @foreach ($warehouse->locations as $location)
+                            @foreach ($warehouse->warehouse_locations as $location)
                                 <x-table-tr>
                                     <x-table-td>{{ $location->room }}</x-table-td>
                                     <x-table-td>{{ $location->rack }}</x-table-td>
                                     <x-table-td>{{ $location->notes }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
-                                            <x-button-edit :route="route('locations.edit', $location->id)" />
-                                            <form action="{{ route('locations.destroy', $location->id) }}" method="POST">
+                                            <x-button-edit :route="route('warehouse_locations.edit', $location->id)" />
+                                            <form action="{{ route('warehouse_locations.destroy', $location->id) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <x-button-delete :route="route('locations.destroy', $location->id)" />
+                                                <x-button-delete :route="route('warehouse_locations.destroy', $location->id)" />
                                             </form>
                                         </div>
                                     </x-table-td>
