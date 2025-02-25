@@ -21,8 +21,8 @@ class InventoryController extends Controller
 		
 		// Fetch inventory details grouped by location
 		$inventoryByLocations = InventoryHistory::with(['product', 'warehouse', 'location'])
-			->select('product_id', 'warehouse_id', 'location_id', DB::raw('SUM(quantity) as total_quantity'))
-			->groupBy('product_id', 'warehouse_id', 'location_id')
+			->select('product_id', 'warehouse_id', 'warehouse_location_id', DB::raw('SUM(quantity) as total_quantity'))
+			->groupBy('product_id', 'warehouse_id', 'warehouse_location_id')
 			->get();
 
 		return view('inventory.index', compact('inventories', 'inventoryByLocations'));

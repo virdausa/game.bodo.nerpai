@@ -8,7 +8,7 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('inventory_movement', function (Blueprint $table) {
+        Schema::create('inventory_movements', function (Blueprint $table) {
             // Primary Key
             $table->id();
 
@@ -19,6 +19,8 @@ return new class extends Migration
             // Columns
             $table->integer('quantity');
             $table->string('transaction_type'); // Possible values: 'PO', 'SO', 'ADJUST', 'MOVE'
+            $table->unsignedBigInteger('transaction_id')->nullable();
+            
             $table->text('notes')->nullable();
             $table->dateTime('time');
 
@@ -30,6 +32,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('inventory_movement');
+        Schema::dropIfExists('inventory_movements');
     }
 };

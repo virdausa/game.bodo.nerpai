@@ -9,7 +9,7 @@ class InventoryHistory extends Model
 {
     use HasFactory;
 	
-	protected $table = 'inventory_history';
+	protected $table = 'inventory_movements';
 	
     protected $fillable = [
 		'product_id', 'warehouse_id', 'quantity', 'transaction_type', 
