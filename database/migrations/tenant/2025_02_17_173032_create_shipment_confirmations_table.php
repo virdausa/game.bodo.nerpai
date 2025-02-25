@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('employee_id')->constrained('employees', 'id');
 
             // Polymorphic consignee (customer/employee)
-            $table->string('consignee_type'); // 'Customer', 'Employee'
+            $table->string('consignee_type')->nullable();                   // 'Customer', 'Employee'
             $table->unsignedBigInteger('consignee_id')->nullable();
 
             // Confirmation details

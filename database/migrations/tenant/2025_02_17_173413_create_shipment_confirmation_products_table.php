@@ -12,12 +12,12 @@ return new class extends Migration {
             $table->id();
 
             // Foreign Keys
-            $table->foreignId('confirmation_id')->constrained('shipment_confirmations');
-            $table->foreignId('product_id')->constrained();
+            $table->foreignId('shipment_confirmation_id')->constrained('shipment_confirmations')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained()->nullOnDelete();
 
             // Attributes
-            $table->integer('quantity');
-            $table->string('condition');
+            $table->integer('quantity')->default(1);
+            $table->string('condition')->default('SC_OK');
             $table->text('notes')->nullable();
 
             // Timestamps
