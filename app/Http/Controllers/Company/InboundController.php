@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
-use App\Models\InboundRequest;
+use App\Http\Controllers\Controller;
+use App\Models\Company\Inbound;
 use App\Models\Purchase;
 use App\Models\User;
 use App\Models\Location;
@@ -10,12 +11,12 @@ use App\Models\Inventory;
 use App\Models\InventoryHistory;
 use Illuminate\Http\Request;
 
-class InboundRequestController extends Controller
+class InboundController extends Controller
 {
     // Show all inbound requests
     public function index()
     {
-        $inboundRequests = InboundRequest::with('purchase', 'warehouse')->orderBy('created_at', 'desc')->get();
+        $inboundRequests = Inbound::with('purchase', 'warehouse')->orderBy('created_at', 'desc')->get();
         return view('inbound_requests.index', compact('inboundRequests'));
     }
 
@@ -37,7 +38,7 @@ class InboundRequestController extends Controller
             'received_quantities.*' => 'required|integer|min:0',
         ]);
 
-        $inboundRequest = InboundRequest::create([
+        $inboundRequest = Inbound::create([
             'purchase_order_id' => $request->purchase_order_id,
             'warehouse_id' => $request->warehouse_id,
             'received_quantities' => $request->received_quantities,
@@ -51,7 +52,7 @@ class InboundRequestController extends Controller
 
 	public function show($id)
 	{
-		$inboundRequest = InboundRequest::with('warehouse', 'purchase.products')->findOrFail($id);
+		$inboundRequest = Inbound::with('warehouse', 'purchase.products')->findOrFail($id);
 
 		return view('inbound_requests.show', compact('inboundRequest'));
 	}
@@ -60,7 +61,7 @@ class InboundRequestController extends Controller
 	// Edit method to show the edit view
     public function edit($id)
     {
-        $inboundRequest = InboundRequest::with('purchase.products', 'warehouse')->findOrFail($id);
+        $inboundRequest = Inbound::with('purchase.products', 'warehouse')->findOrFail($id);
         $users = User::all(); // Assuming you want to select from all users
 
         return view('inbound_requests.edit', compact('inboundRequest', 'users'));
@@ -80,7 +81,7 @@ class InboundRequestController extends Controller
 		]);
 
 
-        $inboundRequest = InboundRequest::findOrFail($id);
+        $inboundRequest = Inbound::findOrFail($id);
 		
 		// Handle checking quantities action
 		if ($request->action === 'check_quantities') {
@@ -136,7 +137,7 @@ class InboundRequestController extends Controller
 	
 	public function handleDiscrepancyAction($id, Request $request)
 	{
-		$inboundRequest = InboundRequest::with('purchase')->findOrFail($id);
+		$inboundRequest = Inbound::with('purchase')->findOrFail($id);
 		$action = $request->input('action');
 
 		switch ($action) {
@@ -148,7 +149,7 @@ class InboundRequestController extends Controller
 
 			case 'request_additional':
 				// Create a new inbound request for the remaining quantities
-				InboundRequest::create([
+				Inbound::create([
 					'purchase_order_id' => $inboundRequest->purchase_order_id,
 					'warehouse_id' => $inboundRequest->warehouse_id,
 					'requested_quantities' => ($this->getRemainingQuantities($inboundRequest)),
@@ -227,14 +228,14 @@ class InboundRequestController extends Controller
 
 	public function complete($id)
 	{
-		$inboundRequest = InboundRequest::with('purchase.products')->findOrFail($id);
+		$inboundRequest = Inbound::with('purchase.products')->findOrFail($id);
 		return view('inbound_requests.complete', compact('inboundRequest'));
 	}
 
 
 	public function storeCompletion($id, Request $request)
 	{
-		$inboundRequest = InboundRequest::findOrFail($id);
+		$inboundRequest = Inbound::findOrFail($id);
 
 		// Loop through each product's assigned location
 		foreach ($request->input('locations') as $productId => $locationData) {

@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class InboundRequest extends Model
+class Inbound extends Model
 {
+    protected $table = 'inbounds';
+
     use HasFactory;
 
     protected $fillable = [

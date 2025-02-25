@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use App\Models\OutboundRequest;
+use App\Models\Company\Outbound;
 use App\Models\Warehouse;
 use App\Models\Product;
 use App\Models\Sale;
@@ -14,11 +15,11 @@ use App\Models\Location;
 use App\Models\OutboundRequestLocation;
 use Illuminate\Http\Request;
 
-class OutboundRequestController extends Controller
+class OutboundController extends Controller
 {
     public function index()
     {
-        $outboundRequests = OutboundRequest::with('sales', 'warehouse', 'verifier')
+        $outboundRequests = Outbound::with('sales', 'warehouse', 'verifier')
 											->orderBy('created_at', 'desc')
 											->get();
         return view('outbound_requests.index', compact('outboundRequests'));
@@ -42,7 +43,7 @@ class OutboundRequestController extends Controller
 			'notes' => 'nullable|string',
 		]);
 
-        OutboundRequest::create([
+        Outbound::create([
 			'sales_order_id' => $validated['sales_order_id'],
 			'warehouse_id' => $validated['warehouse_id'],
 			'requested_quantities' => $validated['requested_quantities'],
@@ -55,7 +56,7 @@ class OutboundRequestController extends Controller
     }
 
 	public function show($id){
-		$outboundRequest = OutboundRequest::with('sales', 'warehouse', 'expedition')->findOrFail($id);
+		$outboundRequest = Outbound::with('sales', 'warehouse', 'expedition')->findOrFail($id);
 		$expedition = $outboundRequest->expedition;
 		$outboundRequestLocations = [];
 		foreach($outboundRequest->requested_quantities as $productId => $quantity){
@@ -71,7 +72,7 @@ class OutboundRequestController extends Controller
 	public function edit($id)
 	{
 
-		$outboundRequest = OutboundRequest::with('sales', 'warehouse')->findOrFail($id);
+		$outboundRequest = Outbound::with('sales', 'warehouse')->findOrFail($id);
 		$expeditions = Expedition::all(); // Fetch expeditions
 		$warehouses = Warehouse::all();
 		// dd($outboundRequest);
@@ -97,7 +98,7 @@ class OutboundRequestController extends Controller
 
 	public function update(Request $request, $id)
 	{
-		$outboundRequest = OutboundRequest::findOrFail($id);
+		$outboundRequest = Outbound::findOrFail($id);
 		
 		//dd($request);
 		
@@ -140,7 +141,7 @@ class OutboundRequestController extends Controller
 			->with('success', 'Outbound Request updated successfully!');
 	}
 
-	public function rejectRequest(OutboundRequest $outboundRequest)
+	public function rejectRequest(Outbound $outboundRequest)
 	{
 		$sales = $outboundRequest->sales;
 		
@@ -157,7 +158,7 @@ class OutboundRequestController extends Controller
 	}
 
 	
-	public function updateStatus(OutboundRequest $outboundRequest, $status)
+	public function updateStatus(Outbound $outboundRequest, $status)
     {
 		DB::transaction(function () use ($outboundRequest, $status) {
 			$outboundRequestLocations = OutboundRequestLocation::where('outbound_request_id', $outboundRequest->id)->get();
@@ -208,7 +209,7 @@ class OutboundRequestController extends Controller
 
 	
 	
-	public function checkStockAvailability(OutboundRequest $outboundRequest, $validated, Request $request)
+	public function checkStockAvailability(Outbound $outboundRequest, $validated, Request $request)
 	{
 		// Handle deleted locations
 		if (!empty($request->input('deleted_locations'))) {
@@ -309,7 +310,7 @@ class OutboundRequestController extends Controller
 
 	public function complete($id)
 	{
-		$outboundRequest = OutboundRequest::findOrFail($id);
+		$outboundRequest = Outbound::findOrFail($id);
 
 		if ($outboundRequest->status !== 'Ready to Complete') {
 			return redirect()->route('outbound_requests.show', $id)
@@ -324,7 +325,7 @@ class OutboundRequestController extends Controller
 
 	public function verifyCompletion($id, Request $request)
 	{
-		$outboundRequest = OutboundRequest::findOrFail($id);
+		$outboundRequest = Outbound::findOrFail($id);
 
 		if ($outboundRequest->status !== 'Ready to Complete') {
 			return redirect()->route('outbound_requests.show', $id)

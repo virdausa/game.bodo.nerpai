@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class OutboundRequest extends Model
+class Outbound extends Model
 {
+    protected $table = 'outbounds';
+
     use HasFactory;
 
     protected $fillable = [

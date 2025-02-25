@@ -58,7 +58,7 @@
 
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900"> 
     @include('layouts.company-navbar')
-    @include('layouts.sidebar')
+    @include('layouts.sidebar-company')
     <!-- Page Content -->
 
     <main class="p-4 sm:ml-64 sm:mt-12">

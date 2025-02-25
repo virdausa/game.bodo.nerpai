@@ -20,9 +20,10 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\WarehouseController;
 use App\Http\Controllers\LocationController;
 use App\Http\Controllers\InventoryController;
-use App\Http\Controllers\InboundRequestController;
-use App\Http\Controllers\OutboundRequestController;
+use App\Http\Controllers\Company\InboundController;
+use App\Http\Controllers\Company\OutboundController;
 
+use App\Http\Controllers\Company\ShipmentController;
 
 // Company
 Route::middleware(['auth', 
@@ -34,31 +35,32 @@ Route::middleware(['auth',
     Route::resource('company_roles', CompanyRoleController::class);
     Route::get('/company_roles', [CompanyRoleController::class, 'index'])->name('company_roles.index');
     Route::get('/company_roles/data', [CompanyRoleController::class, 'getRolesData'])->name('company_roles.data');
-
+    
     Route::resource('company_permissions', CompanyPermissionController::class);
-
+    
     Route::resource('employees', EmployeeController::class);
+    
+
+    route::resource("purchases", PurchaseController::class);
+    Route::resource('suppliers', SupplierController::class);
+    
 
     route::resource("customers", CustomerController::class);
-    route::resource("purchases", PurchaseController::class);
-    route::resource("locations", LocationController::class);
-
-    route::resource("inbound_requests", controller: InboundRequestController::class);
-    route::resource("outbound_requests", controller: OutboundRequestController::class);
-
-
-    route::resource("products", controller: ProductController::class);
-
     Route::resource('sales', SalesController::class);
     Route::get('sales/{sale}/status/{status}', [SalesController::class, 'updateStatus'])->name('sales.updateStatus');
     Route::resource('customer_complaints', CustomerComplaintController::class);
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
+    
 
-    Route::resource('sales', SalesController::class);
-    Route::resource('suppliers', SupplierController::class);
+    route::resource("products", controller: ProductController::class);
+    route::resource("locations", LocationController::class);
+    route::resource("inbounds", controller: InboundController::class);
+    route::resource("outbounds", controller: OutboundController::class);
     Route::resource('warehouses', WarehouseController::class);
-
     Route::resource('inventory', InventoryController::class)->except(['show']);
     Route::get('/inventory/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
     Route::get('/inventory/history', [InventoryController::class, 'history'])->name('inventory.history');
+
+
+    Route::resource("shipments", ShipmentController::class);
 });
