@@ -7,11 +7,11 @@
                     <p class="text-sm dark:text-gray-200 mb-6">Create, edit, and manage your customers listings.</p>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
-                    <!-- Search and Add New Supplier -->
+                    <!-- Search and Add New Customer -->
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                        
                         <div class="w-full md:w-auto flex justify-end">
-                            <x-button-add :route="route('customers.create')" text="Add Supplier" />
+                            <x-button-add :route="route('customers.create')" text="Tambah Customer" />
                         </div>
                     </div>
                     <x-table-table id="search-table">
@@ -38,14 +38,10 @@
                                     <x-table-td>{{ $customer->status }}</x-table-td>
                                     <x-table-td>{{ $customer->created_at }}</x-table-td>
                                     <x-table-td class="flex justify-center items-center gap-2">
-                                    <div class="flex items-center space-x-2">
-                                            
+                                        <div class="flex items-center space-x-2">
+                                            <x-button-show :route="route('customers.show', $customer->id)" />
                                             <x-button-edit :route="route('customers.edit', $customer->id)" />
-                                            <form action="{{ route('customers.destroy', $customer->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('customers.destroy', $customer->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('customers.destroy', $customer->id)" />
                                         </div>
                                     </x-table-td>
                                 </tr>

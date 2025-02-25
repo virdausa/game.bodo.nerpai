@@ -48,11 +48,7 @@
                                         <div class="flex items-center space-x-2">
                                             <x-button-show :route="route('products.show', $product->id)" />
                                             <x-button-edit :route="route('products.edit', $product->id)" />
-                                            <form action="{{ route('products.destroy', $product->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('products.destroy', $product->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('products.destroy', $product->id)" />
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>
