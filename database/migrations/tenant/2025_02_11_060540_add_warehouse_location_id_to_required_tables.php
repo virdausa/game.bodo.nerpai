@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('warehouse_location_id')->constrained('warehouse_locations');
         });
 
-        Schema::table('inventory_movement', function (Blueprint $table) {
+        Schema::table('inventory_movements', function (Blueprint $table) {
             $table->foreignId('warehouse_location_id')->constrained('warehouse_locations');
         });
 
@@ -43,8 +43,8 @@ return new class extends Migration
             $table->dropColumn('warehouse_location_id');
         });
 
-        Schema::table('inventory_movement', function (Blueprint $table) {
-            $table->dropForeign('inventory_movement_warehouse_location_id_foreign');
+        Schema::table('inventory_movements', function (Blueprint $table) {
+            $table->dropForeign('inventory_movements_warehouse_location_id_foreign');
             $table->dropColumn('warehouse_location_id');
         });
 

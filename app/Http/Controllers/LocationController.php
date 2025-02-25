@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Location;
+use App\Models\WarehouseLocation;
 use App\Models\Warehouse;
 
 class LocationController extends Controller
@@ -17,7 +17,7 @@ class LocationController extends Controller
 	public function create()
 	{
 		$warehouses = Warehouse::with('locations')->get();
-		$existingRooms = Location::select('room')->distinct()->pluck('room');
+		$existingRooms = WarehouseLocation::select('room')->distinct()->pluck('room');
 		return view('locations.create', compact('warehouses', 'existingRooms'));
 	}
 
@@ -37,7 +37,7 @@ class LocationController extends Controller
 		}
 
 		// Validate that rack is unique within the room
-		$exists = Location::where('warehouse_id', $request->warehouse_id)
+		$exists = WarehouseLocation::where('warehouse_id', $request->warehouse_id)
 						  ->where('room', $room)
 						  ->where('rack', $request->rack)
 						  ->exists();
@@ -46,8 +46,8 @@ class LocationController extends Controller
 			return back()->withErrors('The rack in this room already exists.');
 		}
 
-		// Create location
-		Location::create([
+		// Create WarehouseLocation
+		WarehouseLocation::create([
 			'warehouse_id' => $request->warehouse_id,
 			'room' => $room,
 			'rack' => $request->rack,
