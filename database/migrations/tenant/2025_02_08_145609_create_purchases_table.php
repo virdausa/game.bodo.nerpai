@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('po_number')->unique()->nullable();
             $table->date('po_date');
             $table->decimal('total_amount', 30, 2)->default(0);
-            $table->string('status')->default('PO_Planned');
+            $table->string('status')->default('PO_PLANNED');
             $table->string('admin_notes')->nullable();
             $table->string('supplier_notes')->nullable();
             $table->timestamps();

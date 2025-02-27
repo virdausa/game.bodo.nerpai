@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Company;
 
 use App\Models\Company\Purchase; // Ensure you import the Purchase model
+use App\Models\Company\PurchaseInvoice;
 use App\Models\Product;
-use App\Models\Warehouse;
+use App\Models\Company\Warehouse;
 use App\Models\InventoryHistory;
 use App\Models\InboundRequest;
 use App\Models\Supplier;
@@ -73,6 +74,38 @@ class PurchaseController extends Controller
 	}
 
 
+	public function duplicate($id) 
+	{
+		$purchase = Purchase::findOrFail($id);
+
+		$newPurchase = $purchase->replicate()->fill([
+			'status' => 'PO_PLANNED',
+		]);
+		$newPurchase->po_number = null;
+		$newPurchase->save();
+
+		// replicate products
+		$total_amount = 0;
+		foreach ($purchase->products as $product) {
+			$total_cost = $product->pivot->quantity * $product->pivot->buying_price;
+			$newPurchase->products()->attach($product->pivot->product_id, [
+				'quantity' => $product->pivot->quantity,
+				'buying_price' => $product->pivot->buying_price,
+				'total_cost' => $total_cost
+			]);
+			$total_amount += $total_cost;
+		}
+		$newPurchase->total_amount = $total_amount;
+
+		dd($newPurchase->products);
+
+		$newPurchase->generatePoNumber();
+		$newPurchase->save();
+
+		return redirect()->route('purchases.edit', $newPurchase->id)->with('success', "Purchase {$newPurchase->po_number} created successfully.");
+	}
+
+
 	public function show($id)
 	{
 		$purchase = Purchase::with(['products', 'warehouse', 'shipments'])->findOrFail($id);
@@ -117,20 +150,21 @@ class PurchaseController extends Controller
 		$totalAmount = 0;
 
 		$purchaseProducts = [];
-		foreach ($request->products as $product) {
-			$quantity = $product['quantity'];
-			$buyingPrice = $product['buying_price'];
-			$totalCost = $quantity * $buyingPrice;
-
-			$purchaseProducts[$product['product_id']] = [
-				'quantity' => $quantity,
-				'buying_price' => $buyingPrice,
-				'total_cost' => $totalCost,
-			];
-
-			$totalAmount += $totalCost;
+		if(isset($request->products)) {
+			foreach ($request->products as $product) {
+				$quantity = $product['quantity'];
+				$buyingPrice = $product['buying_price'];
+				$totalCost = $quantity * $buyingPrice;
+	
+				$purchaseProducts[$product['product_id']] = [
+					'quantity' => $quantity,
+					'buying_price' => $buyingPrice,
+					'total_cost' => $totalCost,
+				];
+	
+				$totalAmount += $totalCost;
+			}
 		}
-
 		// Sync products with updated pivot data
 		$purchase->products()->sync($purchaseProducts);
 
@@ -150,5 +184,50 @@ class PurchaseController extends Controller
 		$purchase->delete();
 
 		return redirect()->route('purchases.index')->with('success', "Purchase {$purchase->po_number} deleted successfully.");
+	}
+
+	
+
+	public function handleAction(Request $request, $purchases, $action){
+		$purchase = Purchase::findOrFail($purchases);
+
+		switch($action){
+			case 'PO_REQUEST_TO_SUPPLIER':
+				$this->sendPORequestToSupplier($purchase);
+				break;
+			case 'PO_CONFIRMED':
+				$this->inputInvoiceFromSupplier($purchase);
+				break;
+			default:
+				abort(404);
+		}
+
+		return redirect()->route('purchases.index')->with('success', "Purchase {$purchase->po_number} updated successfully.");
+	}
+
+	public function sendPORequestToSupplier($purchase){
+		$purchase->status = 'PO_REQUEST_TO_SUPPLIER';
+
+		// Create Request to Supplier if connected
+
+
+
+		$purchase->save();
+	}
+
+	public function inputInvoiceFromSupplier($purchase){
+		$purchase->status = 'PO_CONFIRMED';
+		$purchase->save();
+
+		$purchase_invoice = PurchaseInvoice::create([
+			'purchase_id' => $purchase->id,
+			'date' => date('Y-m-d'),
+			'cost_products' => $purchase->total_amount,
+			'total_amount' => $purchase->total_amount,
+		]);
+		$purchase_invoice->generateInvoiceNumber();
+		$purchase_invoice->save();
+
+		return redirect()->route('purchase_invoices.edit', $purchase_invoice->id)->with('success', "Invoice {$purchase_invoice->invoice_number} created successfully");
 	}
 }

@@ -11,7 +11,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Employee;
 use App\Models\Product;
 use App\Models\Supplier;
-use App\Models\Warehouse;
+use App\Models\Company\Warehouse;
+use App\Models\Company\PurchaseInvoice;
 
 class Purchase extends Model
 {
@@ -65,6 +66,11 @@ class Purchase extends Model
                     ->where('transaction_type', 'PO');
     }
 
+    public function purchase_invoices(): HasMany
+    {
+        return $this->hasMany(PurchaseInvoice::class);
+    }
+
     public function scopeWithStatus($query, $status)
     {
         return $query->where('status', $status);
@@ -72,7 +78,7 @@ class Purchase extends Model
 
     public function generatePoNumber(): string
     {
-        $this->po_number = 'PO-' . ($this->po_date)->format('Y-m-d') . '-' . $this->id;
+        $this->po_number = 'PO_' . ($this->po_date)->format('Y-m-d') . '_' . $this->id;
         return $this->po_number;
     }
 }

@@ -10,6 +10,7 @@ use App\Http\Controllers\CompanyPermissionController;
 use App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\Company\PurchaseController;
+use App\Http\Controllers\Company\PurchaseInvoiceController;
 use App\Http\Controllers\SupplierController;
 
 use App\Http\Controllers\Company\SaleController;
@@ -43,6 +44,9 @@ Route::middleware(['auth',
     
 
     route::resource("purchases", PurchaseController::class);
+    Route::post('purchases/{purchases}/action/{action}', [PurchaseController::class, 'handleAction'])->name('purchases.action');
+    Route::get('purchases/{id}/duplicate', [PurchaseController::class, 'duplicate'])->name('purchases.duplicate');
+    Route::resource('purchase_invoices', PurchaseInvoiceController::class);
     Route::resource('suppliers', SupplierController::class);
     
 

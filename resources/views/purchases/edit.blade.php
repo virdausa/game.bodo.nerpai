@@ -78,10 +78,11 @@
                                 @endforeach
                             </div>
 							<!-- <x-button type="button" id="add-product" class="mr-3" >Add Another Product</x-button> -->
-                            <button class="m-4 px-3 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90" type="button" id="add-product" class="mr-3" {{ $purchase->status != 'Planned' ? 'disabled' : '' }}>
+                            <button class="m-4 px-3 py-2 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-4 [&_svg]:shrink-0 bg-primary text-primary-foreground shadow hover:bg-primary/90" type="button" id="add-product" class="mr-3">
                                 Add Another Product
                             </button>
 
+                            <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
                             <div class="m-4">
                                 <a href="{{ route('purchases.index') }}">
                                     <x-secondary-button type="button">Cancel</x-secondary-button>
@@ -90,6 +91,17 @@
                             </div>
                         </form>
 
+                        <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
+                        @if ($purchase->status == 'PO_REQUEST_TO_SUPPLIER')
+                        <div class="flex justify-end m-4">
+                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_CONFIRMED']) }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <x-primary-button type="submit">Input Invoice Pembelian dari Supplier</x-primary-button>
+                            </form>
+                        </div>
+                        @endif
+
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
                                 const productSelection = document.getElementById('product-selection');
@@ -97,8 +109,6 @@
 								
 
                                 document.getElementById('add-product').addEventListener('click', function () {
-                                    if ("{{ $purchase->status }}" !== "Planned") return;
-
                                     const newProductDiv = document.createElement('div');
                                     newProductDiv.classList.add('product-item', 'mb-4', 'p-4', 'border', 'border-gray-200', 'rounded-lg', 'shadow-md', 'dark:bg-gray-800', 'dark:border-gray-600');
                                     newProductDiv.innerHTML = `

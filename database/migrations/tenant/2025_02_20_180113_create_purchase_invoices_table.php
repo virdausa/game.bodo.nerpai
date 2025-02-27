@@ -12,13 +12,18 @@ return new class extends Migration {
             $table->id();
 
             // Foreign Keys
-            $table->foreignId('purchase_id')->constrained();
+            $table->foreignId('purchase_id')->constrained()->onDelete('cascade');
 
             // Attributes
-            $table->string('invoice_number')->unique();
+            $table->string('invoice_number')->unique()->nullable();
             $table->date('date');
             $table->date('due_date')->nullable();
-            $table->decimal('total_amount', 10, 2)->default(0);
+            $table->decimal('cost_products', 25, 2)->default(0);
+            $table->decimal('vat_input', 25, 2)->default(0);
+            $table->decimal('cost_packing', 25, 2)->default(0);
+            $table->decimal('cost_insurance', 25, 2)->default(0);
+            $table->decimal('cost_freight', 25, 2)->default(0);
+            $table->decimal('total_amount', 30, 2)->default(0);
             $table->string('status')->default('unpaid');
             $table->text('notes')->nullable();
 

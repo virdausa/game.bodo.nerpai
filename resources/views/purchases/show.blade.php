@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-white">
-                    <h1 class="text-2xl font-bold mb-6">Purchase Details</h1>
+                    <h1 class="text-2xl font-bold mb-6">Purchase Details: {{ $purchase->po_number }}</h1>
                     <div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
                     <h3 class="text-lg font-bold my-3">Supplier Details</h3>
@@ -133,8 +133,73 @@
                             @endif
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
-                    <a href="{{ route('purchases.index') }}"
-                        class="mt-6 border rounded border-gray-400 dark:border-gray-700 p-3 text-lg hover:underline text-gray-700 dark:text-gray-400">Cancel</a>
+                    <!-- Invoice Section -->
+                    <h3 class="text-lg font-bold my-3">Invoices</h3>
+                    <div class="overflow-x-auto">
+                        <x-table-table>
+                            <x-table-thead>
+                                <tr class>
+                                    <x-table-th>Id</x-table-th>
+                                    <x-table-th>Invoice Number</x-table-th>
+                                    <x-table-th>Date</x-table-th>
+                                    <x-table-th>Due Date</x-table-th>
+                                    <x-table-th>Total Amount</x-table-th>
+                                    <x-table-th>Notes</x-table-th>
+                                    <x-table-th>Status</x-table-th>
+                                    <x-table-th>Actions</x-table-th>
+                                </tr>
+                            </x-table-thead>
+                            <x-table-tbody>
+                                @foreach ($purchase->purchase_invoices as $invoice)
+                                    <x-table-tr>
+                                        <x-table-td>{{ $invoice->id }}</x-table-td>
+                                        <x-table-td>{{ $invoice->invoice_number }}</x-table-td>
+                                        <x-table-td>{{ $invoice->date }}</x-table-td>
+                                        <x-table-td>{{ $invoice->due_date }}</x-table-td>
+                                        <x-table-td>Rp{{ number_format($invoice->total_amount, 2) }}</x-table-td>
+                                        <x-table-td>{{ $invoice->notes }}</x-table-td>
+                                        <x-table-td>{{ $invoice->status }}</x-table-td>
+                                        <x-table-td>
+                                            <div class="flex space-x-2">
+                                                <x-button-show :route="route('purchase_invoices.show', $invoice->id)" />
+                                                <x-button-edit :route="route('purchase_invoices.edit', $invoice->id)" />
+                                                <x-button-delete :route="route('purchase_invoices.destroy', $invoice->id)" />
+                                            </div>
+                                        </x-table-td>
+                                    </x-table-tr>
+                                @endforeach
+                            </x-table-tbody>
+                        </x-table-table>
+                    </div>
+                    <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
+
+                    <!-- Action Section -->
+                    <h3 class="text-lg font-bold my-3">Actions</h3>
+                    <div>
+                        @if ($purchase->status == 'PO_PLANNED')
+                        <div class="flex justify mt-4">
+                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_REQUEST_TO_SUPPLIER']) }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <x-primary-button type="submit">Kirim Pembelian ke Supplier</x-primary-button>
+                            </form>
+                        </div>
+                        @endif
+                        @if ($purchase->status == 'PO_REQUEST_TO_SUPPLIER')
+                        <div class="flex justify-end mt-4">    
+                            <x-primary-button>
+                                <a href="{{ route('purchases.edit', $purchase->id) }}">Input Invoice Fix dari Supplier</a>
+                            </x-primary-button>
+                        </div>
+                        @endif
+                    </div>
+
+                    <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
+
+                    <!-- Back Button -->
+                    <x-secondary-button>
+                        <a href="{{ route('purchases.index') }}">Back to List</a>
+                    </x-secondary-button>
                 </div>
             </div>
         </div>

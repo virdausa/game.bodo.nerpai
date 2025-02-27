@@ -51,19 +51,14 @@
 
 									<x-table-td>
 										<div class="flex items-center gap-3 justify-end">
-									<x-button-show :route="route('purchases.show', $purchase->id)" />
-										@if ($purchase->status != 'Completed')
-											<x-button-edit :route="route('purchases.edit', $purchase->id)" />
-
+											<x-button-show :route="route('purchases.show', $purchase->id)" />
+											@if ($purchase->status == 'PO_PLANNED' ||
+												$purchase->status == 'PO_REQUEST_TO_SUPPLIER')
+												<x-button-edit :route="route('purchases.edit', $purchase->id)" />
 											@endif
-											@if ($purchase->status == 'Planned')
-											<form action="{{ route('purchases.destroy', $purchase->id) }}" method="POST">
-													@csrf
-													@method('DELETE')
-													<x-button-delete :route="route('purchases.destroy', $purchase->id)" />
-												</form>
-										@endif
+											<x-button-delete :route="route('purchases.destroy', $purchase->id)" />
 										</div>
+									<x-button-add :route="route('purchases.duplicate', $purchase->id)" text="Copy"/>
 									</x-table-td>
 								</x-table-tr>
 							@endforeach

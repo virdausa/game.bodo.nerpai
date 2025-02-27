@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +16,11 @@ class PurchaseInvoice extends Model
         'invoice_number',
         'date',
         'due_date',
+        'cost_products',
+        'vat_input',
+        'cost_packing',
+        'cost_insurance',
+        'cost_freight',
         'total_amount',
         'status',
         'notes'
@@ -30,5 +35,11 @@ class PurchaseInvoice extends Model
     public function purchase(): BelongsTo
     {
         return $this->belongsTo(Purchase::class);
+    }
+
+    public function generateInvoiceNumber(): string
+    {
+        $this->invoice_number = 'INV_' . $this->id . '_' . $this->purchase->po_number;
+        return $this->invoice_number;
     }
 }
