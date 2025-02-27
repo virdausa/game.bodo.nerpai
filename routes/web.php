@@ -13,6 +13,7 @@ use App\Http\Controllers\CompanyController;
 
 use App\Http\Controllers\Company\StoreController;
 
+use App\Http\Middleware\AppMiddleware;
 use App\Http\Middleware\CompanyMiddleware;
 
 Route::get('/', function () {
@@ -24,7 +25,10 @@ Route::get('/lobby', function () {
 })->middleware(['auth', 'verified'])->name('lobby');
 
 // App
-Route::middleware(['auth'])->group(function () { 
+Route::middleware([
+    'auth',
+    AppMiddleware::class,
+])->group(function () { 
     Route::resource('users', UserController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

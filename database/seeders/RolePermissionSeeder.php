@@ -22,9 +22,10 @@ class RolePermissionSeeder extends Seeder
             'permissions sidebar',
             
             'crud roles',
-
+            
             'crud user',
-
+            
+            'companies',
             'crud company',
 
             'crud permissions',
@@ -43,6 +44,7 @@ class RolePermissionSeeder extends Seeder
             'User' => [
                 'company sidebar',
 
+                'companies',
                 'crud company',
             ],
             'Admin' => [
@@ -55,6 +57,7 @@ class RolePermissionSeeder extends Seeder
 
                 'crud user',
 
+                'companies',
                 'crud company',
 
                 'crud permissions',
