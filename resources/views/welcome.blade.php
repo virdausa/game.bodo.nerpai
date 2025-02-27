@@ -25,6 +25,8 @@
                 <p class="text-sm text-center text-gray-500">Your go-to destination for a highly
                     performant, highly adaptive ERP solution</p>
                 <div class="flex space-x-4 mt-4">
+                    <a href="https://nerpai.space"
+                        class="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/80">Website</a>
                     @if (Route::has('login'))
                         @auth
                             <a href="{{ route('lobby') }}"
