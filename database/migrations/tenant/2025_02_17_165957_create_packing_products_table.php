@@ -12,13 +12,13 @@ return new class extends Migration {
             $table->id();
 
             // Foreign keys
-            $table->foreignId('packing_id')->constrained('shipment_packings', 'id');
-            $table->foreignId('product_id')->constrained('products', 'id');
+            $table->foreignId('packing_id')->constrained('shipment_packings', 'id')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('products', 'id')->onDelete('cascade');
 
             // Attributes
-            $table->integer('quantity');
-            $table->decimal('packing_weight', 10, 2);
-            $table->decimal('packing_volume', 10, 2);
+            $table->integer('quantity')->default(1);
+            $table->decimal('packing_weight', 15, 2)->default(0);
+            $table->decimal('packing_volume', 15, 2)->default(0);
             $table->text('notes')->nullable();
 
             // Timestamps

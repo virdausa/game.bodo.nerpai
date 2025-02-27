@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('shipments', function (Blueprint $table) {
             // Primary key
             $table->id();
+            $table->string('shipment_number')->nullable()->unique();
 
             // Polymorphic shipper (WH/SUP/CUST)
             $table->string('shipper_type');  // 'WH', 'SUP', 'CUST'
@@ -28,19 +29,19 @@ return new class extends Migration
             $table->json('destination_address');
 
             // Transaction details (PO/SO/MOVE)
-            $table->string('transaction_type'); // 'PO', 'SO', 'MOVE'
+            $table->string('transaction_type')->default('MOVE'); // 'PO', 'SO', 'MOVE'
             $table->unsignedBigInteger('transaction_id')->nullable();
-
-            // // Foreign keys
-            // $table->foreignId('carrier_id')->constrained();
 
             // Shipment details
             $table->date('ship_date');
             $table->string('tracking_number')->nullable();
-            $table->decimal('shipping_fee', 10, 2);
+            $table->decimal('shipping_fee', 15, 2)->default(0);
             $table->string('payment_rules')->nullable(); // COD/etc
             $table->text('notes')->nullable();
-            $table->string('status')->nullable(false);
+            $table->string('status')->default('SHIP_IN_TRANSIT');
+
+            // Packing Details
+            $table->integer('packing_quantity')->default(1);
 
             // Timestamps
             $table->timestamps();

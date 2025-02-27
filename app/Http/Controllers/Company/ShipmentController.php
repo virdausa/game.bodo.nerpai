@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Company\Shipment;
+use App\Models\Company\Courier;
 
 class ShipmentController extends Controller
 {
@@ -46,7 +47,10 @@ class ShipmentController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $shipment = Shipment::findOrFail($id);
+        $couriers = Courier::all();
+
+        return view('company.shipments.edit', compact('shipment', 'couriers'));
     }
 
     /**
@@ -54,7 +58,23 @@ class ShipmentController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'courier_id' => 'required|exists:couriers,id',
+            'ship_date' => 'required|date',
+            'tracking_number' => 'required|string|max:255',
+            'shipping_fee' => 'required|numeric',
+            'payment_rules' => 'nullable|string|max:255',
+            'packing_quantity' => 'required|integer',
+            'notes' => 'nullable|string',
+        ]);
+
+        $shipment = Shipment::findOrFail($id);
+        $shipment->update($validated);
+        $shipment->generateShipmentNumber();
+        $shipment->save();
+
+        $referrer = $request->referrer;
+        return redirect()->to($referrer ?? route('shipments.index'))->with('success', "Shipment {$shipment->shipment_number} updated successfully.");
     }
 
     /**

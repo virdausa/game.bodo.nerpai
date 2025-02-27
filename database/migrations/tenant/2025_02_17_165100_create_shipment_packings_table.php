@@ -13,12 +13,10 @@ return new class extends Migration {
 
             // Foreign keys
             $table->foreignId('shipment_id')->constrained('shipments', 'id');
-            $table->foreignId('employee_id')->constrained('employees', 'id');
 
             // Attributes
-            $table->integer('quantity')->default(1);
-            $table->decimal('weight', 10, 2);
-            $table->decimal('volume', 10, 2);
+            $table->decimal('weight', 20, 2);
+            $table->decimal('volume', 20, 2);
             $table->text('notes')->nullable();
 
             // Timestamps

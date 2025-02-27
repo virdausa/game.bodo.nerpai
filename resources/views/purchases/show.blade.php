@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-company-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
@@ -173,6 +173,45 @@
                     </div>
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
+                    <!-- Invoice Section -->
+                    <h3 class="text-lg font-bold my-3">Shipments</h3>
+                    <div class="overflow-x-auto">
+                        <x-table-table>
+                            <x-table-thead>
+                                <tr>
+                                    <x-table-th>ID</x-table-th>
+                                    <x-table-th>Pengirim</x-table-th>
+                                    <x-table-th>Penerima</x-table-th>
+                                    <x-table-th>Transaksi</x-table-th>
+                                    <x-table-th>Tanggal</x-table-th>
+                                    <x-table-th>Status</x-table-th>
+                                    <x-table-th>Notes</x-table-th>
+                                    <x-table-th>Actions</x-table-th>
+                                </tr>
+                            </x-table-thead>
+                            <x-table-tbody>
+                                @foreach ($purchase->shipments as $shipment)
+                                    <x-table-tr>
+                                        <x-table-td>{{ $shipment->id }}</x-table-td>
+                                        <x-table-td>{{ $shipment->shipper_type }} : {{ $shipment->shipper_id }}</x-table-td>
+                                        <x-table-td>{{ $shipment->consignee_type }} : {{ $shipment->consignee_id }}</x-table-td>
+                                        <x-table-td>{{ $shipment->transaction_type }} : {{ $shipment->transaction_id }}</x-table-td>
+                                        <x-table-td>{{ $shipment->ship_date }}</x-table-td>
+                                        <x-table-td>{{ $shipment->status }}</x-table-td>
+                                        <x-table-td>{{ $shipment->notes }}</x-table-td>
+                                        <x-table-td>
+                                            <div class="flex items-center space-x-2">
+                                                <x-button-show :route="route('shipments.show', $shipment->id)" />
+                                                <x-button-edit :route="route('shipments.edit', $shipment->id)" />
+                                            </div>
+                                        </x-table-td>
+                                    </x-table-tr>
+                                @endforeach
+                            </x-table-tbody>
+                        </x-table-table>
+                    </div>
+                    <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
+
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
                     <div>
@@ -192,6 +231,26 @@
                             </x-primary-button>
                         </div>
                         @endif
+
+                        @if ($purchase->status == 'PO_CONFIRMED')
+                        <div class="flex justify mt-4">
+                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_DP_CONFIRMED']) }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <x-primary-button type="submit">Konfirmasi Pembayaran/DP Lunas ke Supplier</x-primary-button>
+                            </form>
+                        </div>
+                        @endif
+
+                        @if ($purchase->status == 'PO_DP_CONFIRMED')
+                        <div class="flex justify mt-4">
+                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_SHIPMENT_CONFIRMED']) }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <x-primary-button type="submit">Input Shipment dari Supplier</x-primary-button>
+                            </form>
+                        </div>
+                        @endif
                     </div>
 
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
@@ -204,4 +263,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-company-layout>

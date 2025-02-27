@@ -9,14 +9,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ShipmentPacking extends Model
 {
+    protected $table = 'shipment_packings';
+
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
         'shipment_id',
-        'quantity',
         'weight',
         'volume',
-        'employee_id',
         'notes'
     ];
 
@@ -30,8 +30,10 @@ class ShipmentPacking extends Model
         return $this->belongsTo(Shipment::class);
     }
 
-    public function employee(): BelongsTo
+    public function packing_products(): belongsToMany
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsToMany(Product::class, 'packing_products')
+                    ->withPivot('quantity', 'packing_weight', 'packing_volume')
+                    ->withTimestamps();
     }
 }

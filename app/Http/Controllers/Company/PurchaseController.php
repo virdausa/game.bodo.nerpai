@@ -9,6 +9,7 @@ use App\Models\Company\Warehouse;
 use App\Models\InventoryHistory;
 use App\Models\InboundRequest;
 use App\Models\Supplier;
+use App\Models\Company\Shipment;
 use Illuminate\Http\Request;
 
 use App\Http\Controllers\Controller;
@@ -198,6 +199,12 @@ class PurchaseController extends Controller
 			case 'PO_CONFIRMED':
 				$this->inputInvoiceFromSupplier($purchase);
 				break;
+			case 'PO_DP_CONFIRMED':
+				$this->confirmPaymenttoSupplier($purchase);
+				break;
+			case 'PO_SHIPMENT_CONFIRMED':
+				$this->inputShipmentFromSupplier($purchase);
+				break;
 			default:
 				abort(404);
 		}
@@ -229,5 +236,36 @@ class PurchaseController extends Controller
 		$purchase_invoice->save();
 
 		return redirect()->route('purchase_invoices.edit', $purchase_invoice->id)->with('success', "Invoice {$purchase_invoice->invoice_number} created successfully");
+	}
+
+	public function confirmPaymenttoSupplier($purchase){
+		$purchase->status = 'PO_DP_CONFIRMED';
+
+		// notify supplier
+
+		$purchase->save();
+	}
+	
+	public function inputShipmentFromSupplier($purchase){
+		$purchase->status = 'PO_SHIPMENT_CONFIRMED';
+		$purchase->save();
+		
+		$shipment = Shipment::create([
+			'shipper_type' => 'SUP',
+			'shipper_id' => $purchase->supplier_id,
+			'origin_address' => $purchase->supplier->address,
+			'consignee_type' => 'WH',
+			'consignee_id' => $purchase->warehouse_id,
+			'destination_address' => $purchase->warehouse->address,
+
+			'transaction_type' => 'PO',
+			'transaction_id' => $purchase->id,
+
+			'ship_date' => date('Y-m-d'),
+		]);
+		$shipment->generateShipmentNumber();
+		$shipment->save();
+
+		return redirect()->route('shipments.edit', $shipment->id)->with('success', "Shipment {$shipment->shipment_number} created successfully");
 	}
 }

@@ -26,7 +26,7 @@ class Shipment extends Model
         'destination_address',
         'transaction_type',
         'transaction_id',
-        'carrier_id',
+        'courier_id',
         'ship_date',
         'tracking_number',
         'shipping_fee',
@@ -66,5 +66,11 @@ class Shipment extends Model
     public function storeOutbounds(): HasMany
     {
         return $this->hasMany(StoreOutbound::class);
+    }
+
+    public function generateShipmentNumber(): string
+    {
+        $this->shipment_number = 'SHP_' . $this->id . '_' . $this->transaction_type . '_' . $this->transaction_id;
+        return 'SHIP-' . $this->id;
     }
 }

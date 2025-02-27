@@ -15,6 +15,10 @@ return new class extends Migration
             // Primary keys
             $table->foreignId('courier_id')->nullable()->constrained()->nullOnDelete();
         });
+
+        Schema::table('shipments', function (Blueprint $table) {
+            $table->foreignId('courier_id')->nullable()->constrained()->nullOnDelete();
+        });
     }
 
     /**
@@ -24,6 +28,11 @@ return new class extends Migration
     {
         Schema::table('sales', function (Blueprint $table) {
             $table->dropForeign('sales_courier_id_foreign');
+            $table->dropColumn('courier_id');
+        });
+
+        Schema::table('shipments', function (Blueprint $table) {
+            $table->dropForeign('shipments_courier_id_foreign');
             $table->dropColumn('courier_id');
         });
     }
