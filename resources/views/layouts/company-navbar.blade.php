@@ -14,6 +14,16 @@
                         </path>
                     </svg>
                 </button>
+
+                <!-- Tombol Toggle -->
+                <button id="toggleSidebar" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                    <svg id="toggleIcon" class="w-5 h-5 text-gray-600 dark:text-gray-300 transition-transform duration-300" 
+                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                    <span class="sr-only">Toggle sidebar</span>
+                </button>
+
                 <a href="{{ route('dashboard') }}" class="flex ms-2 mr-4">
                     <img src="{{ asset('svg/hehe.svg') }}" class="h-8 me-3 dark:invert" alt="HEHE" />
                     <!-- <img src="{{ asset('svg/'.session('company_id').'.svg') }}" class="h-8 me-3 dark:invert" alt="HEHE" /> -->

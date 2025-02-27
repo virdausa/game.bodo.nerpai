@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-company-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
@@ -22,12 +22,12 @@
 
                             <div class="mb-4">
                                 <x-input-label for="po_date">Purchase Date</x-input-label>
-                                <input type="date" name="po_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ ($purchase->po_date)->format('Y-m-d') }}" {{ $purchase->status != 'Planned' ? 'readonly' : '' }}>
+                                <input type="date" name="po_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ ($purchase->po_date)->format('Y-m-d') }}" >
                             </div>
 
                             <div class="mb-4">
                                 <x-input-label for="warehouse_id">Select Warehouse</x-input-label>
-                                <select name="warehouse_id" id="warehouse_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" {{ $purchase->status != 'Planned' ? 'readonly' : '' }}>
+                                <select name="warehouse_id" id="warehouse_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" >
                                     @foreach($warehouses as $warehouse)
                                     <option value="{{ $warehouse->id }}" {{ $purchase->warehouse_id == $warehouse->id ? 'selected' : '' }}>{{ $warehouse->name }}</option>
                                     @endforeach
@@ -63,17 +63,17 @@
 									<div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700">
 									</div>    
                                 <x-input-label for="product_id">Select Product</x-input-label>
-                                    <select name="products[{{ $index }}][product_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" {{ $purchase->status != 'Planned' ? 'readonly' : '' }} required>
+                                    <select name="products[{{ $index }}][product_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"  required>
                                         @foreach ($products as $availableProduct)
                                         <option value="{{ $availableProduct->id }}" {{ $availableProduct->id == $product->id ? 'selected' : '' }}>{{ $availableProduct->name }} - Rp{{ $availableProduct->price }}</option>
                                         @endforeach
                                     </select>
 
                                     <x-input-label for="quantity">Quantity</x-input-label>
-                                    <input type="number" name="products[{{ $index }}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $product->pivot->quantity }}" required {{ $purchase->status != 'Planned' ? 'readonly' : '' }}>
+                                    <input type="number" name="products[{{ $index }}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $product->pivot->quantity }}" required >
 
                                     <x-input-label for="buying_price">Buying Price</x-input-label>
-                                    <input type="number" name="products[{{ $index }}][buying_price]" step="0.01" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $product->pivot->buying_price }}" required {{ $purchase->status != 'Planned' ? 'readonly' : '' }}>
+                                    <input type="number" name="products[{{ $index }}][buying_price]" step="0.01" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $product->pivot->buying_price }}" required >
                                 </div>
                                 @endforeach
                             </div>
@@ -152,4 +152,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-company-layout>

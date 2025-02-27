@@ -1,7 +1,11 @@
 @extends('layouts.base')
 
+@section('navbar')
+    @include('layouts.company-navbar')
+@endsection
+
 @section('sidebar')
-    @include('layouts.sidebar-lobby')
+    @include('layouts.sidebar-company')
 @endsection
 
 @section('main-content')

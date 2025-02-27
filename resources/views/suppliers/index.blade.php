@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-company-layout>
     <div class="pt-12">
         <div class="max-w-7xl my-10 mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
@@ -59,4 +59,4 @@
         </div>
     </div>
     
-</x-app-layout>
+</x-company-layout>

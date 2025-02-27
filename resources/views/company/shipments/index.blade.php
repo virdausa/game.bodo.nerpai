@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-company-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Shipments') }}
@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-white">
-                    <h3 class="text-lg font-bold dark:text-white">Manage Shipments</h3>
+                    <h3 class="text-2xl font-bold dark:text-white">Manage Shipments</h3>
                     <p class="text-sm dark:text-gray-200 mb-6">Create, edit, and manage your shipment listings.</p>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
 
@@ -18,7 +18,7 @@
                         
                         <div class="w-full md:w-auto flex justify-end">
                             <a href="{{ route('shipments.create') }}">
-                                <x-button-add :route="route('shipments.create')" text="Add Product" />
+                                <x-button-add :route="route('shipments.create')" text="Create New Shipment" />
                             </a>
                         </div>
                     </div>
@@ -40,8 +40,8 @@
                             @foreach ($shipments as $shipment)
                                 <x-table-tr>
                                     <x-table-td>{{ $shipment->id }}</x-table-td>
-                                    <x-table-td>{{ $shipment->shipper }} : {{ $shipment->shipper_id }}</x-table-td>
-                                    <x-table-td>{{ $shipment->consignee }} : {{ $shipment->consignee_id }}</x-table-td>
+                                    <x-table-td>{{ $shipment->shipper_type }} : {{ $shipment->shipper_id }}</x-table-td>
+                                    <x-table-td>{{ $shipment->consignee_type }} : {{ $shipment->consignee_id }}</x-table-td>
                                     <x-table-td>{{ $shipment->transaction_type }} : {{ $shipment->transaction_id }}</x-table-td>
                                     <x-table-td>{{ $shipment->ship_date }}</x-table-td>
                                     <x-table-td>{{ $shipment->status }}</x-table-td>
@@ -50,11 +50,7 @@
                                         <div class="flex items-center space-x-2">
                                             <x-button-show :route="route('shipments.show', $shipment->id)" />
                                             <x-button-edit :route="route('shipments.edit', $shipment->id)" />
-                                            <form action="{{ route('shipments.destroy', $shipment->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('shipments.destroy', $shipment->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('shipments.destroy', $shipment->id)" />
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>
@@ -66,4 +62,4 @@
         </div>
     </div>
    
-</x-app-layout>
+</x-company-layout>

@@ -402,7 +402,7 @@
                 session('employee')?->can('permissions sidebar'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-                        onclick="toggleDropdown('access-menu')">
+                        onclick="toggleDropdown('access-menu'); toggleSidebar();">
                         <div class="flex items-center">
                             <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                                 aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">

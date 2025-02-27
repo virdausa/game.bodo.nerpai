@@ -42,6 +42,14 @@
             background-color: #4b5563;
             /* Hover color for dark mode */
         }
+
+        #main-content {
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar-collapsed #main-content {
+            margin-left: 4rem;
+        }
     </style>
 
     <script>
@@ -56,23 +64,62 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-sans antialiased bg-gray-100 dark:bg-gray-900"> 
-    @include('layouts.company-navbar')
-    @include('layouts.sidebar-company')
+<body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
+    @yield('navbar')
+    @yield('sidebar')
     <!-- Page Content -->
 
-    <main class="p-4 sm:ml-64 sm:mt-12">
-        <div id="content">
-            {{ $slot }}
-            
-
-            @include('layouts.footer')
-        </div>
+    <main id="main-content" class="p-4 sm:ml-64 sm:mt-12 transition-all duration-300">
+        @yield('main-content')
     </main>
-
 
     <script src="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            let sidebar = document.getElementById("logo-sidebar");
+            let mainContent = document.getElementById("main-content");
+            let textElements = document.querySelectorAll(".sidebar-text");
+            let toggleIcon = document.getElementById("toggleIcon");
+
+            // Cek state terakhir di localStorage
+            let sidebarState = localStorage.getItem("sidebarState");
+
+            document.getElementById("toggleSidebar").addEventListener("click", function () {
+                document.body.classList.toggle("sidebar-collapsed");
+
+                if (sidebar.classList.contains("w-64")) {
+                    sidebar.classList.replace("w-64", "w-16");
+                    mainContent.classList.replace("sm:ml-64", "sm:ml-16");
+                    toggleIcon.classList.add("rotate-180");
+
+                    textElements.forEach(el => el.classList.add("hidden"));
+                    localStorage.setItem("sidebarState", "collapsed");
+                } else {
+                    sidebar.classList.replace("w-16", "w-64");
+                    mainContent.classList.replace("sm:ml-16", "sm:ml-64");
+                    toggleIcon.classList.remove("rotate-180");
+
+                    textElements.forEach(el => el.classList.remove("hidden"));
+                    localStorage.setItem("sidebarState", "expanded");
+                }
+            });
+
+            if (sidebarState == "collapsed") {
+                // click toggle button
+                document.getElementById("toggleSidebar").click();
+            } 
+        });
+
+        function toggleSidebar(state = 'collapsed') {
+            let sidebarState = localStorage.getItem("sidebarState");
+
+            if(sidebarState == "collapsed"){
+                document.getElementById("toggleSidebar").click();
+            }
+        }
+    </script>
 
     <script>
         function setActive(element) {

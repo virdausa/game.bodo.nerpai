@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-company-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-gray-200">
             {{ __('Create New Supplier') }}
@@ -65,4 +65,4 @@
             </div>
         </div>
     </div>
-</x-app-layout>
+</x-company-layout>
