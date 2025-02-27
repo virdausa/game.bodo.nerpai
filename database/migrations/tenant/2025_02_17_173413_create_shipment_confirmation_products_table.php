@@ -13,7 +13,7 @@ return new class extends Migration {
 
             // Foreign Keys
             $table->foreignId('shipment_confirmation_id')->constrained('shipment_confirmations')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->nullOnDelete();
+            $table->foreignId('product_id')->constrained()->onDelete('cascade');
 
             // Attributes
             $table->integer('quantity')->default(1);

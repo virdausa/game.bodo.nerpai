@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\WarehouseLocation;
-use App\Models\Warehouse;
+use App\Models\Company\WarehouseLocation;
+use App\Models\Company\Warehouse;
 use Illuminate\Database\Seeder;
 
 class WarehouseSeeder extends Seeder
@@ -14,6 +14,7 @@ class WarehouseSeeder extends Seeder
     public function run(): void
     {
         $warehouse1 = Warehouse::create([
+            'code' => 'WH1',
             'name' => 'Warehouse 1',
             'address' => json_encode([
                 'street' => 'Jl. Contoh 1',
@@ -27,6 +28,7 @@ class WarehouseSeeder extends Seeder
         ]);
 
         $warehouse2 = Warehouse::create([
+            'code' => 'WH2',
             'name' => 'Warehouse 2',
             'address' => json_encode([
                 'street' =>  'Jl. Contoh 2',
@@ -39,7 +41,7 @@ class WarehouseSeeder extends Seeder
             'notes' => 'Seeder',
         ]);
 
-        for ($room = 1; $room <= 3; $room++) {
+        for ($room = 1; $room <= 2; $room++) {
             for ($rack = 1; $rack <= 2; $rack++) {
                 WarehouseLocation::create([
                     'warehouse_id' => $warehouse1->id,

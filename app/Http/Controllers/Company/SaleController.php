@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Company;
 use App\Models\Company\Sale;
 use App\Models\SalesProduct;
 use App\Models\Product;
-use App\Models\Warehouse;
+use App\Models\Company\Warehouse;
 use App\Models\Company\Courier;
 use App\Models\Customer;
 use App\Models\Employee;
