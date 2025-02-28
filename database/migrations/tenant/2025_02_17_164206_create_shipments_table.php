@@ -34,6 +34,7 @@ return new class extends Migration
 
             // Shipment details
             $table->date('ship_date');
+            $table->date('delivery_date')->nullable();
             $table->string('tracking_number')->nullable();
             $table->decimal('shipping_fee', 15, 2)->default(0);
             $table->string('payment_rules')->nullable(); // COD/etc

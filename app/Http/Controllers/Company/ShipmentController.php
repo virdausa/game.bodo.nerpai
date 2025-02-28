@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Company;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+
 use App\Models\Company\Shipment;
+use App\Models\Company\ShipmentConfirmation;
 use App\Models\Company\Courier;
 
 class ShipmentController extends Controller
@@ -39,7 +41,9 @@ class ShipmentController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $shipment = Shipment::with('shipper', 'consignee', 'transaction', 'courier', 'shipment_confirmations')
+                            ->findOrFail($id);
+        return view('company.shipments.show', compact('shipment'));
     }
 
     /**
@@ -83,5 +87,83 @@ class ShipmentController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    
+    public function confirm($id){
+        $shipment_confirmation = ShipmentConfirmation::with('products', 'shipment')
+                                ->findOrFail($id);
+        $shipment = $shipment_confirmation->shipment;
+        $products = $shipment_confirmation->products;
+
+        return view('company.shipments.confirm', compact('shipment_confirmation', 'shipment', 'products'));
+    }
+
+    public function confirm_show($id){
+        $shipment_confirmation = ShipmentConfirmation::with('products', 'shipment')
+                                ->findOrFail($id);
+
+        return view('company.shipments.confirm', compact('shipment_confirmation'));
+    }
+
+    public function confirm_update(Request $request, $id){
+        $validated = $request->validate([
+            'received_time' => 'required|date',
+            'consignee_name' => 'nullable|string|max:255',
+            'notes' => 'nullable|string',
+        ]);
+
+        $shipment_confirmation = ShipmentConfirmation::findOrFail($id);
+        $shipment_confirmation->update($validated);
+        $shipment_confirmation->save();
+
+        $referrer = $request->referrer;
+        if($referrer == route('shipments.confirm', $shipment_confirmation->id)){
+            $referrer = "";     // reset it
+        }
+        return redirect()->to($referrer ?? route('shipments.index'))->with('success', "Shipment Confirmation ID:{$shipment_confirmation->id} updated successfully.");
+    }
+
+
+
+    public function handleAction(Request $request, $shipments, $action){
+		$shipment = Shipment::findOrFail($shipments);
+
+		switch($action){
+			case 'SHP_DELIVERY_CONFIRMED':
+				return $this->inputDeliveryConfirmation($shipment);
+				break;
+			default:
+				abort(404);
+		}
+
+		return redirect()->route('shipments.index')->with('success', "Shipment {$shipment->shipment_numer} updated successfully.");
+	}
+
+    public function inputDeliveryConfirmation($shipment){
+        $shipment->status = 'SHP_DELIVERY_CONFIRMED';
+        $shipment->save();
+
+        $employee = session('employee');
+
+        $shipment_confirmation = ShipmentConfirmation::create([
+            'shipment_id' => $shipment->id,
+            'employee_id' => $employee->id,
+            'received_time' => now()->format('Y-m-d H:i:s'),
+        ]);
+
+        // pre input produk
+        $products = $shipment->transaction->products;
+        if($products->isNotEmpty()){
+            foreach($products as $product){
+                $shipment_confirmation->products()->attach($product->id, [
+                    'quantity' => $product->pivot->quantity,
+                    'condition' => 'SC_OK',
+                ]);
+            }
+        }
+
+        return redirect()->route('shipments.confirm', $shipment_confirmation->id)->with('success', "Shipment Confirmation {$shipment->shipment_number} created successfully.");
     }
 }

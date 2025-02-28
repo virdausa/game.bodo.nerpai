@@ -8,7 +8,7 @@ use App\Models\Product;
 use App\Models\Company\Warehouse;
 use App\Models\InventoryHistory;
 use App\Models\InboundRequest;
-use App\Models\Supplier;
+use App\Models\Company\Supplier;
 use App\Models\Company\Shipment;
 use Illuminate\Http\Request;
 
@@ -203,7 +203,7 @@ class PurchaseController extends Controller
 				$this->confirmPaymenttoSupplier($purchase);
 				break;
 			case 'PO_SHIPMENT_CONFIRMED':
-				$this->inputShipmentFromSupplier($purchase);
+				return $this->inputShipmentFromSupplier($purchase);
 				break;
 			default:
 				abort(404);
@@ -216,8 +216,6 @@ class PurchaseController extends Controller
 		$purchase->status = 'PO_REQUEST_TO_SUPPLIER';
 
 		// Create Request to Supplier if connected
-
-
 
 		$purchase->save();
 	}

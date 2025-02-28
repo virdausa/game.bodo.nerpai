@@ -68,6 +68,17 @@ class Shipment extends Model
         return $this->hasMany(StoreOutbound::class);
     }
 
+    public function courier(): BelongsTo
+    {
+        return $this->belongsTo(Courier::class);
+    }
+
+    public function shipment_confirmations(): HasMany
+    {
+        return $this->hasMany(ShipmentConfirmation::class);
+    }
+
+
     public function generateShipmentNumber(): string
     {
         $this->shipment_number = 'SHP_' . $this->id . '_' . $this->transaction_type . '_' . $this->transaction_id;

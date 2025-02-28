@@ -68,5 +68,9 @@ Route::middleware(['auth',
 
 
     Route::resource("shipments", ShipmentController::class);
+    Route::post('shipments/{shipments}/action/{action}', [ShipmentController::class, 'handleAction'])->name('shipments.action');
+    Route::get('shipments/{id}/confirm', [ShipmentController::class, 'confirm'])->name('shipments.confirm');
+    Route::put('shipments/{id}/confirm-update', [ShipmentController::class, 'confirm_update'])->name('shipments.confirm-update');
+    Route::get('shipments/{id}/confirm-show', [ShipmentController::class, 'confirm_show'])->name('shipments.confirm-show');
     Route::resource("couriers", CourierController::class);
 });

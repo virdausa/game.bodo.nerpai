@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Product;
+use App\Models\Employee;
+use App\Models\Company\Shipment;
 
 class ShipmentConfirmation extends Model
 {
@@ -21,6 +23,7 @@ class ShipmentConfirmation extends Model
         'employee_id',
         'consignee_type',
         'consignee_id',
+        'consignee_name',
         'consignee_signature',
         'received_time',
         'notes'
@@ -34,7 +37,7 @@ class ShipmentConfirmation extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'shipment_confirmation_products')
-                    ->withPivot('quantity', 'condition', 'notes')
+                    ->withPivot('id','quantity', 'condition', 'notes')
                     ->withTimestamps();
     }
 
