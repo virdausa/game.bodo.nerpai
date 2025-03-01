@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Product;
+use App\Models\Company\Warehouse;
+use App\Models\Company\WarehouseLocation;
+
 class Inventory extends Model
 {
     use HasFactory;

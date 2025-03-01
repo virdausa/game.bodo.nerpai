@@ -22,7 +22,9 @@ class InboundController extends Controller
     public function index()
     {
 		$warehouse = Warehouse::findOrFail(session('company_warehouse_id'));
-        $inbounds = Inbound::with('shipment_confirmation', 'warehouse')->orderBy('created_at', 'desc')->get();
+        $inbounds = Inbound::with('shipment_confirmation', 'warehouse')
+								->where('warehouse_id', $warehouse->id)
+								->orderBy('created_at', 'desc')->get();
 		$shipments_incoming = Shipment::where('consignee_type', 'WH')
 										->where('consignee_id', $warehouse->id)
 										->orderBy('created_at', 'desc')->get();
@@ -39,22 +41,7 @@ class InboundController extends Controller
     // Store inbound request
     public function store(Request $request)
     {
-        $request->validate([
-            'purchase_order_id' => 'required|exists:purchases,id',
-            'warehouse_id' => 'required|exists:warehouses,id',
-            'received_quantities' => 'required|array',
-            'received_quantities.*' => 'required|integer|min:0',
-        ]);
-
-        $inboundRequest = Inbound::create([
-            'purchase_order_id' => $request->purchase_order_id,
-            'warehouse_id' => $request->warehouse_id,
-            'received_quantities' => $request->received_quantities,
-            'status' => 'In Transit',
-            'notes' => $request->notes,
-        ]);
-
-        return redirect()->route('warehouse_inbounds.index')->with('success', 'Inbound request created successfully.');
+        
     }
 	
 
@@ -142,53 +129,6 @@ class InboundController extends Controller
             ->with('success', 'Inbound request updated successfully.');
     }
 	
-	
-	public function handleDiscrepancyAction($id, Request $request)
-	{
-		$inboundRequest = Inbound::with('purchase')->findOrFail($id);
-		$action = $request->input('action');
-
-		switch ($action) {
-			case 'accept_partial':
-				// Accept received quantity as-is, mark discrepancy as resolved
-				$inboundRequest->status = 'Ready to Complete';
-				$inboundRequest->notes = 'Discrepancy resolved by accepting partial shipment.';
-				break;
-
-			case 'request_additional':
-				// Create a new inbound request for the remaining quantities
-				Inbound::create([
-					'purchase_order_id' => $inboundRequest->purchase_order_id,
-					'warehouse_id' => $inboundRequest->warehouse_id,
-					'requested_quantities' => ($this->getRemainingQuantities($inboundRequest)),
-					'received_quantities' => ([]), // Start with an empty JSON array
-					'status' => 'In Transit',
-					'notes' => 'Additional inbound request for remaining quantities'
-				]);
-
-				// Update purchase status to indicate pending additional shipment
-				$inboundRequest->status = 'Ready to Complete';
-				$inboundRequest->notes = 'Additional inbound request created for missing items. Dicrepancy resolved';
-				break;
-
-			case 'record_excess':
-				// Logic for recording excess as extra stock
-				$inboundRequest->status = 'Ready to Complete';
-				$inboundRequest->save();
-				// Additional logic to add the excess to inventory could go here
-				break;
-
-			default:
-				return redirect()->back()->with('error', 'Invalid action');
-		}
-
-		$inboundRequest->save();
-
-		// Check overall status of all inbound requests for this purchase
-		$this->updatePurchaseStatus($inboundRequest->purchase_order_id);
-
-		return redirect()->route('purchases.show', $inboundRequest->purchase_order_id)->with('success', 'Discrepancy handled successfully.');
-	}
 
 	// Helper function to calculate remaining quantities for a new inbound request
 	private function getRemainingQuantities($inboundRequest)
@@ -241,64 +181,6 @@ class InboundController extends Controller
 	}
 
 
-	public function storeCompletion($id, Request $request)
-	{
-		$inboundRequest = Inbound::findOrFail($id);
-
-		// Loop through each product's assigned location
-		foreach ($request->input('locations') as $productId => $locationData) {
-			$location = Location::where('warehouse_id', $inboundRequest->warehouse_id)
-								->where('room', $locationData['room'])
-								->where('rack', $locationData['rack'])
-								->first();
-
-			if (!$location) {
-				return back()->withErrors(['error' => 'Invalid room or rack selected for product ID ' . $productId]);
-			}
-
-			// Record each product in inventory history
-			InventoryHistory::create([
-				'product_id' => $productId,
-				'warehouse_id' => $inboundRequest->warehouse_id,
-				'location_id' => $location->id,
-				'quantity' => $inboundRequest->received_quantities[$productId] ?? 0,
-				'transaction_type' => 'Inbound',
-				'notes' => 'Transferred from inbound request ' . $inboundRequest->id,
-			]);
-			
-			
-			// Check if the product already exists in the inventory for the specified warehouse and location
-			$inventory = Inventory::where('product_id', $productId)
-								  ->where('warehouse_id', $inboundRequest->warehouse_id)
-								  ->where('location_id', $location->id)
-								  ->first();
-			if ($inventory) {
-				// If the inventory entry exists, update the quantity
-				$receivedQuantity = $inboundRequest->received_quantities[$productId] ?? 0;
-				$inventory->quantity += $receivedQuantity;
-				$inventory->save();
-			} else {
-				// If no inventory entry exists for this location, create a new one
-				Inventory::create([
-					'product_id' => $productId,
-					'warehouse_id' => $inboundRequest->warehouse_id,
-					'location_id' => $location->id,
-					'quantity' => $inboundRequest->received_quantities[$productId] ?? 0,
-				]);
-			}
-		}
-
-		// Mark the inbound request as completed
-		$inboundRequest->status = 'Completed';
-		$inboundRequest->save();
-
-		// Check overall status of all inbound requests for this purchase
-		$this->updatePurchaseStatus($inboundRequest->purchase_order_id);
-	
-		return redirect()->route('warehouse_inbounds.show', $id)->with('success', 'Inbound request completed.');
-	}
-
-
 
 	public function handleAction(Request $request, $inbounds, $action) {
 		if($inbounds != '0') 
@@ -308,6 +190,12 @@ class InboundController extends Controller
 			case 'INB_REQUEST':
 				// get shipment confirmation
 				return $this->createInboundFromShipment($request->shipment_confirmation);
+			case 'INB_PROCESS':
+				return $this->inputInboundtoWarehouse($inbound);
+				break;
+			case 'INB_COMPLETED':
+				return $this->completeInbound($inbound);
+				break;
 			default:
 				abort(404);
 		}
@@ -336,5 +224,36 @@ class InboundController extends Controller
 		}
 
 		return redirect()->route('warehouse_inbounds.show', $inbound->id)->with('success', "Inbound request created successfully.");
+	}
+
+
+	public function inputInboundtoWarehouse($inbound) {
+		$inbound->status = 'INB_PROCESS';
+		$inbound->save();
+
+		return redirect()->route('warehouse_inbounds.show', $inbound->id)->with('success', "Inbound {$inbound->id} is on Process :)");
+	}
+
+	public function completeInbound($inbound) {
+		$inbound->status = 'INB_COMPLETED';
+		$inbound->save();
+
+		// input inbound products to warehouse & inventory
+		$this->inputInboundProductsToWarehouse($inbound);
+
+		return redirect()->route('warehouse_inbounds.show', $inbound->id)->with('success', "Inbound {$inbound->id} is Completed :D");
+	}
+
+	public function inputInboundProductsToWarehouse($inbound) {
+		$inbound_products = $inbound->inbound_products;
+		foreach($inbound_products as $inbound_product){
+			$inventory = Inventory::create([
+				'warehouse_id' => $inbound->warehouse_id,
+				'product_id' => $inbound_product->product_id,
+				'warehouse_location_id' => $inbound_product->warehouse_location_id,
+				'quantity' => $inbound_product->quantity,
+				'cost_per_unit' => 0.5 * $inbound_product->product->price,
+			]);
+		}
 	}
 }

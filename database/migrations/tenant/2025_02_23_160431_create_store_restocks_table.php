@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('store_restocks', function (Blueprint $table) {
             // Primary key
             $table->id();
+            $table->string('number')->nullable()->unique();
 
             // Foreign keys
             $table->foreignId('store_id')->nullable()->constrained('stores', 'id')->onDelete('set null');
@@ -21,7 +22,8 @@ return new class extends Migration
 
             // Attributes
             $table->date('restock_date');
-            $table->string('status')->default('ST_RES_REQ');
+            $table->decimal('total_amount', 30, 2)->default(0);
+            $table->string('status')->default('STR_REQUEST');
             $table->text('admin_notes')->nullable();
             $table->text('team_notes')->nullable();
 

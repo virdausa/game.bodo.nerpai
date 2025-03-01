@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white border-b border-gray-500 dark:bg-gray-800 dark:border-gray-700 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-white">
-                    {{ __("Anda masuk ke halaman store") }}
+                    {{ __("Anda masuk ke halaman toko: ") }} {{ session('company_store_name') }} 
                 </div>
             </div>
         </div>

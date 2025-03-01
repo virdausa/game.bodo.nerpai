@@ -13,12 +13,15 @@ class StoreRestock extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'store_restocks';
-    protected $timestamps = true;
+    
+    public $timestamps = true;
 
     protected $fillable = [
+        'number',
         'store_id',
         'store_employee_id',
         'restock_date',
+        'total_amount',
         'status',
         'admin_notes',
         'team_notes'
@@ -32,5 +35,12 @@ class StoreRestock extends Model
     public function storeEmployee(): BelongsTo
     {
         return $this->belongsTo(StoreEmployee::class);
+    }
+
+    public function products(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'store_restock_products')
+                    ->withPivot('id', 'quantity', 'cost_per_unit', 'total_cost', 'notes')
+                    ->withTimestamps();
     }
 }

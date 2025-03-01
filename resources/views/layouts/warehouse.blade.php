@@ -5,6 +5,9 @@
     'navbar_right' => [
         'navbar-company-switcher',
     ],
+    'navbar_dropdown_user' => [
+        'navbar-user-back-lobby',
+    ],
     'sidebar' => [
         'Dashboard' => [
             'icon' => 'icon-sidebar',
