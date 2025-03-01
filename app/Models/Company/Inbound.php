@@ -5,6 +5,12 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Employee;
+use App\Models\Product;
+use App\Models\Company\ShipmentConfirmation;
+use App\Models\Company\Warehouse;
+use App\Models\Company\InboundProducts;
+
 class Inbound extends Model
 {
     protected $table = 'inbounds';
@@ -12,46 +18,32 @@ class Inbound extends Model
     use HasFactory;
 
     protected $fillable = [
-        'purchase_order_id',
         'warehouse_id',
-		'requested_quantities',
-        'received_quantities',
+		'shipment_confirmation_id',
+        'employee_id',
+		'inbound_date',
         'status',
-		'arrival_date',
-        'verified_by',
         'notes',
     ];
-
-    protected $casts = [
-		'received_quantities' => 'array',
-		'requested_quantities' => 'array', // Add this line
-	];
-
-
-    public function purchase()
-    {
-        return $this->belongsTo(Purchase::class, 'purchase_order_id');
-    }
 
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
     }
 
-    public function verifier()
+    public function employee()
     {
-        return $this->belongsTo(User::class, 'verified_by');
+        return $this->belongsTo(Employee::class);
     }
-	
-	public function productQuantities()
-	{
-		$requestedQuantities = collect($this->requested_quantities); // Cast to Collection
-		$receivedQuantities = collect($this->received_quantities); // Cast to Collection
 
-		return $requestedQuantities->mapWithKeys(function ($quantity, $productId) use ($receivedQuantities) {
-			return [$productId => $quantity - ($receivedQuantities->get($productId, 0))];
-		});
-	}
+    public function shipment_confirmation()
+    {
+        return $this->belongsTo(ShipmentConfirmation::class);
+    }
 
-
+    
+    public function inbound_products()
+    {
+        return $this->hasMany(InboundProducts::class);
+    }
 }

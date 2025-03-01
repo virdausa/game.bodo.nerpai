@@ -1,14 +1,19 @@
 <?php
 
-namespace App\Http\Controllers\Company;
+namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use App\Models\Company\Inbound;
-use App\Models\Purchase;
+use App\Models\Company\InboundProducts;
+use App\Models\Company\Purchase;
 use App\Models\User;
 use App\Models\Location;
 use App\Models\Inventory;
 use App\Models\InventoryHistory;
+use App\Models\Company\Shipment;
+use App\Models\Company\Warehouse;
+use App\Models\Company\ShipmentConfirmation;
+
 use Illuminate\Http\Request;
 
 class InboundController extends Controller
@@ -16,15 +21,18 @@ class InboundController extends Controller
     // Show all inbound requests
     public function index()
     {
-        $inboundRequests = Inbound::with('purchase', 'warehouse')->orderBy('created_at', 'desc')->get();
-        return view('inbound_requests.index', compact('inboundRequests'));
+		$warehouse = Warehouse::findOrFail(session('company_warehouse_id'));
+        $inbounds = Inbound::with('shipment_confirmation', 'warehouse')->orderBy('created_at', 'desc')->get();
+		$shipments_incoming = Shipment::where('consignee_type', 'WH')
+										->where('consignee_id', $warehouse->id)
+										->orderBy('created_at', 'desc')->get();
+        return view('warehouse.warehouse_inbounds.index', compact('inbounds', 'shipments_incoming'));
     }
 
     // Create inbound request for a purchase
-    public function create($purchaseId)
+    public function create()
     {
-        $purchase = Purchase::with('products')->findOrFail($purchaseId);
-        return view('inbound_requests.create', compact('purchase'));
+		
     }
 
 
@@ -46,15 +54,15 @@ class InboundController extends Controller
             'notes' => $request->notes,
         ]);
 
-        return redirect()->route('inbound_requests.index')->with('success', 'Inbound request created successfully.');
+        return redirect()->route('warehouse_inbounds.index')->with('success', 'Inbound request created successfully.');
     }
 	
 
 	public function show($id)
 	{
-		$inboundRequest = Inbound::with('warehouse', 'purchase.products')->findOrFail($id);
+		$inbound = Inbound::with('inbound_products', 'shipment_confirmation')->findOrFail($id);
 
-		return view('inbound_requests.show', compact('inboundRequest'));
+		return view('warehouse.warehouse_inbounds.show', compact('inbound'));
 	}
 
 
@@ -64,7 +72,7 @@ class InboundController extends Controller
         $inboundRequest = Inbound::with('purchase.products', 'warehouse')->findOrFail($id);
         $users = User::all(); // Assuming you want to select from all users
 
-        return view('inbound_requests.edit', compact('inboundRequest', 'users'));
+        return view('warehouse.warehouse_inbounds.edit', compact('inboundRequest', 'users'));
     }
 
 
@@ -109,7 +117,7 @@ class InboundController extends Controller
 			$inboundRequest->received_quantities = $receivedQuantities;
 			$inboundRequest->save();
 
-			return redirect()->route('inbound_requests.show', $inboundRequest->id)
+			return redirect()->route('warehouse_inbounds.show', $inboundRequest->id)
 				->with('success', 'Quantities checked successfully.');
 		}
 		
@@ -130,7 +138,7 @@ class InboundController extends Controller
 		// Check overall status of all inbound requests for this purchase
 		$this->updatePurchaseStatus($inboundRequest->purchase_order_id);
 
-        return redirect()->route('inbound_requests.index')
+        return redirect()->route('warehouse_inbounds.index')
             ->with('success', 'Inbound request updated successfully.');
     }
 	
@@ -202,19 +210,19 @@ class InboundController extends Controller
 	// Helper function to update purchase status based on inbound requests
 	private function updatePurchaseStatus($purchaseId)
 	{
-		$purchase = Purchase::with('inboundRequests')->findOrFail($purchaseId);
-		$inboundRequests = $purchase->inboundRequests;
+		$purchase = Purchase::with('inbounds')->findOrFail($purchaseId);
+		$inbounds = $purchase->inbounds;
 
-		if ($inboundRequests->every(fn($ir) => $ir->status === 'Completed')) {
+		if ($inbounds->every(fn($ir) => $ir->status === 'Completed')) {
 			// All inbound requests are completed
 			$purchase->status = 'Completed';
-		} elseif ($inboundRequests->contains('status', 'Quantity Discrepancy')) {
+		} elseif ($inbounds->contains('status', 'Quantity Discrepancy')) {
 			// If any request has a quantity discrepancy
 			$purchase->status = 'Quantity Discrepancy';
-		} elseif ($inboundRequests->contains('status', 'In Transit') && $inboundRequests->contains('status', 'Completed')) {
+		} elseif ($inbounds->contains('status', 'In Transit') && $inbounds->contains('status', 'Completed')) {
 			// There’s at least one completed request, but some are still in transit
 			$purchase->status = 'Pending Additional Shipment';
-		} elseif ($inboundRequests->every(fn($ir) => $ir->arrival_date)) {
+		} elseif ($inbounds->every(fn($ir) => $ir->arrival_date)) {
 			// All inbound received are completed
 			$purchase->status = 'Received - Pending Verification';
 		} else {
@@ -229,7 +237,7 @@ class InboundController extends Controller
 	public function complete($id)
 	{
 		$inboundRequest = Inbound::with('purchase.products')->findOrFail($id);
-		return view('inbound_requests.complete', compact('inboundRequest'));
+		return view('warehouse_inbounds.complete', compact('inboundRequest'));
 	}
 
 
@@ -287,8 +295,46 @@ class InboundController extends Controller
 		// Check overall status of all inbound requests for this purchase
 		$this->updatePurchaseStatus($inboundRequest->purchase_order_id);
 	
-		return redirect()->route('inbound_requests.show', $id)->with('success', 'Inbound request completed.');
+		return redirect()->route('warehouse_inbounds.show', $id)->with('success', 'Inbound request completed.');
 	}
 
 
+
+	public function handleAction(Request $request, $inbounds, $action) {
+		if($inbounds != '0') 
+			$inbound = Inbound::findOrFail($inbounds);
+
+		switch ($action) {
+			case 'INB_REQUEST':
+				// get shipment confirmation
+				return $this->createInboundFromShipment($request->shipment_confirmation);
+			default:
+				abort(404);
+		}
+
+		return redirect()->route('warehouse_inbounds.index')->with('success', "Inbound request {$inbound->id} updated successfully.");
+	}
+
+	public function createInboundFromShipment($shipment_confirmation) {
+		$shipment_confirmation = ShipmentConfirmation::with('products', 'shipment')->findOrFail($shipment_confirmation);
+		$products = $shipment_confirmation->products;
+		$shipment = $shipment_confirmation->shipment;
+
+		$inbound = Inbound::create([
+			'warehouse_id' => $shipment->consignee_id,
+			'shipment_confirmation_id' => $shipment_confirmation->id,
+			'employee_id' => $shipment_confirmation->employee_id,
+			'status' => 'INB_REQUEST',
+			'inbound_date' => date('Y-m-d'),
+		]);
+
+		foreach($products as $product){
+			$inbound->products()->attach($product->id, [
+				'quantity' => $product->pivot->quantity,
+				'warehouse_location_id' => '1',
+			]);
+		}
+
+		return redirect()->route('warehouse_inbounds.show', $inbound->id)->with('success', "Inbound request created successfully.");
+	}
 }

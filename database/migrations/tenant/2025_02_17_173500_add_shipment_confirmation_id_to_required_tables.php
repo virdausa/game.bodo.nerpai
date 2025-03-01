@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('outbounds', function (Blueprint $table) {
-            $table->foreignId('shipment_id')->constrained();
+        Schema::table('inbounds', function (Blueprint $table) {
+            $table->foreignId('shipment_confirmation_id')->constrained()->onDelete('cascade');
         });
     }
 
@@ -21,9 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('outbounds', function (Blueprint $table) {
-            $table->dropForeign('outbounds_shipment_id_foreign');
-            $table->dropColumn('shipment_id');
+        Schema::table('inbounds', function (Blueprint $table) {
+            $table->dropForeign('inbounds_shipment_confirmation_id_foreign');
+            $table->dropColumn('shipment_confirmation_id');
         });
     }
 };

@@ -47,4 +47,10 @@ class WarehouseLocation extends Model
 	{
 		return $this->hasMany(StoreOutboundProduct::class);
 	}
+
+
+	public function print_location()
+	{
+		return $this->room . ' : ' . $this->rack;
+	}
 }

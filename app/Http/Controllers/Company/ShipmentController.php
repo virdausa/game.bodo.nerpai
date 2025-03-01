@@ -103,8 +103,10 @@ class ShipmentController extends Controller
     public function confirm_show($id){
         $shipment_confirmation = ShipmentConfirmation::with('products', 'shipment')
                                 ->findOrFail($id);
+        $shipment = $shipment_confirmation->shipment;
+        $products = $shipment_confirmation->products;
 
-        return view('company.shipments.confirm', compact('shipment_confirmation'));
+        return view('company.shipments.confirm-show', compact('shipment_confirmation', 'shipment', 'products'));
     }
 
     public function confirm_update(Request $request, $id){
