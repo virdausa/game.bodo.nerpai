@@ -2,6 +2,7 @@
     'route',
     'navbar_left' => [],
     'navbar_right' => [],
+    'navbar_dropdown_user' => [],
 ])
 
 <nav class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
@@ -78,22 +79,11 @@
                             </p>
                         </div>
                         <ul class="py-1" role="none">
-                            <li>
-                                <x-responsive-nav-link :href="route('exit.company', 'lobby')">
-                                    {{ __('Back to Lobby') }}
-                                </x-responsive-nav-link>
-                            </li>
-
-                            {{-- <li>
-                                <form method="POST" action="{{ route('logout') }}">
-                                    @csrf
-
-                                    <x-responsive-nav-link-danger :href="route('logout')" onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                                        {{ __('Log Out') }}
-                                        </x-responsive-nav-link>
-                                </form>
-                            </li> --}}
+                            @foreach($navbar_dropdown_user as $item)
+                                <li>
+                                    @include('components.' . $item)
+                                </li>
+                            @endforeach
                         </ul>
                     </div>
                 </div>
