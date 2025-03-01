@@ -18,7 +18,6 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerComplaintController;
 
 use App\Http\Controllers\ProductController;
-use App\Http\Controllers\Company\WarehouseController;
 use App\Http\Controllers\Company\WarehouseLocationController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Company\InboundController;
@@ -58,7 +57,6 @@ Route::middleware(['auth',
     
 
     route::resource("products", controller: ProductController::class);
-    Route::resource('warehouses', WarehouseController::class);
     route::resource("warehouse_locations", WarehouseLocationController::class);
     route::resource("inbounds", controller: InboundController::class);
     route::resource("outbounds", controller: OutboundController::class);

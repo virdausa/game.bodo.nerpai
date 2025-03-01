@@ -19,7 +19,7 @@
                             <!-- <a href="{{ route('warehouse_locations.index') }}" class="ml-2">
                                 <x-secondary-button :route="route('warehouse_locations.index')">Manage Locations</x-secondary-button>
                             </a> -->
-                            @include('warehouses.create')
+                            @include('company.warehouses.create')
                          </div>
                     </div>
 
@@ -28,8 +28,9 @@
                         <x-table-thead>
                             <tr>
                                 <x-table-th>ID</x-table-th>
+                                <x-table-th>Code</x-table-th>
                                 <x-table-th>Name</x-table-th>
-                                <x-table-th>Location</x-table-th>
+                                <x-table-th>Address</x-table-th>
                                 <x-table-th>Actions</x-table-th>
                             </tr>
                         </x-table-thead>
@@ -37,12 +38,20 @@
                             @foreach ($warehouses as $warehouse)
                                 <x-table-tr>
                                     <x-table-td>{{ $warehouse->id }}</x-table-td>
+                                    <x-table-td>{{ $warehouse->code }}</x-table-td>
                                     <x-table-td>{{ $warehouse->name }}</x-table-td>
                                     <x-table-td>{{ $warehouse->address }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
-                                            <x-button-show :route="route('warehouses.show', $warehouse->id)" />
-                                            @include('warehouses.edit', ['id' => $warehouse->id])
+                                            <form method="POST" action="{{ route('warehouses.switch', $warehouse->id) }}">
+                                                @csrf
+            
+                                                <x-primary-button :href="route('warehouses.switch', $warehouse->id)" onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                                                    {{ __('Masuk Warehouse') }}
+                                                    </x-primary-button>
+                                            </form>
+
                                             <x-button-delete :route="route('warehouses.destroy', $warehouse->id)" />
                                         </div>
                                     </x-table-td>
