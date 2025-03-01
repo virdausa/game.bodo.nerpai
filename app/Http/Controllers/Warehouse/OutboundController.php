@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Company;
+namespace App\Http\Controllers\Warehouse;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
