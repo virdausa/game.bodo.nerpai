@@ -14,13 +14,15 @@ return new class extends Migration
 
             // Foreign Keys
             $table->foreignId('product_id')->constrained();
-            $table->foreignId('warehouse_id')->constrained();
+            $table->foreignId('warehouse_id')->constrained()->onDelete('cascade');
 
             // Columns
             $table->date('expire_date')->nullable();
             $table->integer('quantity')->default(0);
             $table->integer('reserved_quantity')->default(0);
             $table->integer('in_transit_quantity')->default(0);
+
+            $table->decimal('cost_per_unit', 15, 2)->default(0);
 
             // Timestamps (optional, not in schema but commonly used)
             $table->timestamps();

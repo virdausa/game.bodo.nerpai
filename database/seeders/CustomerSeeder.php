@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Customer;
+use App\Models\Company\Customer;
 use Illuminate\Database\Seeder;
 
 class CustomerSeeder extends Seeder

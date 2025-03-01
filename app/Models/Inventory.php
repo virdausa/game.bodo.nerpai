@@ -14,7 +14,7 @@ class Inventory extends Model
     protected $fillable = [
         'product_id',
         'warehouse_id',
-		'location_id',
+		'warehouse_location_id',
         'quantity',
         'reserved_quantity',
         'in_transit_quantity',
@@ -33,7 +33,7 @@ class Inventory extends Model
     }
 	
 	// Define relationship with Location
-    public function location()
+    public function warehouse_location()
     {
         return $this->belongsTo(WarehouseLocation::class);
     }

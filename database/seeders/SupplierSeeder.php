@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Supplier;
+use App\Models\Company\Supplier;
 use Illuminate\Database\Seeder;
 
 class SupplierSeeder extends Seeder
