@@ -11,7 +11,7 @@
     </button>
     <div x-show="open" @click.outside="open = false"
     class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 dark:bg-gray-700">
-        @foreach (\App\Models\Store::all() as $store)
+        @foreach (\App\Models\Company\Store::all() as $store)
             <form method="POST" action="{{ route('stores.switch', $store->id) }}">
             @csrf
                 <button type="submit" name="store_id" value="{{ $store->id }}"

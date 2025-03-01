@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 use App\Models\Employee;
-use App\Models\Store;
+use App\Models\Company\Store;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class StoreEmployee extends Model
@@ -26,7 +26,7 @@ class StoreEmployee extends Model
 
     public function employee()
     {
-        return $this->belongsTo(Employee::class);
+        return $this->belongsTo(Employee::class, 'employee_id');
     }
 
     public function store()

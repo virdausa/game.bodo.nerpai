@@ -2,7 +2,7 @@
 
 namespace App\Models\Store;
 
-use App\Models\Store;
+use App\Models\Company\Store;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -27,12 +27,18 @@ class StoreRestock extends Model
         'team_notes'
     ];
 
+
+    public function generateNumber()
+    {
+        $this->number = 'STR_' . $this->restock_date . '_' . $this->id;
+    }
+
     public function store(): BelongsTo
     {
         return $this->belongsTo(Store::class);
     }
 
-    public function storeEmployee(): BelongsTo
+    public function store_employee(): BelongsTo
     {
         return $this->belongsTo(StoreEmployee::class);
     }

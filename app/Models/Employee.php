@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 use Spatie\Permission\Models\Role;  // Pastikan Role diimport
 
+use App\Models\Company\Store;
+
 class Employee extends Model
 {
     protected $connection = 'tenant';
@@ -67,5 +69,10 @@ class Employee extends Model
             ->wherePivot('deleted_at', null)
             ->withTimestamps();
 
+    }
+
+    public function store_employees()
+    {
+        return $this->hasMany(StoreEmployee::class);
     }
 }

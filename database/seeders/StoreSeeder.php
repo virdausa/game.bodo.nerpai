@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Store;
+use App\Models\Company\Store;
 use Illuminate\Database\Seeder;
 
 use Database\Seeders\Store\StoreRolePermissionSeeder;
