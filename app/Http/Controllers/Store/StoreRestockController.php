@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Store;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
+use App\Models\Company\Store;
 use App\Models\Store\StoreRestock;
 
 class StoreRestockController extends Controller
@@ -14,7 +15,10 @@ class StoreRestockController extends Controller
      */
     public function index()
     {
-        $store_restocks = StoreRestock::all();
+        $store_id = session('company_store_id');
+        $store_restocks = StoreRestock::with('store_employee')
+                                        ->where('store_id', $store_id)
+                                        ->get();
 
         return view('store.store_restocks.index', compact('store_restocks'));
     }
@@ -32,7 +36,27 @@ class StoreRestockController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'team_notes' => 'nullable|string|max:255',
+        ]);
+
+        $store = Store::findOrFail(session('company_store_id'));
+        $store_employee_id = session('company_store_employee_id');
+
+        $store_restock = StoreRestock::create([
+            'store_id' => $store->id,
+            'restock_date' => now()->format('Y-m-d'),
+            'store_employee_id' => $store_employee_id,
+            'status' => 'STR_REQUEST',
+            'total_amount' => 0,
+            'team_notes' => $validated['team_notes'],
+        ]);
+        $store_restock->generateNumber();
+        $store_restock->save();
+
+        // notify admin
+
+        return redirect()->route('store_restocks.index')->with('success', 'Restock request created successfully. :)');
     }
 
     /**
@@ -65,5 +89,16 @@ class StoreRestockController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    public function cancelRequest(Request $request, $id)
+    {
+        $store_restock = StoreRestock::findOrFail($id);
+        $store_restock->update([
+            'status' => 'STR_CANCELLED',
+        ]);
+
+        return redirect()->route('store_restocks.index')->with('success', "Restock request {$store_restock->number} cancelled successfully. :)");
     }
 }

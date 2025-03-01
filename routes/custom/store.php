@@ -24,6 +24,7 @@ Route::middleware([
     Route::resource('store_permissions', StorePermissionController::class);
 
     Route::resource('store_restocks', StoreRestockController::class);
+    Route::delete('store_restocks/{id}/cancel', [StoreRestockController::class, 'cancelRequest'])->name('store_restocks.cancel');
 
     Route::resource('store_customers', StorePermissionController::class);
     Route::resource('store_pos', StorePermissionController::class);

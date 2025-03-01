@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Artisan;
 
-use App\Models\Store;
+use App\Models\Company\Store;
 use App\Models\Employee;
 use App\Models\Store\StoreEmployee;
 
@@ -118,6 +118,7 @@ class StoreController extends Controller
 
         return redirect()->route('dashboard-store')->with('success', "Anda masuk ke {$store->name}");
     }
+
 
     public function exitStore(Request $request, $route = 'dashboard')
     {

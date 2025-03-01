@@ -19,7 +19,7 @@ class StoreMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $middlewareList = [
-            //StoreLoginAccess::class,
+            StoreLoginAccess::class,
         ];
 
         return app(Pipeline::class)
