@@ -65,8 +65,13 @@
 </head>
 
 <body class="font-sans antialiased bg-gray-100 dark:bg-gray-900">
-    @yield('navbar')
-    @yield('sidebar')
+    <x-navbar :navbar_left="$navbar_left ?? []" :navbar_right="$navbar_right ?? []"/>
+    @if(isset($sidebar))
+        <x-sidebar :sidebar="$sidebar ?? []" />
+    @else 
+        @yield('sidebar')
+    @endif
+
     <!-- Page Content -->
 
     <main id="main-content" class="p-4 sm:ml-64 sm:mt-12 transition-all duration-300">
