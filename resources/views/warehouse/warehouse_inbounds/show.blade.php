@@ -1,10 +1,10 @@
 @php
     $shipment_confirmation = $inbound->shipment_confirmation;
     $shipment = $shipment_confirmation->shipment;
+    $layout = session('layout');
 @endphp
 
-
-<x-company-layout>
+<x-dynamic-component :component="'layouts.' . $layout">
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
@@ -38,6 +38,7 @@
                                 <x-table-th>#</x-table-th>
                                 <x-table-th>Product</x-table-th>
                                 <x-table-th>Quantity</x-table-th>
+                                <x-table-th>Cost</x-table-th>
                                 <x-table-th>Notes</x-table-th>
                                 <x-table-th>Location</x-table-th>
                                 <x-table-th>Actions</x-table-th>
@@ -49,6 +50,7 @@
                                     <x-table-td>{{ $product->id }}</x-table-td>
                                     <x-table-td>{{ $product->product->id }} : {{ $product->product->name }}</x-table-td>
                                     <x-table-td>{{ $product->quantity }}</x-table-td>
+                                    <x-table-td>{{ $product->product->price * 0.5 }}</x-table-td>
                                     <x-table-td>{{ $product->notes ?? 'N/A' }}</x-table-td>
                                     <x-table-td>{{ $product->warehouse_location->print_location() ?? 'N/A' }}</x-table-td>
                                     <x-table-td>
@@ -89,10 +91,10 @@
 
                     <!-- Back Button -->
                     <x-secondary-button>
-                        <a href="{{ route('shipments.index') }}">Back to List</a>
+                        <a href="{{ route('warehouse_inbounds.index') }}">Back to List</a>
                     </x-secondary-button>
                 </div>
             </div>
         </div>
     </div>
-</x-company-layout>
+</x-dynamic-component>

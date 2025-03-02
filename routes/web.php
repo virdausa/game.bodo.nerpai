@@ -55,7 +55,7 @@ Route::middleware([
 Route::middleware(['auth', 
                 CompanyMiddleware::class,
 ])->group(function () {
-    Route::get('/dashboard', function () { return view('dashboard'); })->name('dashboard');
+    Route::get('/dashboard-company', function () { return view('company.dashboard-company'); })->name('dashboard-company');
 
     // Stores
     Route::resource('stores', StoreController::class);

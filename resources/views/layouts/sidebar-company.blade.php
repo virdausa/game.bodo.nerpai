@@ -10,7 +10,7 @@
   dark:[&::-webkit-scrollbar-thumb]:bg-neutral-500">
         <ul class="space-y-2 font-medium">
             <li>
-                <a href="{{ route('dashboard') }}"
+                <a href="{{ route('dashboard-company') }}"
                     class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
                     <svg class="w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                         aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 22 21">
@@ -24,7 +24,6 @@
             </li>
 
             @if(session('employee')?->can('customer-complaints sidebar'))
-
                 <li>
                     <a href="{{ route('customer_complaints.index') }}"
                         class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
@@ -211,6 +210,11 @@
                                 </a>
                             </li>
                         @endif
+                        
+                        <li>
+                            <x-sidebar-item :icon="'icon-checklist-paper'" :route="'restocks.index'" :text="'Restocks'" />
+                        </li>
+
                         @if(session('employee')?->can('inventory sidebar'))
                             <li>
                                 <a href="{{ route('inventory.index') }}"

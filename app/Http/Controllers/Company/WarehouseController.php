@@ -96,12 +96,13 @@ class WarehouseController extends Controller
     }
 
 
-	public function exitWarehouse(Request $request, $route = 'dashboard')
+	public function exitWarehouse(Request $request, $route = 'dashboard-company')
 	{
 		$this->forgetWarehouse();
 
 		// Redirect ke halaman (atau dashboard company)
-		session('layout', 'company');
+		// change layout to company
+		Session::put('layout', 'company');
 
 		return redirect()->route($route)->with('success', 'Anda telah keluar dari warehouse!');
 	}

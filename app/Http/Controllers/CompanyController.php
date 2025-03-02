@@ -105,14 +105,18 @@ class CompanyController extends Controller
         Session::put('company_id', $company->id);
 		Session::put('company_name', $company->name);
         Session::put('company_database_url', $company->database);
+		Session::put('layout', 'company');
 
-        return redirect()->route('dashboard')->with('success', "Anda masuk ke {$company->name}");
+        return redirect()->route('dashboard-company')->with('success', "Anda masuk ke {$company->name}");
     }
 
 	public function exitCompany(Request $request, $route = 'lobby')
 	{
 		// Hapus session company
 		$this->forgetCompany();
+
+		// change layout to lobby
+		Session::put('layout', 'lobby');
 
 		// Redirect ke halaman lobby (atau dashboard utama)
 		return redirect()->route($route)->with('status', 'You have exited the company.');

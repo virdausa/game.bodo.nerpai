@@ -115,14 +115,19 @@ class StoreController extends Controller
         Session::put('company_store_id', $store->id);
         Session::put('company_store_code', $store->code);
         Session::put('company_store_name', $store->name);
+        Session::put('layout', 'store');
 
         return redirect()->route('dashboard-store')->with('success', "Anda masuk ke {$store->name}");
     }
 
 
-    public function exitStore(Request $request, $route = 'dashboard')
+    public function exitStore(Request $request, $route = 'dashboard-company')
     {
         $this->forgetStore();
+
+        // Redirect ke halaman (atau dashboard company)
+        // change layout to company
+        Session::put('layout', 'company');
 
         return redirect()->route($route)->with('success', 'Anda telah keluar dari store!');
     }
