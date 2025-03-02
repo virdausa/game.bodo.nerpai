@@ -19,6 +19,7 @@ return new class extends Migration
             // Foreign keys
             $table->foreignId('store_id')->nullable()->constrained('stores', 'id')->onDelete('set null');
             $table->foreignId('store_employee_id')->nullable()->constrained('store_employees', 'id');
+            $table->foreignId('warehouse_id')->nullable()->constrained()->onDelete('set null');
 
             // Attributes
             $table->date('restock_date');

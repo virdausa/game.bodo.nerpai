@@ -19,9 +19,11 @@ class Inventory extends Model
         'product_id',
         'warehouse_id',
 		'warehouse_location_id',
+        'expiry_date',
         'quantity',
         'reserved_quantity',
         'in_transit_quantity',
+        'cost_per_unit',
     ];
 
     // Relationship with Product

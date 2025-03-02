@@ -19,6 +19,7 @@ use App\Http\Controllers\CustomerComplaintController;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Company\WarehouseLocationController;
+use App\Http\Controllers\Company\RestockController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Company\InboundController;
 use App\Http\Controllers\Company\OutboundController;
@@ -58,6 +59,9 @@ Route::middleware(['auth',
 
     route::resource("products", controller: ProductController::class);
     route::resource("warehouse_locations", WarehouseLocationController::class);
+
+    route::resource("restocks", controller: RestockController::class);
+
     route::resource("inbounds", controller: InboundController::class);
     route::resource("outbounds", controller: OutboundController::class);
     Route::resource('inventory', InventoryController::class)->except(['show']);

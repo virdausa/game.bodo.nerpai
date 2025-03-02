@@ -217,7 +217,9 @@ class InboundController extends Controller
 		]);
 
 		foreach($products as $product){
-			$inbound->products()->attach($product->id, [
+			$inbound_product = InboundProducts::create([
+				'inbound_id' => $inbound->id,
+				'product_id' => $product->id,
 				'quantity' => $product->pivot->quantity,
 				'warehouse_location_id' => '1',
 			]);
