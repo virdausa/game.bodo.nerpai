@@ -212,7 +212,7 @@
                         @endif
                         
                         <li>
-                            <x-sidebar-item :icon="'icon-checklist-paper'" :route="'restocks.index'" :text="'Restocks'" />
+                            <x-sidebar-item :icon="'icon-checklist-paper'" :route="'inventory_transfers.index'" :text="'Inventory Transfers'" />
                         </li>
 
                         @if(session('employee')?->can('inventory sidebar'))

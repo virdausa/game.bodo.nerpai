@@ -19,7 +19,7 @@ use App\Http\Controllers\CustomerComplaintController;
 
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Company\WarehouseLocationController;
-use App\Http\Controllers\Company\RestockController;
+use App\Http\Controllers\Company\InventoryTransferController;
 use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Company\InboundController;
 use App\Http\Controllers\Company\OutboundController;
@@ -60,7 +60,9 @@ Route::middleware(['auth',
     route::resource("products", controller: ProductController::class);
     route::resource("warehouse_locations", WarehouseLocationController::class);
 
-    route::resource("restocks", controller: RestockController::class);
+    route::resource("inventory_transfers", controller: InventoryTransferController::class);
+    Route::post('inventory_transfers/{id}/action/{action}', [InventoryTransferController::class, 'handleAction'])->name('inventory_transfers.action');
+    Route::post('inventory_transfers/storeRequest', [InventoryTransferController::class, 'storeRequest'])->name('inventory_transfers.storeRequest');
 
     route::resource("inbounds", controller: InboundController::class);
     route::resource("outbounds", controller: OutboundController::class);

@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('outbounds', function (Blueprint $table) {
-            $table->foreignId('shipment_id')->constrained();
-        });
+        // Schema::table('outbounds', function (Blueprint $table) {
+        //     $table->foreignId('shipment_id')->nullable()->constrained()->onDelete('set null');
+        // });
     }
 
     /**
@@ -21,9 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('outbounds', function (Blueprint $table) {
-            $table->dropForeign('outbounds_shipment_id_foreign');
-            $table->dropColumn('shipment_id');
-        });
+        // Schema::table('outbounds', function (Blueprint $table) {
+        //     $table->dropForeign('outbounds_shipment_id_foreign');
+        //     $table->dropColumn('shipment_id');
+        // });
     }
 };

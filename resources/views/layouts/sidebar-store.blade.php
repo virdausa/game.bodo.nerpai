@@ -58,6 +58,10 @@
                                 </a>
                             </li>
                         @endif
+
+                        <li>
+                            <x-sidebar-item :icon="'icon-checklist-paper'" :route="'inventory_transfers.index'" :text="'Inventory Transfer'" />
+                        </li>
                     </ul>
                 </li>
             @endif

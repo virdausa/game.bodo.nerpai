@@ -5,6 +5,8 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\Employee;
+
 class Outbound extends Model
 {
     protected $table = 'outbounds';
@@ -12,30 +14,30 @@ class Outbound extends Model
     use HasFactory;
 
     protected $fillable = [
-        'sales_order_id', 
-        'warehouse_id', 
-        'requested_quantities', 
-		'received_quantities',
-        'status', 
-        'verified_by', 
-        'notes', 
-        'packing_fee', 
-        'shipping_fee', 
-        'tracking_number', 
-        'real_volume', 
-        'real_weight',
-		'expedition_id',
-		'real_shipping_fee',
+        'number',
+        'warehouse_id',
+        'source_type',
+        'source_id',
+        'employee_id',
+        'date',
+        'status',
+        'notes',
     ];
 
     protected $casts = [
-		'received_quantities' => 'array',
-		'requested_quantities' => 'array', // Add this line
-	];
+        'date' => 'date',
+    ];
 
-    public function sales()
+    public function generateNumber()
     {
-        return $this->belongsTo(Sale::class, 'sales_order_id');
+        $this->number = 'OUTB_' . $this->date . '_' . $this->id;
+        return $this->number;
+    }
+
+
+    public function source()
+    {
+        return $this->morphTo();
     }
 
     public function warehouse()
@@ -43,29 +45,13 @@ class Outbound extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
-    public function verifier()
+    public function employee()
     {
-        return $this->belongsTo(User::class, 'verified_by');
+        return $this->belongsTo(Employee::class);
     }
-	
-	public function productQuantities()
-	{
-		$requestedQuantities = collect($this->requested_quantities); // Cast to Collection
-		$receivedQuantities = collect($this->received_quantities); // Cast to Collection
 
-		return $requestedQuantities->mapWithKeys(function ($quantity, $productId) use ($receivedQuantities) {
-			return [$productId => $quantity - ($receivedQuantities->get($productId, 0))];
-		});
-	}
-	
-	public function expedition()
-	{
-		return $this->belongsTo(Expedition::class);
-	}
-	
-	
-	public function locations()
-	{
-		return $this->hasMany(OutboundRequestLocation::class);
-	}
+    public function outbound_products()
+    {
+        return $this->hasMany(OutboundProduct::class);
+    }
 }

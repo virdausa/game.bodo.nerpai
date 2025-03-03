@@ -14,16 +14,19 @@ return new class extends Migration
         Schema::create('outbounds', function (Blueprint $table) {
             // Primary key
             $table->id();
+            $table->string('number')->nullable()->unique();
 
             // Foreign keys
             $table->foreignId('warehouse_id')->constrained();
-            // $table->foreignId('shipment_id')->constrained();
             $table->foreignId('employee_id')->constrained();
 
+            $table->string('source_type')->nullable();          // ITF, SO
+            $table->unsignedBigInteger('source_id')->nullable();
+            
             // Columns
+            $table->date('date');
+            $table->string('status')->default('OUTB_REQUEST');
             $table->string('notes')->nullable();
-            $table->string('status');
-            $table->date('outbound_date');
 
             // Timestamps (optional, not in ERD but commonly used)
             $table->timestamps();

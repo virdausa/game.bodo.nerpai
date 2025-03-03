@@ -3,51 +3,86 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-white">
-                    <h3 class="text-2xl font-bold dark:text-white">Edit Restock</h3>
-                    <p class="text-sm dark:text-gray-200 mb-3">Update the details of your store_restock.</p>
+                    <h3 class="text-2xl font-bold dark:text-white">Edit Inventory Transfer</h3>
+                    <p class="text-sm dark:text-gray-200 mb-3">Update the details of your inventory_transfer.</p>
 
                     <div class="p-2 border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-600 mb-4">
-                        <form action="{{ route('restocks.update', $store_restock->id) }}" method="POST">
+                        <form action="{{ route('inventory_transfers.update', $inventory_transfer->id) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <h3 class="text-lg font-bold my-3">Restock Details</h3>
+                            <h3 class="text-lg font-bold my-3">Inventory Transfer Details</h3>
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
+                                <x-div-box-show title="Inventory Transfer Number">{{ $inventory_transfer->number }}</x-div-box-show>
                                 <div class="form-group">
-                                    <x-input-label for="restock_date">Restock Date</x-input-label>
-                                    <input type="date" name="restock_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ ($store_restock->restock_date) }}" >
+                                    <x-input-label for="date">Inventory Transfer Date</x-input-label>
+                                    <x-input-input type="date" name="date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $inventory_transfer->date?->format('Y-m-d') }}" />
+                                </div>
+
+                                <!-- Select Shipper Type -->
+                                <div class="form-group">
+                                    <x-input-label for="shipper_type" class="block text-sm font-medium text-gray-700">Select Shipper Type</x-input-label>
+                                    <x-input-select name="shipper_type" id="shipper_type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
+                                        <option value="ST" {{ $inventory_transfer->shipper_type == 'ST' ? 'selected' : '' }}>Store</option>
+                                        <option value="WH" {{ $inventory_transfer->shipper_type == 'WH' ? 'selected' : '' }}>Warehouse</option>
+                                    </x-input-select>
+                                </div>
+                                <!-- Select Shipper -->
+                                <div class="form-group mb-4">
+                                    <x-input-label for="shipper_id" class="block text-sm font-medium text-gray-700">Select Shipper</x-input-label>
+                                    <x-input-select name="shipper_id" id="shipper_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
+                                        <option value="{{ $inventory_transfer->shipper_id }}">{{ $inventory_transfer->shipper?->name ?? 'N/A' }}</option>
+                                    </x-input-select>
+                                </div>
+
+                                <div
+                                    class="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
+                                    <p class="text-sm text-gray-500 dark:text-gray-300">Consignee</p>
+                                    <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $inventory_transfer->consignee_type }} : {{$inventory_transfer->consignee->name ?? 'N/A' }}</p>
+                                </div>
+                                <div
+                                    class="p-4 bg-gray-50 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
+                                    <p class="text-sm text-gray-500 dark:text-gray-300">Destination Address</p>
+                                    <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
+                                        {{ $inventory_transfer->destination_address ?? 'N/A' }}</p>
                                 </div>
 
                                 <div class="form-group">
-                                    <x-input-label for="warehouse_id">Select Warehouse</x-input-label>
-                                    <select name="warehouse_id" id="warehouse_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" >
-                                        @foreach($warehouses as $warehouse)
-                                        <option value="{{ $warehouse->id }}" {{ $store_restock->warehouse_id == $warehouse->id ? 'selected' : '' }}>{{ $warehouse->name }}</option>
+                                    <x-input-label for="courier_id">Expedition Kurir</x-input-label>
+                                    <select name="courier_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
+                                        @foreach($couriers as $courier)
+                                            <option value="{{ $courier->id }}" {{ $inventory_transfer->courier_id == $courier->id ? 'selected' : '' }}>
+                                                {{ $courier->name }}
+                                            </option>
                                         @endforeach
                                     </select>
                                 </div>
+                                <x-div-box-show title="Status">
+                                    <p
+                                        class="text-lg font-medium inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
+                                        {{ $inventory_transfer->status ?? 'N/A' }}
+                                    </p>
+                                </x-div-box-show>
+                                
+                                <x-div-box-show title="Admin">{{ $inventory_transfer->admin?->companyuser->user->name ?? 'N/A' }}</x-div-box-show>
+                                <x-div-box-show title="Team">{{ $inventory_transfer->team?->companyuser->user->name ?? 'N/A' }}</x-div-box-show>
 
                                 <div class="form-group">
                                     <x-input-label for="admin_notes">Admin Notes</x-input-label>
-                                    <textarea name="admin_notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" >{{ $store_restock->admin_notes }}</textarea>
+                                    <textarea name="admin_notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" >{{ $inventory_transfer->admin_notes }}</textarea>
                                 </div>
 
                                 <div class="form-group">
                                     <x-input-label for="team_notes">Team Notes</x-input-label>
-                                    <textarea name="team_notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" >{{ $store_restock->team_notes }}</textarea>
+                                    <textarea name="team_notes" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" >{{ $inventory_transfer->team_notes }}</textarea>
                                 </div>
 
-                                <x-div-box-show title="Status">
-                                    <p
-                                        class="text-lg font-medium inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                        {{ $store_restock->status ?? 'N/A' }}
-                                    </p>
-                                </x-div-box-show>
                             </div>
                             <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
                             <h3 class="text-lg font-bold mt-6">Products</h3>
                             <div id="product-selection" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                @foreach ($store_restock->products as $index => $product)
+                                @foreach ($inventory_transfer->products as $index => $product)
                                 <div class="product-item mb-4 p-4 border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-600">
                                 <div class="flex inline justify-between space items-center">
 										<h3 class="text-md font-bold">Products</h3>
@@ -80,28 +115,19 @@
 
                             <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
                             <div class="m-4">
-                                <a href="{{ route('restocks.index') }}">
+                                <a href="{{ route('inventory_transfers.index') }}">
                                     <x-secondary-button type="button">Cancel</x-secondary-button>
                                 </a>
-                                <x-primary-button>Update Restock</x-primary-button>
+                                <x-primary-button>Update Inventory Transfer</x-primary-button>
                             </div>
                         </form>
 
                         <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
-                        @if ($store_restock->status == 'PO_REQUEST_TO_SUPPLIER')
-                        <div class="flex justify-end m-4">
-                            <form action="{{ route('restocks.action', ['restocks' => $store_restock->id, 'action' => 'PO_CONFIRMED']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Input Invoice Pembelian dari Supplier</x-primary-button>
-                            </form>
-                        </div>
-                        @endif
 
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {
                                 const productSelection = document.getElementById('product-selection');
-                                let productIndex = {{ $store_restock->products->count() }};
+                                let productIndex = {{ $inventory_transfer->products->count() }};
 								
 
                                 document.getElementById('add-product').addEventListener('click', function () {
@@ -148,4 +174,37 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let stores = @json($stores);
+        let warehouses = @json($warehouses);
+
+        function updateConsigneeOptions(selectedConsigneeId = null) {
+            let consigneeTypeSelect = document.getElementById('shipper_type').value;
+            let consigneeSelect = document.getElementById('shipper_id');
+            consigneeSelect.innerHTML = '';
+
+            let data = consigneeTypeSelect == 'ST' ? stores : warehouses;
+            data.forEach(option => {
+                let optionElement = document.createElement('option');
+                optionElement.value = option.id;
+                optionElement.textContent = option.name;
+
+                if(selectedConsigneeId && selectedConsigneeId == option.id) {
+                    optionElement.selected = true;
+                }
+
+                consigneeSelect.appendChild(optionElement);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let existingShipperId = "{{ $inventory_transfer->shipper_id }}";
+            updateConsigneeOptions(existingShipperId);
+        });
+
+        document.getElementById('shipper_type').addEventListener('change', function() {
+            updateConsigneeOptions();
+        });
+    </script>
 </x-company-layout>

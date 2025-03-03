@@ -37,7 +37,7 @@
                                     <x-table-td>{{ $employee->employee->companyuser->user->name }}</x-table-td>
                                     <x-table-td>{{ $employee->status }}</x-table-td>
                                     <x-table-td>{{ $employee->employee->role->name }}</x-table-td>
-                                    <x-table-td>{{ $employee->store_role->name }}</x-table-td>
+                                    <x-table-td>{{ $employee?->store_role?->name }}</x-table-td>
                                     <x-table-td>
                                     <div class="flex items-center space-x-2">
                                             

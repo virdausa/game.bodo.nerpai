@@ -18,10 +18,12 @@ return new class extends Migration
             // Foreign keys
             $table->foreignId('outbound_id')->constrained();
             $table->foreignId('product_id')->constrained();
-            // $table->foreignId('location_id')->constrained();
+            // $table->foreignId('warehouse_location_id')->constrained();
 
             // Columns
             $table->integer('quantity')->nullable();
+            $table->decimal('cost_per_unit', 15, 2)->nullable();
+            $table->decimal('total_cost', 25, 2)->nullable();
             $table->text('notes')->nullable();
 
             // Timestamps (optional, not in ERD but commonly used)

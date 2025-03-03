@@ -11,6 +11,7 @@ use App\Models\Company\Warehouse;
 use App\Models\Company\Customer;
 use App\Models\Company\Purchase;
 use App\Models\Company\Sale;
+use App\Models\Company\Store;
 
 
 class AppServiceProvider extends ServiceProvider
@@ -41,6 +42,7 @@ class AppServiceProvider extends ServiceProvider
             'CUST' => Customer::class,
             'PO' => Purchase::class,
             'SO' => Sale::class,
+            'ST' => Store::class,
         ]);
 	}
 }
