@@ -33,6 +33,7 @@
                                 <x-table-th>Incoming Stock</x-table-th>
                                 <x-table-th>Reserved Stock</x-table-th>
                                 <x-table-th>In Transit Stock</x-table-th>
+                                <x-table-th>Cost per Unit</x-table-th>
                             </tr>
                         </x-table-thead>
                         <x-table-tbody>
@@ -44,6 +45,7 @@
                                     <x-table-td>0</x-table-td> <!-- Replace with logic for incoming -->
                                     <x-table-td>{{ $inventory->reserved_quantity }}</x-table-td>
                                     <x-table-td>{{ $inventory->in_transit_quantity }}</x-table-td>
+                                    <x-table-td>{{ $inventory->cost_per_unit }}</x-table-td>
                                 </x-table-tr>
                             @endforeach
                         </x-table-tbody>

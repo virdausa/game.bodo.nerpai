@@ -12,7 +12,8 @@ use App\Models\Company\Customer;
 use App\Models\Company\Purchase;
 use App\Models\Company\Sale;
 use App\Models\Company\Store;
-
+use App\Models\Company\InventoryTransfer;
+use App\Models\Company\Outbound;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -43,6 +44,8 @@ class AppServiceProvider extends ServiceProvider
             'PO' => Purchase::class,
             'SO' => Sale::class,
             'ST' => Store::class,
+            'ITF' => InventoryTransfer::class,
+            'OUTB' => Outbound::class,
         ]);
 	}
 }

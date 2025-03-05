@@ -43,9 +43,9 @@
                             @foreach ($shipments as $shipment)
                                 <x-table-tr>
                                     <x-table-td>{{ $shipment->id }}</x-table-td>
-                                    <x-table-td>{{ $shipment->shipper_type }} : {{ $shipment->shipper_id }}</x-table-td>
-                                    <x-table-td>{{ $shipment->consignee_type }} : {{ $shipment->consignee_id }}</x-table-td>
-                                    <x-table-td>{{ $shipment->transaction_type }} : {{ $shipment->transaction_id }}</x-table-td>
+                                    <x-table-td>{{ $shipment->shipper_type }} : {{ $shipment->shipper?->name }}</x-table-td>
+                                    <x-table-td>{{ $shipment->consignee_type }} : {{ $shipment->consignee?->name }}</x-table-td>
+                                    <x-table-td>{{ $shipment->transaction_type }} : {{ $shipment->transaction?->number }}</x-table-td>
                                     <x-table-td>{{ $shipment->ship_date }}</x-table-td>
                                     <x-table-td>{{ $shipment->status }}</x-table-td>
                                     <x-table-td>{{ $shipment->notes }}</x-table-td>

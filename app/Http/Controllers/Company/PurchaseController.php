@@ -260,6 +260,7 @@ class PurchaseController extends Controller
 			'transaction_id' => $purchase->id,
 
 			'ship_date' => date('Y-m-d'),
+			'status' => 'SHP_IN_TRANSIT',
 		]);
 		$shipment->generateShipmentNumber();
 		$shipment->save();

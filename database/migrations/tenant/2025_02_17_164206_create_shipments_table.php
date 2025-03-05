@@ -25,11 +25,11 @@ return new class extends Migration
             $table->unsignedBigInteger('consignee_id');
 
             // Addresses
-            $table->json('origin_address');
-            $table->json('destination_address');
+            $table->json('origin_address')->nullable();
+            $table->json('destination_address')->nullable();
 
             // Transaction details (PO/SO/MOVE)
-            $table->string('transaction_type')->default('MOVE'); // 'PO', 'SO', 'MOVE'
+            $table->string('transaction_type')->default('ITF'); // 'PO', 'SO', 'MOVE'
             $table->unsignedBigInteger('transaction_id')->nullable();
 
             // Shipment details
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->decimal('shipping_fee', 15, 2)->default(0);
             $table->string('payment_rules')->nullable(); // COD/etc
             $table->text('notes')->nullable();
-            $table->string('status')->default('SHIP_IN_TRANSIT');
+            $table->string('status')->default('SHP_IN_TRANSIT');
 
             // Packing Details
             $table->integer('packing_quantity')->default(1);

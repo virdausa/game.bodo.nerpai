@@ -21,7 +21,7 @@ class StoreRestock extends Model
 
     protected $fillable = [
         'number',
-        'store_warehouse_id',
+        'warehouse_id',
         'store_id',
         'store_employee_id',
         'restock_date',

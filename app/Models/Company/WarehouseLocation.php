@@ -28,11 +28,6 @@ class WarehouseLocation extends Model
 		return $this->hasMany(Inventory::class);
 	}
 
-	public function locations()
-	{
-		return $this->hasMany(OutboundRequestLocation::class);
-	}
-
 	public function storeInventories(): HasMany
 	{
 		return $this->hasMany(StoreInventory::class);

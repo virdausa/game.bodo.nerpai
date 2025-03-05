@@ -26,4 +26,5 @@ Route::middleware([
     Route::post('warehouse_inbounds/{warehouse_inbounds}/action/{action}', [InboundController::class, 'handleAction'])->name('warehouse_inbounds.action');
     
     Route::resource('warehouse_outbounds', OutboundController::class);
+    Route::post('warehouse_outbounds/{warehouse_outbounds}/action/{action}', [OutboundController::class, 'handleAction'])->name('warehouse_outbounds.action');  
 });

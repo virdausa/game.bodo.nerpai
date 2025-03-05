@@ -173,7 +173,7 @@
                     </div>
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
-                    <!-- Invoice Section -->
+                    <!-- Shipment Section -->
                     <h3 class="text-lg font-bold my-3">Shipments</h3>
                     <div class="overflow-x-auto">
                         <x-table-table>

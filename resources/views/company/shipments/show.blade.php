@@ -161,7 +161,7 @@
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
                     <div>
-                        @if ($shipment->status == 'SHIP_IN_TRANSIT')
+                        @if ($shipment->status == 'SHP_IN_TRANSIT' && $shipment_confirm_allowed)
                         <div class="flex justify mt-4">
                             <form action="{{ route('shipments.action', ['shipments' => $shipment->id, 'action' => 'SHP_DELIVERY_CONFIRMED']) }}" method="POST">
                                 @csrf

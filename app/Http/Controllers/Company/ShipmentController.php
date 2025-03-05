@@ -43,7 +43,23 @@ class ShipmentController extends Controller
     {
         $shipment = Shipment::with('shipper', 'consignee', 'transaction', 'courier', 'shipment_confirmations')
                             ->findOrFail($id);
-        return view('company.shipments.show', compact('shipment'));
+    
+        $shipment_confirm_allowed = false;
+        $consignee_type = $shipment->consignee_type;
+        $consignee_id = $shipment->consignee_id;
+        $layout = session('layout');
+
+        if($consignee_type == 'ST' && $layout == 'store') {
+            if($consignee_id == session('company_store_id')) {
+                $shipment_confirm_allowed = true;
+            }
+        } else if($consignee_type == 'WH' && $layout == 'warehouse') {
+            if($consignee_id == session('company_warehouse_id')) {
+                $shipment_confirm_allowed = true;
+            }
+        }
+
+        return view('company.shipments.show', compact('shipment', 'shipment_confirm_allowed'));
     }
 
     /**

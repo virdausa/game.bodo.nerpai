@@ -4,6 +4,9 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Company\Shipment;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Employee;
 
@@ -53,5 +56,11 @@ class Outbound extends Model
     public function outbound_products()
     {
         return $this->hasMany(OutboundProduct::class);
+    }
+
+    public function shipments() :hasMany
+    {
+        return $this->hasMany(Shipment::class, 'transaction_id', 'id')
+                    ->where('transaction_type', 'OUTB');
     }
 }

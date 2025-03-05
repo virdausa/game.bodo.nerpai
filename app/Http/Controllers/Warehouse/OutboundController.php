@@ -5,24 +5,32 @@ namespace App\Http\Controllers\Warehouse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use App\Models\Company\Outbound;
-use App\Models\Warehouse;
+use App\Models\Company\OutboundProduct;
+use App\Models\Company\Warehouse;
+use App\Models\Company\Shipment;
+
 use App\Models\Product;
 use App\Models\Sale;
 use App\Models\Inventory;
 use App\Models\InventoryHistory;
-use App\Models\Expedition;
-use App\Models\Location;
-use App\Models\OutboundRequestLocation;
+
+
+
 use Illuminate\Http\Request;
 
 class OutboundController extends Controller
 {
     public function index()
     {
-        $outboundRequests = Outbound::with('sales', 'warehouse', 'verifier')
-											->orderBy('created_at', 'desc')
-											->get();
-        return view('outbound_requests.index', compact('outboundRequests'));
+		$warehouse = Warehouse::findOrFail(session('company_warehouse_id'));
+        $outbounds = Outbound::with('source')
+				->where('warehouse_id', $warehouse->id)
+				->orderBy('created_at', 'desc')->get();
+		$shipments_outgoing = Shipment::where('shipper_type', 'WH')
+				->where('shipper_id', $warehouse->id)
+				->orderBy('created_at', 'desc')->get();
+
+		return view('warehouse.warehouse_outbounds.index', compact('outbounds', 'shipments_outgoing'));
     }
 
     public function create()
@@ -55,18 +63,25 @@ class OutboundController extends Controller
         return redirect()->route('outbound_requests.index')->with('success', 'Outbound request created.');
     }
 
-	public function show($id){
-		$outboundRequest = Outbound::with('sales', 'warehouse', 'expedition')->findOrFail($id);
-		$expedition = $outboundRequest->expedition;
-		$outboundRequestLocations = [];
-		foreach($outboundRequest->requested_quantities as $productId => $quantity){
-			$outboundRequestLocations[$productId] = OutboundRequestLocation::join('locations', 'outbound_request_locations.location_id', '=', 'locations.id')
-			->where('outbound_request_locations.product_id', $productId)
-			->select('locations.id', 'locations.room', 'locations.rack', 'outbound_request_locations.quantity')
-			->get();
-		}
+	public function show($id)
+	{
+		$warehouse_id = session('company_warehouse_id');
+		
+		$outbound = Outbound::with([
+			'source',
+			'shipments',
+			'outbound_products.product',
+			'outbound_products.warehouse_location',
+			'outbound_products' => function ($query) {
+				$query->withCount(['inventory as stock' => function ($subQuery) {
+					$subQuery->select(DB::raw('SUM(quantity)'))
+							->whereNull('deleted_at')
+							->whereIn('warehouse_id', [session('company_warehouse_id')]);
+				}]);
+			}
+		])->findOrFail($id);
 
-		return view('outbound_requests.show', compact('outboundRequest', 'expedition', 'outboundRequestLocations'));
+		return view('warehouse.warehouse_outbounds.show', compact('outbound'));
 	}
 
 	public function edit($id)
@@ -141,248 +156,61 @@ class OutboundController extends Controller
 			->with('success', 'Outbound Request updated successfully!');
 	}
 
-	public function rejectRequest(Outbound $outboundRequest)
-	{
-		$sales = $outboundRequest->sales;
-		
-		// go back status
-		$sales->admin_notes .= $outboundRequest->notes;
-		$sales->status = 'Planned';
-		$sales->save();
-		
-		// destroy outbound
-		$outboundRequest->delete();
-		
-		return redirect()->route('inventory.index')
-						 ->with('success', 'Outbound Request has been rejected & deleted successfully.');
-	}
 
-	
-	public function updateStatus(Outbound $outboundRequest, $status)
-    {
-		DB::transaction(function () use ($outboundRequest, $status) {
-			$outboundRequestLocations = OutboundRequestLocation::where('outbound_request_id', $outboundRequest->id)->get();
 
-			foreach ($outboundRequestLocations as $location) {
-				$inventory = Inventory::where('product_id', $location->product_id)
-					->where('warehouse_id', $outboundRequest->warehouse_id)
-					->where('location_id', $location->location_id)
-					->first();
-	
-				// Handle inventory updates for each status
-				if ($status === 'Pending Confirmation') {
-					// Reserve stock
-					$inventory->reserved_quantity += $location->quantity;
-					$inventory->quantity -= $location->quantity;
-				} elseif ($status === 'In Transit') {
-					// Move from reserved to in transit
-					$inventory->reserved_quantity -= $location->quantity;
-					$inventory->in_transit_quantity += $location->quantity;
-				} elseif ($status === 'Rejected' || $status === 'Cancelled') {
-					// Restore reserved stock
-					$inventory->reserved_quantity -= $location->quantity;
-					$inventory->quantity += $location->quantity;
-				}
-	
-				$inventory->save();
-			}
-	
-			// Update the outbound request status
-			$outboundRequest->status = $status;
-	
-			// Existing validation and updates for 'In Transit' status
-			if ($status === 'In Transit') {
-				$validated = request()->validate([
-					'tracking_number' => 'required|string',
-					'real_shipping_fee' => 'required|numeric|min:0',
-				]);
-				$outboundRequest->update(array_merge($validated, ['status' => $status]));
-			} else {
-				$outboundRequest->save();
-			}
-		});
+	public function handleAction(Request $request, $warehouse_outbounds, $action) {
+		$outbound = Outbound::findOrFail($warehouse_outbounds);
 
-		$this->updateSalesStatus($outboundRequest->sales_order_id);
-
-		return response()->json(['success' => true]);
-    }
-
-	
-	
-	public function checkStockAvailability(Outbound $outboundRequest, $validated, Request $request)
-	{
-		// Handle deleted locations
-		if (!empty($request->input('deleted_locations'))) {
-			$deletedLocationIds = explode(',', rtrim($request->input('deleted_locations'), ','));
-			OutboundRequestLocation::where('outbound_request_id', $outboundRequest->id)
-				->whereIn('location_id', $deletedLocationIds)
-				->delete();
-		}
-	
-		// Save or update locations
-		if (isset($validated['locations'])) {
-			foreach($outboundRequest->requested_quantities as $productId => $quantity){
-				if(isset($validated['locations'][$productId]) && !empty($validated['locations'][$productId])) {
-					$locations = $validated['locations'][$productId];
-					$totalQuantity = 0;
-
-					$locationIds = [];
-					foreach ($locations as $locationData) {
-						if (in_array($locationData['location_id'], $locationIds)) {
-							continue;
-						}
-						$locationIds[] = $locationData['location_id'];
-						
-						if (isset($locationData['location_id']) && !empty($locationData['location_id'])) {
-							$qty_in_location = Inventory::where('warehouse_id', $outboundRequest->warehouse_id)
-								->where('product_id', $productId)
-								->where('location_id', $locationData['location_id'])
-								->sum('quantity');
-								
-								// validate if qty in location is more than requested qty
-								if ($qty_in_location < $locationData['quantity']) {
-									return back()->withErrors(['error' => 'Quantity in location is less than requested quantity for product ID ' . $productId]);
-								}
-
-							$totalQuantity += $locationData['quantity'];
-							
-							$outboundRequestLocation = OutboundRequestLocation::updateOrCreate(
-								[
-									'outbound_request_id' => $outboundRequest->id,
-									'product_id' => $productId,
-									'location_id' => $locationData['location_id'],
-								],
-								[
-									'quantity' => $locationData['quantity'],
-									]
-								);
-						}
-					}
-				} else {
-					return back()->withErrors(['error' => 'No locations provided for product ID ' . $productId]);
-				}
-				
-				// validate if total quantity is more than requested qty
-				if ($totalQuantity != $quantity) {
-					return back()->withErrors(['error' => 'Total quantity is not match with requested quantity for product ID ' . $productId]);
-				}	
-			}
-
-			// If stock is sufficient, proceed to the next status
-			$this->updateStatus($outboundRequest, 'Pending Confirmation');
-	
-			return redirect()->route('outbound_requests.index', $outboundRequest->id)
-							 ->with('success', 'Stock verified and status updated to Pending Confirmation.');
-		} else {
-			return back()->withErrors(['error' => 'No locations provided.']);
+		switch ($action) {
+			case 'OUTB_PROCESS':
+				return $this->acceptOutbound($outbound);
+			case 'OUTB_IN_TRANSIT':
+				return $this->createShipmentFromOutbound($outbound);
+				break;
+			case 'OUTB_COMPLETED':
+				return $this->completeOutbound($outbound);
+				break;
+			default:
+				abort(404);
 		}
 
+		return redirect()->route('warehouse_outbounds.index')->with('success', "Outbound request {$outbound->number} updated successfully.");
 	}
 
 
-
-	// Helper function to update sales status based on outbound requests
-	private function updateSalesStatus($salesId)
+	public function acceptOutbound($outbound) 
 	{
-		$sales = Sale::with('outboundRequests')->findOrFail($salesId);
-		$outboundRequests = $sales->outboundRequests;
-
-		if ($outboundRequests->every(fn($or) => $or->status === 'Completed')) {
-			// All outbound requests are completed
-			$sales->status = 'Completed';
-		} elseif ($outboundRequests->contains('status', 'Customer Complaint')) {
-			// If any request has a customer complaint
-			$sales->status = 'Customer Complaint';
-		} elseif ($outboundRequests->contains('status', 'In Transit') && $outboundRequests->contains('status', 'Completed')) {
-			// There’s at least one completed request, but some are still in transit
-			$sales->status = 'Customer Complaint';
-		} elseif ($outboundRequests->every(fn($or) => $or->status === 'Ready to Complete')) {
-			// All outbound requests are ready to complete
-			$sales->status = 'Ready to Complete';
-		} else {
-			// Default to "Planned" if none of the above conditions are met
-			$sales->status = 'In Transit';
-		}
-
-		$sales->save();
+		$outbound->status = 'OUTB_PROCESS';
+		$outbound->save();
+	
+		return redirect()->route('warehouse_outbounds.index')->with('success', "Outbound request {$outbound->number} updated successfully.");
 	}
 
 
-	public function complete($id)
+	public function createShipmentFromOutbound($outbound) 
 	{
-		$outboundRequest = Outbound::findOrFail($id);
-
-		if ($outboundRequest->status !== 'Ready to Complete') {
-			return redirect()->route('outbound_requests.show', $id)
-							->withErrors(['error' => 'Outbound request is not ready for completion.']);
-		}
-
-		// Pass the outbound request to the view for completion verification
-		return view('outbound_requests.complete', compact('outboundRequest'));
-	}
-
-
-
-	public function verifyCompletion($id, Request $request)
-	{
-		$outboundRequest = Outbound::findOrFail($id);
-
-		if ($outboundRequest->status !== 'Ready to Complete') {
-			return redirect()->route('outbound_requests.show', $id)
-				->withErrors(['error' => 'Outbound request is not ready for completion.']);
-		}
-
-		// Validate received quantities
-		$validated = $request->validate([
-			'received_quantities' => 'required|array',
-			'received_quantities.*' => 'required|integer|min:0',
+		$shipment = Shipment::create([
+			'shipper_type' => 'WH',
+			'shipper_id' => $outbound->warehouse_id,
+			'origin_address' => $outbound->warehouse->address,
+			'consignee_type' => $outbound->source->consignee_type,
+			'consignee_id' => $outbound->source->consignee_id,
+			'destination_address' => $outbound->source->consignee->address,
+			'transaction_type' => 'OUTB',
+			'transaction_id' => $outbound->id,
+			'courier_id' => $outbound->source->courier_id,
+			'ship_date' => now()->format('Y-m-d'),
+			'status' => 'SHP_IN_TRANSIT',
 		]);
+		$shipment->generateShipmentNumber();
+		$shipment->save();
 
-		$receivedQuantities = $validated['received_quantities'];
-
-		foreach ($receivedQuantities as $productId => $receivedQuantity) {
-			$remainingQty = $receivedQuantity;
-
-			$outboundRequestLocations = OutboundRequestLocation::where('outbound_request_id', $outboundRequest->id)
-									->where('product_id', $productId)
-									->get();
-			foreach ($outboundRequestLocations as $location) {
-				if ($location->product_id !== $productId || $remainingQty <= 0) {
-					continue;
-				}
-
-				// Deduct stock from inventory
-				$inventory = Inventory::where('product_id', $productId)
-					->where('warehouse_id', $outboundRequest->warehouse_id)
-					->where('location_id', $location->location_id)
-					->first();
-
-				$deductQty = min($location->quantity, $remainingQty);
-				$remainingQty -= $deductQty;
-
-				if ($inventory) {
-					$inventory->in_transit_quantity -= $deductQty;
-					$inventory->save();
-
-					// Log inventory history
-					InventoryHistory::create([
-						'product_id' => $productId,
-						'warehouse_id' => $outboundRequest->warehouse_id,
-						'location_id' => $location->location_id,
-						'quantity' => -1 * $deductQty,
-						'transaction_type' => 'Outbound',
-						'notes' => 'Completed Outbound Request ID: ' . $outboundRequest->id,
-					]);
-				}
-			}
-		}
-
-		$outboundRequest->status = 'Completed';
-		$outboundRequest->save();
-
-		return redirect()->route('outbound_requests.show', $outboundRequest->id)
-			->with('success', 'Outbound request completed successfully and inventory updated.');
+		$outbound->status = 'OUTB_IN_TRANSIT';
+		$outbound->save();
+	
+		return redirect()->route('shipments.edit', $shipment->id)->with('success', "Shipment {$shipment->shipment_number} created successfully");
 	}
+
 
 
 }
