@@ -10,6 +10,9 @@ use App\Http\Controllers\Store\StorePermissionController;
 
 use App\Http\Controllers\Store\StoreRestockController;
 
+use App\Http\Controllers\Store\StoreInventoryController;
+use App\Http\Controllers\Store\StoreInboundController;
+
 Route::middleware([
     'auth',
     CompanyMiddleware::class,
@@ -31,7 +34,10 @@ Route::middleware([
 
     Route::resource('store_products', StorePermissionController::class);
     Route::resource('store_warehouses', StorePermissionController::class);
-    Route::resource('store_inventories', StorePermissionController::class);
-    Route::resource('store_inbounds', StorePermissionController::class);
+    Route::resource('store_inventories', StoreInventoryController::class);
+    
+    Route::resource('store_inbounds', StoreInboundController::class);
+    Route::post('store_inbounds/{id}/action/{action}', [StoreInboundController::class, 'handleAction'])->name('store_inbounds.action');
+
     Route::resource('store_outbounds', StorePermissionController::class);
 });
