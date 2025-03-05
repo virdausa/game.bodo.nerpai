@@ -14,7 +14,7 @@ class StoreInventory extends Model
     use HasFactory;
 
     protected $table = 'store_inventories';
-    protected $timestamps = true;
+    public $timestamps = true;
 
     protected $fillable = [
         'store_id',
