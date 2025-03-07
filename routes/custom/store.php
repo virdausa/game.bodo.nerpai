@@ -7,7 +7,7 @@ use App\Http\Middleware\StoreMiddleware;
 use App\Http\Controllers\Store\StoreEmployeeController;
 use App\Http\Controllers\Store\StoreRoleController;
 use App\Http\Controllers\Store\StorePermissionController;
-
+use App\Http\Controllers\Store\StoreProductController;
 use App\Http\Controllers\Store\StoreRestockController;
 
 use App\Http\Controllers\Store\StorePosController;
@@ -36,7 +36,7 @@ Route::middleware([
     Route::resource('store_pos', StorePosController::class);
     Route::get('store_pos/{id}/print', [StorePosController::class, 'printPos'])->name('store_pos.print');
 
-    Route::resource('store_products', StorePermissionController::class);
+    Route::resource('store_products', StoreProductController::class);
     Route::resource('store_warehouses', StorePermissionController::class);
     Route::resource('store_inventories', StoreInventoryController::class);
     
