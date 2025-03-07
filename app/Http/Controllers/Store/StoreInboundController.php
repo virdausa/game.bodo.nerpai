@@ -129,6 +129,7 @@ class StoreInboundController extends Controller
                 $store_product = StoreProduct::create([
                     'store_id' => $shipment->consignee_id,
                     'product_id' => $product->id,
+                    'store_price' => $product->price,
                 ]);
                 $storeProductMap[$product->id] = $store_product->id;
             }

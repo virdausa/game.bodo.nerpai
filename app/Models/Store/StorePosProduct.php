@@ -19,8 +19,11 @@ class StorePosProduct extends Model
         'store_product_id',
         'quantity',
         'price',
+        'discount',
         'subtotal',
-        'notes'
+        'cost_per_unit',
+        'total_cost',
+        'notes',
     ];
 
     protected $casts = [
@@ -28,12 +31,12 @@ class StorePosProduct extends Model
         'subtotal' => 'decimal:2',
     ];
 
-    public function storePos(): BelongsTo
+    public function store_pos(): BelongsTo
     {
         return $this->belongsTo(StorePos::class);
     }
 
-    public function storeProduct(): BelongsTo
+    public function store_product(): BelongsTo
     {
         return $this->belongsTo(StoreProduct::class);
     }
