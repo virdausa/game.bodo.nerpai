@@ -28,6 +28,8 @@ use App\Http\Controllers\Company\OutboundController;
 use App\Http\Controllers\Company\ShipmentController;
 use App\Http\Controllers\Company\CourierController;
 
+use App\Http\Controllers\Company\ReportController;
+
 // Company
 Route::middleware(['auth', 
                 CompanyMiddleware::class,
@@ -79,4 +81,7 @@ Route::middleware(['auth',
     Route::put('shipments/{id}/confirm-update', [ShipmentController::class, 'confirm_update'])->name('shipments.confirm-update');
     Route::get('shipments/{id}/confirm-show', [ShipmentController::class, 'confirm_show'])->name('shipments.confirm-show');
     Route::resource("couriers", CourierController::class);
+
+
+    Route::resource("reports", ReportController::class);
 });

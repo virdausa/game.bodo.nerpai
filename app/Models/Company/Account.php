@@ -11,7 +11,7 @@ class Account extends Model
     protected $fillable = [
         'code',
         'name',
-        'type',
+        'type_id',
         'parent_id',
         'status',
         'balance',
@@ -25,5 +25,10 @@ class Account extends Model
     public function children()
     {
         return $this->hasMany(Account::class, 'parent_id');
+    }
+
+    public function account_type()
+    {
+        return $this->belongsTo(AccountType::class, 'type');
     }
 }

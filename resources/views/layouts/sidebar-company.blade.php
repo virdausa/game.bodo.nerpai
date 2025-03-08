@@ -324,6 +324,40 @@
                 </li>
             @endif
 
+            @if(session('employee'))
+                <li class="relative">
+                    <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                        onclick="toggleDropdown('finance-menu')">
+                        <div class="flex items-center">
+                            <svg class="flex-shrink-0 w-4 h-4 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
+                                <path
+                                    d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z" />
+                            </svg>
+                            <span class="flex-1 ms-3 whitespace-nowrap">Finance</span>
+                        </div>
+                        <svg class="w-4 h-4 transition-transform transform group-hover:rotate-180" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <ul class="mt-1 space-y-1 ms-6 
+                                {{ Request::routeIs('reports*') || 
+                                 Request::routeIs('couriers*')
+                                 ? 'block' : 'hidden' }}" id="finance-menu">
+                        @if(session('employee'))
+                            <li>
+                                <x-sidebar-item icon="icon-checklist-paper" 
+                                                    route="reports.index" 
+                                                    text="Reports">
+                                    Reports
+                                </x-sidebar-item>
+                            </li>
+                        @endif
+                    </ul>
+                </li>
+            @endif
+
             @if(session('employee')?->can('employees sidebar'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -360,6 +394,17 @@
                             </li>
                         @endif
                     </ul>
+                </li>
+            @endif
+
+            <!-- Reports -->
+            @if(session('employee'))
+                <li class="relative">
+                    <x-sidebar-item icon="icon-checklist-paper" 
+                                        route="reports.index" 
+                                        text="Reports">
+                        Laporan
+                    </x-sidebar-item>
                 </li>
             @endif
 
