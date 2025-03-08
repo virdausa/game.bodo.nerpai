@@ -8,7 +8,7 @@ use App\Models\Company\InboundProducts;
 use App\Models\Company\Purchase;
 use App\Models\User;
 use App\Models\Location;
-use App\Models\Inventory;
+use App\Models\Company\Inventory;
 use App\Models\InventoryHistory;
 use App\Models\Company\Shipment;
 use App\Models\Company\Warehouse;
