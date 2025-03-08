@@ -15,7 +15,7 @@ use App\Http\Controllers\Company\SupplierController;
 
 use App\Http\Controllers\Company\SaleController;
 use App\Http\Controllers\Company\SaleInvoiceController;
-use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\Company\CustomerController;
 use App\Http\Controllers\CustomerComplaintController;
 
 use App\Http\Controllers\ProductController;

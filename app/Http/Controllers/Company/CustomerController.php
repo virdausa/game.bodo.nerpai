@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
+use App\Http\Controllers\Controller;
 
-use App\Models\Customer;
+use App\Models\Company\Customer;
 use Illuminate\Http\Request;
+
 
 class CustomerController extends Controller
 {
@@ -15,7 +17,7 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = Customer::all();
-        return view('customers.index', compact('customers'));
+        return view('company.customers.index', compact('customers'));
     }
 
     /**
@@ -25,7 +27,7 @@ class CustomerController extends Controller
      */
     public function create()
     {
-        return view('customers.create');
+        return view('company.customers.create');
     }
 
     /**
@@ -57,7 +59,7 @@ class CustomerController extends Controller
     public function show($id)
     {
         $customer = Customer::find($id);
-        return view('customers.show', compact('customer'));
+        return view('company.customers.show', compact('customer'));
     }
 
     /**
@@ -69,7 +71,7 @@ class CustomerController extends Controller
     public function edit($id)
     {
         $customer = Customer::find($id);
-        return view('customers.edit', compact('customer'));
+        return view('company.customers.edit', compact('customer'));
     }
 
     /**
@@ -118,6 +120,6 @@ class CustomerController extends Controller
     {
         $customer = Customer::find($id);
         $sales = $customer->sales;
-        return view('customers.sales', compact('customer', 'sales'));
+        return view('company.customers.sales', compact('customer', 'sales'));
     }
 }

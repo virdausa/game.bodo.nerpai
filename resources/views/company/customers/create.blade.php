@@ -37,10 +37,10 @@
                                 <x-input-textarea name="notes" x-model="notes"></x-input-textarea>
                             </div>
                             <div class="flex gap-3 justify-end">
-                                <a href="{{ route('customers.index') }}">
-                                    <x-button type="button" variant="secondary">Cancel</x-button>
-                                </a>
-                                <x-button type="submit" variant="primary">Create Customer</x-button>
+                                <x-secondary-button>
+                                    <a href="{{ route('customers.index') }}">Cancel</a>
+                                </x-secondary-button>
+                                <x-primary-button type="submit">Create Customer</x-primary-button>
                             </div>
                         </div>
                     </form>

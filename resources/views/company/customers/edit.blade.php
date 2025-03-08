@@ -43,12 +43,10 @@
                             </div>
                         </div>
                         <div class="flex gap-3 justify-end mt-4">
-                            <a href="{{ route('customers.index') }}">
-                                <x-button type="button" variant="secondary">
-                                    Cancel
-                                </x-button>
-                            </a>
-                            <x-button type="submit" variant="primary">Update Customer</x-button>
+                            <x-secondary-button>
+                                <a href="{{ route('customers.index') }}">Cancel</a>
+                            </x-secondary-button>
+                            <x-primary-button type="submit">Update Customer</x-primary-button>
                         </div>
                     </form>
                 </div>
