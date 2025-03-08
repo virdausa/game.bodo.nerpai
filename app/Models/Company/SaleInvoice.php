@@ -7,13 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PurchaseInvoice extends Model
+class SaleInvoice extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'purchase_id',
-        'invoice_number',
+        'sale_id',
+        'number',
         'date',
         'due_date',
         'cost_products',
@@ -32,14 +32,14 @@ class PurchaseInvoice extends Model
         'total_amount' => 'decimal:2',
     ];
 
-    public function purchase(): BelongsTo
+    public function sale(): BelongsTo
     {
-        return $this->belongsTo(Purchase::class);
+        return $this->belongsTo(Sale::class);
     }
 
-    public function generateInvoiceNumber(): string
+    public function generateNumber(): string
     {
-        $this->invoice_number = 'INV_' . $this->id . '_' . $this->purchase->po_number;
-        return $this->invoice_number;
+        $this->number = 'INV_' . $this->id . '_' . $this->sale->number;
+        return $this->number;
     }
 }

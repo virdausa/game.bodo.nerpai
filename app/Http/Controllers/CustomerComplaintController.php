@@ -8,7 +8,7 @@ use App\Models\CustomerComplaint;
 use App\Models\ComplaintDetail;
 use App\Models\OutboundRequest;
 use App\Models\Inventory;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Sale;
 
 class CustomerComplaintController extends Controller

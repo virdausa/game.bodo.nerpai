@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 use App\Models\Employee;
 use App\Models\Company\Courier;
-use App\Models\Product;
+use App\Models\Company\Product;
 
 class InventoryTransfer extends Model
 {

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Employee;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\Supplier;
 use App\Models\Company\Warehouse;
 use App\Models\Company\PurchaseInvoice;

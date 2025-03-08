@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Employee;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\ShipmentConfirmation;
 use App\Models\Company\Warehouse;
 use App\Models\Company\InboundProducts;

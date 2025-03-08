@@ -9,7 +9,7 @@ use App\Models\Company\OutboundProduct;
 use App\Models\Company\Warehouse;
 use App\Models\Company\Shipment;
 
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Sale;
 use App\Models\Inventory;
 use App\Models\InventoryHistory;

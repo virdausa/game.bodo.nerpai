@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Store;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Store\StoreProduct;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;

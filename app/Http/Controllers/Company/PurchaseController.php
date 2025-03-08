@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Models\Company\Purchase; // Ensure you import the Purchase model
 use App\Models\Company\PurchaseInvoice;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\Warehouse;
 use App\Models\InventoryHistory;
 use App\Models\InboundRequest;

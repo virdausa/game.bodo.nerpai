@@ -9,7 +9,7 @@ use App\Models\Store\StoreEmployee;
 use App\Models\Store\StoreProduct;
 use App\Models\Store\StoreInventory;
 use App\Models\Customer;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\Courier;
 
 use Illuminate\Http\Request;

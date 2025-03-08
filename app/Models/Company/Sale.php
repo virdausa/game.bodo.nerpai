@@ -5,10 +5,11 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Product;
+use App\Models\Company\Product;
+use App\Models\Employee;
+
 use App\Models\Company\Warehouse;
 use App\Models\Company\Customer;
-use App\Models\Employee;
 
 class Sale extends Model
 {
@@ -44,29 +45,9 @@ class Sale extends Model
             ->withTimestamps();
     }
 
-    // Relationship with Product
-    public function salesProducts()
-    {
-        return $this->belongsTo(SalesProduct::class);
-    }
-
     public function warehouse()
     {
         return $this->belongsTo(Warehouse::class);
-    }
-
-    public function productQuantities()
-    {
-        return $this->products->mapWithKeys(function ($product) {
-            return [$product->id => $product->pivot->quantity];
-        });
-    }
-
-
-    // Get Status Name (optional helper method for status display)
-    public function getStatusLabelAttribute()
-    {
-        return ucfirst(strtolower(str_replace('_', ' ', $this->status)));
     }
 
     public function customer()
@@ -82,5 +63,18 @@ class Sale extends Model
     public function employee()
     {
         return $this->belongsTo(Employee::class);
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(SaleInvoice::class);
+    }
+
+
+    public function shipments(): HasMany
+    {
+        // shipment with type = "PO" and id = purchase_id
+        return $this->hasMany(Shipment::class, 'transaction_id', 'id')
+                    ->where('transaction_type', 'SO');
     }
 }

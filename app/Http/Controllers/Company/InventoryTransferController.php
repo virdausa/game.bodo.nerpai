@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Company\Store;
 use App\Models\Company\Warehouse;
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\Outbound;
 use App\Models\Company\OutboundProduct;
 

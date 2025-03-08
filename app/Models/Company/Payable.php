@@ -1,34 +1,37 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class SaleInvoice extends Model
+class Payable extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'sale_id',
-        'invoice_number',
-        'date',
-        'due_date',
+        'purchase_invoice_id',
+        'supplier_id',
         'total_amount',
+        'balance',
         'status',
         'notes'
     ];
 
     protected $casts = [
-        'date' => 'date',
-        'due_date' => 'date',
         'total_amount' => 'decimal:2',
+        'balance' => 'decimal:2',
     ];
 
-    public function sale(): BelongsTo
+    public function purchaseInvoice(): BelongsTo
     {
-        return $this->belongsTo(Sale::class);
+        return $this->belongsTo(PurchaseInvoice::class);
+    }
+
+    public function supplier(): BelongsTo
+    {
+        return $this->belongsTo(Supplier::class);
     }
 }

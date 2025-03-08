@@ -4,7 +4,7 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Model;
 
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\WarehouseLocation;
 use App\Models\Company\Outbound;
 use App\Models\Inventory;

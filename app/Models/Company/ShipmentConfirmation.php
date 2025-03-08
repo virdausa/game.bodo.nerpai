@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Employee;
 use App\Models\Company\Shipment;
 

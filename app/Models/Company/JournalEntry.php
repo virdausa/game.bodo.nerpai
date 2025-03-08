@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Company;
 
 use App\Models\Company\AssetDisposal;
 use App\Models\Company\AssetMaintenance;

@@ -2,7 +2,7 @@
 
 namespace App\Models\Store;
 
-use App\Models\Product;
+use App\Models\Company\Product;
 use App\Models\Company\Store;
 use App\Models\Company\WarehouseLocation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
