@@ -1,17 +1,21 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Space;
 
 use Illuminate\Database\Eloquent\Model;
 
+use App\Models\User;
+use App\Models\CompanyUser;
+
 class Company extends Model
 {
-    protected $connection = 'mysql';
-
-    protected $keyType = 'string';
+    protected $table = 'companies';
+    
+    protected $connection = 'space';
 
     protected $fillable = [
         'id',
+        'code',
         'name',
         'location',
         'database',

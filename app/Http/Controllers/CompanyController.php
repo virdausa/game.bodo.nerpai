@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Company;
+use App\Models\Space\Company;
 use App\Models\CompanyUser;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Auth;
@@ -18,28 +18,28 @@ class CompanyController extends Controller
 	{
 		$user = Auth::user();
 		$companies = $user->companies;
-		return view('companies.index', compact('companies'));
+		return view('space.companies.index', compact('companies'));
 	}
 
 	public function create()
 	{
-		return view('companies.create');
+		return view('space.companies.create');
 	}
 
 	public function store(Request $request)
 	{
 		$validated = $request->validate([
-			'id' => 'required|string|max:255',
+			'code' => 'required|string|max:255',
 			'name' => 'required|string|max:255',
 			'address' => 'nullable|string|max:255',
 			'database' => 'nullable|string|max:255',
 		]);
 		
 		$company = Company::updateOrCreate(
-			['id' => $request->id],
+			['code' => $request->code],
 			$validated
 		);
-		$company->id = $request->id;
+		$company->code = $request->code;
 		
 		$this->setupNewCompany($company);
 
@@ -48,7 +48,7 @@ class CompanyController extends Controller
 
 	public function edit(Company $Company)
 	{
-		return view('companies.edit', compact('Company'));
+		return view('space.companies.edit', compact('Company'));
 	}
 
 	public function update(Request $request, Company $Company)
@@ -139,12 +139,13 @@ class CompanyController extends Controller
 	{
 		$company = Company::findOrFail($id);
 
+		$code = $company->code;
 		$dbUrl = env('DB_URL');
 		$dbConfig = parse_url($dbUrl);
 		if(!$dbConfig) {
 			return redirect()->route('companies.index')->with('error', 'Database Company tidak valid');
 		}
-		$dbName = $dbConfig ? (ltrim($dbConfig['path'], '/') . "_" . $id) : ltrim($dbConfig['path'], '/');
+		$dbName = $dbConfig ? (ltrim($dbConfig['path'], '/') . "_" . $code) : ltrim($dbConfig['path'], '/');
 
 		// Konfigurasi koneksi ke database tenant
 		// Atur koneksi database dinamis

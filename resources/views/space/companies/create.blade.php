@@ -4,8 +4,8 @@
 
         <!-- Company Id -->
         <div class="form-group mb-4">
-            <x-input-label for="id">Company Id (Kode Perusahaan)</x-input-label>
-            <x-text-input type="text" id="id" name="id" class="w-full" required placeholder="Masukkan nama perusahaan" />
+            <x-input-label for="code">Company Id (Kode Perusahaan)</x-input-label>
+            <x-text-input type="text" id="code" name="code" class="w-full" required placeholder="Masukkan nama perusahaan" />
         </div>
 
         <!-- company Name -->
@@ -15,16 +15,16 @@
         </div>
 
         <!-- Address -->
-        <div class="form-group mb-4">
+        <!-- <div class="form-group mb-4">
             <x-input-label for="address">Alamat</x-input-label>
             <x-text-input type="text" id="address" name="address" class="w-full" placeholder="Dimanakah lokasi perusahaan?"/>
-        </div>
+        </div> -->
 
         <!-- Database -->
-        <div class="form-group mb-4">
+        <!-- <div class="form-group mb-4">
             <x-input-label for="database">Database Url</x-input-label>
             <x-text-input type="text" id="database" name="database" class="w-full" placeholder="Masukkan database url" />
-        </div>
+        </div> -->
 
         <!-- Actions -->
         <div class="flex justify-end space-x-4 mt-4">

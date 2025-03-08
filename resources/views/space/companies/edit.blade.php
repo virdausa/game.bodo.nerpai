@@ -10,10 +10,10 @@
         </div>
 
         <!-- Location -->
-        <div class="form-group">
+        <!-- <div class="form-group">
             <x-input-label for="location">Address</x-input-label>
             <x-text-input type="text" id="location" name="location" class="w-full" value="{{ $Tenant->address }}" />
-        </div>
+        </div> -->
 
         <!-- Actions -->
         <div class="flex justify-end space-x-4">

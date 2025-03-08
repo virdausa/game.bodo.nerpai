@@ -15,7 +15,7 @@
                     <!-- Actions -->
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                                @include('companies.create')
+                                @include('space.companies.create')
                          </div>
                     </div>
 
@@ -24,6 +24,7 @@
                         <x-table-thead>
                             <tr>
                                 <x-table-th>ID</x-table-th>
+                                <x-table-th>Code</x-table-th>
                                 <x-table-th>Name</x-table-th>
                                 <x-table-th>Location</x-table-th>
                                 <x-table-th>Database</x-table-th>
@@ -35,6 +36,7 @@
                             @foreach (\App\Models\User::find(auth()->user()->id)->companies as $company)
                                 <x-table-tr>
                                     <x-table-td>{{ $company->id }}</x-table-td>
+                                    <x-table-td>{{ $company->code }}</x-table-td>
                                     <x-table-td>{{ $company->name }}</x-table-td>
                                     <x-table-td>{{ $company->address }}</x-table-td>
                                     <x-table-td>{{ $company->database ? parse_url($company->database)['host'] ?? $company->database->name : 'Internal' }}</x-table-td>
