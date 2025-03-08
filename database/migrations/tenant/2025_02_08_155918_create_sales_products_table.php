@@ -19,6 +19,9 @@ return new class extends Migration
             // Columns
             $table->integer('quantity');
             $table->decimal('price', 15, 2);
+            $table->decimal('discount', 15, 2)->default(0);
+            $table->decimal('subtotal', 25, 2)->default(0);
+            $table->decimal('cost_per_unit', 20, 2)->default(0);
             $table->decimal('total_cost', 25, 2)->default(0);
             $table->string('notes')->nullable();
 

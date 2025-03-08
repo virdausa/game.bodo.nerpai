@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Product;
 use App\Models\Company\Warehouse;
-use App\Models\Customer;
+use App\Models\Company\Customer;
 use App\Models\Employee;
 
 class Sale extends Model
@@ -17,8 +17,8 @@ class Sale extends Model
     use HasFactory;
 
     protected $fillable = [
-        'so_number',
-        'sale_date',
+        'number',
+        'date',
         'employee_id',
         'customer_id',
         'warehouse_id',
@@ -33,8 +33,8 @@ class Sale extends Model
 
     public function generateSoNumber(): string
     {
-        $this->so_number = 'SO-' . $this->sale_date . '-' . $this->id;
-        return $this->so_number;
+        $this->number = 'SO_' . $this->date . '_' . $this->id;
+        return $this->number;
     }
 
     public function products()

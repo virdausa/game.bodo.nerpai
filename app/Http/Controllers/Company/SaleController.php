@@ -7,7 +7,7 @@ use App\Models\SalesProduct;
 use App\Models\Product;
 use App\Models\Company\Warehouse;
 use App\Models\Company\Courier;
-use App\Models\Customer;
+use App\Models\Company\Customer;
 use App\Models\Employee;
 use App\Models\CustomerComplaint;
 use Illuminate\Http\Request;
@@ -18,8 +18,8 @@ class SaleController extends Controller
 {
 	public function index(Request $request)
 	{
-		$sales = Sale::with(['warehouse', 'customer'])->orderBy('sale_date', 'desc')->get();
-		return view('sales.index', compact('sales'));
+		$sales = Sale::with(['warehouse', 'customer'])->orderBy('date', 'desc')->get();
+		return view('company.sales.index', compact('sales'));
 	}
 
 
@@ -29,14 +29,15 @@ class SaleController extends Controller
 		$products = Product::all();
 		$couriers = Courier::all(); // Fetch couriers
 		$customers = Customer::all();
-		return view('sales.create', compact('warehouses', 'products', 'couriers', 'customers'));
+
+		return view('company.sales.create', compact('warehouses', 'products', 'couriers', 'customers'));
 	}
 
 	public function store(Request $request)
 	{
 		$validated = $request->validate([
 			'customer_id' => 'required|integer',
-			'sale_date' => 'required|date',
+			'date' => 'required|date',
 			'warehouse_id' => 'required|exists:warehouses,id',
 			'products' => 'required|array', // Expecting products as an array
 			'products.*.product_id' => 'required|exists:products,id',
@@ -49,13 +50,14 @@ class SaleController extends Controller
 
 		// Create sale
 		$sale = Sale::create([
-			'sale_date' => $validated['sale_date'],
+			'date' => $validated['date'],
 			'customer_id' => $validated['customer_id'],
 			'warehouse_id' => $validated['warehouse_id'],
 			'employee_id' => $employee->id,
 			'total_amount' => collect($validated['products'])->sum(function ($product) {
 				return $product['quantity'] * $product['price'];
 			}),
+			'status' => 'SO_OFFER',
 		]);
 		$sale->generateSoNumber();
 		$sale->save();
@@ -77,7 +79,7 @@ class SaleController extends Controller
 	public function show($id)
 	{
 		$sale = Sale::with(['products'])->findOrFail($id);
-		return view('sales.show', compact('sale'));
+		return view('company.sales.show', compact('sale'));
 	}
 
 
@@ -89,14 +91,14 @@ class SaleController extends Controller
 		$products = Product::all();
 		$couriers = Courier::all(); // Fetch couriers
 
-		return view('sales.edit', compact('sale', 'warehouses', 'products', 'couriers', 'customers'));
+		return view('company.sales.edit', compact('sale', 'warehouses', 'products', 'couriers', 'customers'));
 	}
 
 
 	public function update(Request $request, $id)
 	{
 		$validated = $request->validate([
-			'sale_date' => 'required|date',
+			'date' => 'required|date',
 			'customer_id' => 'required|integer',
 			'warehouse_id' => 'required|exists:warehouses,id',
 			'products' => 'required|array', // Validate products as an array
@@ -108,21 +110,12 @@ class SaleController extends Controller
 			'shipping_fee_discount' => 'nullable|numeric|min:0',
 			'estimated_shipping_fee' => 'nullable|numeric|min:0',
 		]);
-		
+
 		$employee = session('employee');
 		
 		$sale = Sale::findOrFail($id);
-		$sale->update([
-			'customer_id' => $validated['customer_id'],
-			'so_number' => $sale->generateSoNumber(),
-			'sale_date' => $validated['sale_date'],
-			'warehouse_id' => $validated['warehouse_id'],
-			'courier_id' => $validated['courier_id'] ?? NULL, // Update courier in the same call
-			'shipping_fee_discount' => $validated['shipping_fee_discount'] ?? 0,
-			'estimated_shipping_fee' => $validated['estimated_shipping_fee'],
-			'employee_id' => $employee->id,
-		]);
-		
+		$sale->update($validated);
+		$sale->generateSoNumber();
 
 		// Sync products with updated quantities, prices, and notes
 		$totalAmount = 0;
@@ -153,55 +146,5 @@ class SaleController extends Controller
 		$sale->delete();
 
 		return redirect()->route('sales.index')->with('success', 'Sale deleted successfully.');
-	}
-
-	public function updateStatus(Sale $sale, $status)
-	{
-		// Set status to "Unpaid" and request outbound
-		if ($sale->status == 'Planned' && $status == 'Unpaid') {
-			$sale->status = $status;
-			$sale->save();
-
-			// Create an inbound request when moving to "In Transit"
-			$requestedQuantities = [];
-			foreach ($sale->products as $product) {
-				$requestedQuantities[$product->id] = $product->pivot->quantity;
-			}
-
-			OutboundRequest::create([
-				'sales_order_id' => $sale->id,
-				'warehouse_id' => $sale->warehouse_id,
-				'requested_quantities' => $requestedQuantities,
-				'received_quantities' => [],
-				'status' => 'Requested',
-				'notes' => 'Outbound request created upon status change to Unpaid',
-			]);
-		}
-
-		// Set status to "Pending Shipment" after confirming payment
-		if ($status == 'Pending Shipment') {
-			// Check if the sale is in the correct status
-			if ($sale->status !== 'Unpaid') {
-				return redirect()->back()->with('error', 'This sale cannot be marked as paid.');
-			}
-
-			// Update the related Outbound Request status
-			$outboundRequest = OutboundRequest::where('sales_order_id', $sale->id)
-				->where('status', 'Pending Confirmation')
-				->latest()->first();
-			if ($outboundRequest) {
-				$outboundRequest->status = 'Packing & Shipping';
-				$outboundRequest->save();
-			}
-
-			$sale->update(['status' => $status]);
-			return redirect()->route('sales.show', $sale->id)
-				->with('success', 'Sale marked as paid and is now pending shipment.');
-		}
-
-		$sale->update(['status' => $status]);
-
-		return redirect()->route('sales.edit', $sale->id)
-			->with('success', 'Status updated successfully!');
 	}
 }
