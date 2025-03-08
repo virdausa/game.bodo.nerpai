@@ -1,9 +1,9 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Company;
 
-use App\Models\Account;
-use App\Models\AccountType;
+use App\Models\Company\Account;
+use App\Models\Company\AccountType;
 use Illuminate\Database\Seeder;
 
 class AccountSeeder extends Seeder

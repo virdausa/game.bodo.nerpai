@@ -24,7 +24,6 @@ class CompanySeeder extends Seeder
             WarehouseSeeder::class,
             CustomerSeeder::class,
             SupplierSeeder::class,
-            AccountSeeder::class,
 
             // stores
             StoreRolePermissionSeeder::class,

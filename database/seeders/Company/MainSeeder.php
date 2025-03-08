@@ -17,6 +17,8 @@ class MainSeeder extends Seeder
 
             AssetTypeSeeder::class,
             AssetLocationSeeder::class,
+
+            AccountSeeder::class,
         ]);
     }
 }
