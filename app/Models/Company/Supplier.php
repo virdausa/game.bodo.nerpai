@@ -20,6 +20,8 @@ class Supplier extends Model
         'phone_number',
         'status',
         'notes',
+        'entity_type',
+        'entity_id',
     ];
 
     public function getSuppliers(): Collection

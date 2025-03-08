@@ -1,11 +1,17 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
-use App\Models\Supplier;
+use App\Models\Company\Supplier;
 use App\Services\SupplierService;
 use App\Http\Requests\Supplier\StoreSupplierRequest;
 use App\Http\Requests\Supplier\UpdateSupplierRequest;
+
+use App\Models\Space\Person;
+use App\Models\Space\Company;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class SupplierController extends Controller
 {
@@ -21,18 +27,19 @@ class SupplierController extends Controller
     public function index()
     {
         $suppliers = $this->supplierService->getAll();
-        return view('suppliers.index', compact('suppliers'));
+
+        return view('company.suppliers.index', compact('suppliers'));
     }
 
     public function show(String $id)
     {
         $supplier = $this->supplierService->getOne($id);
-        return view('suppliers.show', compact('supplier'));
+        return view('company.suppliers.show', compact('supplier'));
     }
 
     public function create()
     {
-        return view('suppliers.create');
+        return view('company.suppliers.create');
     }
 
     public function store(StoreSupplierRequest $request)
@@ -44,7 +51,23 @@ class SupplierController extends Controller
     public function edit(String $id)
     {
         $supplier = $this->supplierService->getOne($id);
-        return view('suppliers.edit', compact('supplier'));
+
+        $company_id = session('company_id');
+
+        $persons = Person::all();
+        // company who's not supplier and who's not this comapny itself
+        $used_companies_ids = Supplier::whereNotNull('entity_id')
+                                    ->where('entity_type', 'COMP')
+                                    ->where('entity_id', '!=', $supplier->entity_id)
+                                    ->pluck('entity_id');
+
+        //dd($used_companies);
+
+        $companies = Company::whereNotIn('id', $used_companies_ids)
+                                ->where('id', '!=', $company_id)
+                                ->get();
+
+        return view('company.suppliers.edit', compact('supplier', 'persons', 'companies'));
     }
 
     public function update(UpdateSupplierRequest $request, String $id)

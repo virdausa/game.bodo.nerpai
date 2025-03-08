@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Http\Resources\SupplierCollection;
 use App\Http\Resources\SupplierResource;
-use App\Models\Supplier;
+use App\Models\Company\Supplier;
 
 class SupplierService
 {

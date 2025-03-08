@@ -27,6 +27,8 @@ class UpdateSupplierRequest extends FormRequest
             'phone_number' => 'nullable|string',
             'status' => ['required', new Enum(StatusEnum::class)],
             'notes' => 'nullable|string',
+            'entity_type' => 'nullable|string',
+            'entity_id' => 'nullable|integer',
         ];
     }
 }

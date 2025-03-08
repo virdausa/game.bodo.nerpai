@@ -62,6 +62,30 @@
                                 class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white dark:border-gray-600">{{ $supplier->notes }}</textarea>
                         </div>
 
+                        <div class="mb-3 mt-1 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+
+                        <!-- Relation -->
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                            <div class="form-group">
+                                <x-input-label for="entity_type">Entity Type</x-input-label>
+                                <x-input-select id="entity_type" name="entity_type" class="w-full">
+                                    <option value="">-- Select Entity Type --</option>
+                                    <option value="PERS" {{ $supplier->entity_type == 'PERS' ? 'selected' : '' }}>
+                                        Person</option>
+                                    <option value="COMP" {{ $supplier->entity_type == 'COMP' ? 'selected' : '' }}>
+                                        Company</option>
+                                </x-input-select>
+                            </div>
+                            <div class="form-group">
+                                <x-input-label for="entity_id">Entity ID</x-input-label>
+                                <x-input-select id="entity_id" name="entity_id" class="w-full">
+                                    <option value="">-- Select Entity --</option>
+                                </x-input-select>
+                            </div>
+                        </div>
+
+                        <div class="mb-3 mt-1 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
+
                         <!-- Actions -->
                         <div class="flex justify-end space-x-4">
                             <x-primary-button type="submit">Update Supplier</x-primary-button>
@@ -72,4 +96,38 @@
             </div>
         </div>
     </div>
+
+    <script>
+        let persons = @json($persons);
+        let companies = @json($companies);
+
+        function updateEntityOptions(selectedEntityId = null) {
+            let entityTypeSelect = document.getElementById('entity_type').value;
+            let entitySelect = document.getElementById('entity_id');
+            entitySelect.innerHTML = '';
+
+            let data = entityTypeSelect == 'COMP' ? companies : persons;
+            data.forEach(option => {
+                let optionElement = document.createElement('option');
+                optionElement.value = option.id;
+                optionElement.textContent = option.name;
+
+                if(selectedEntityId && selectedEntityId == option.id) {
+                    optionElement.selected = true;
+                }
+
+                entitySelect.appendChild(optionElement);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            let existingEntityId = "{{ $supplier->entity_id }}";
+            updateEntityOptions(existingEntityId);
+        });
+
+        document.getElementById('entity_type').addEventListener('change', function() {
+            updateEntityOptions();
+        });
+    </script>
+
 </x-company-layout>

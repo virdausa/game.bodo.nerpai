@@ -17,11 +17,15 @@ return new class extends Migration
 
             // Columns
             $table->string('name');
-            $table->json('address');
+            $table->json('address')->nullable();
             $table->string('email')->nullable();
             $table->string('phone_number')->nullable();
             $table->string('status')->default('active');
             $table->text('notes')->nullable();
+
+            // Foreign keys
+            $table->string('entity_type')->default('PERS');                  // PERS / COMP
+            $table->unsignedBigInteger('entity_id')->nullable();        
 
             // Timestamps
             $table->timestamps();

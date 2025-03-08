@@ -11,7 +11,7 @@ use App\Http\Controllers\EmployeeController;
 
 use App\Http\Controllers\Company\PurchaseController;
 use App\Http\Controllers\Company\PurchaseInvoiceController;
-use App\Http\Controllers\SupplierController;
+use App\Http\Controllers\Company\SupplierController;
 
 use App\Http\Controllers\Company\SaleController;
 use App\Http\Controllers\CustomerController;
