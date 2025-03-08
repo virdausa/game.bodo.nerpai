@@ -29,6 +29,7 @@ class Store extends Model
         'status',
         'manager',
         'notes',
+        'valuation_method',
     ];
 
     public function employees()

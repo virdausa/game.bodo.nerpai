@@ -13,12 +13,13 @@ return new class extends Migration
     {
         Schema::create('stores', function (Blueprint $table) {
             $table->id();
-            $table->string('code')->unique();
+            $table->string('code')->nullable()->unique();
             $table->string('name');
             $table->json('address')->nullable();
             $table->string('status')->default('active');
             $table->foreignId('manager')->nullable()->constrained('employees', 'id')->onDelete('set null');
             $table->string('notes')->nullable();
+            $table->string('valuation_method')->nullable()->default('FIFO');        // FIFO, LIFO, AVERAGE
             $table->timestamps();
             $table->softDeletes();
         });
