@@ -57,9 +57,23 @@ class ShipmentController extends Controller
             if($consignee_id == session('company_warehouse_id')) {
                 $shipment_confirm_allowed = true;
             }
+        } else if($consignee_type == 'CUST' && $layout == 'company') {
+            $shipment_confirm_allowed = true;
         }
 
-        return view('company.shipments.show', compact('shipment', 'shipment_confirm_allowed'));
+        $shipment_completed_allowed = false;
+        $shipper_type = $shipment->shipper_type;
+        $shipper_id = $shipment->shipper_id;
+
+        if($shipper_type == 'WH' && $layout == 'warehouse') {
+            if($shipper_id == session('company_warehouse_id')) {
+                $shipment_completed_allowed = true;
+            }   
+        }
+
+        return view('company.shipments.show', compact('shipment', 
+            'shipment_completed_allowed', 
+            'shipment_confirm_allowed'));
     }
 
     /**
@@ -152,11 +166,15 @@ class ShipmentController extends Controller
 			case 'SHP_DELIVERY_CONFIRMED':
 				return $this->inputDeliveryConfirmation($shipment);
 				break;
-			default:
+
+            case 'SHP_COMPLETED':
+                return $this->completeShipment($shipment);
+			
+                default:
 				abort(404);
 		}
 
-		return redirect()->route('shipments.index')->with('success', "Shipment {$shipment->shipment_numer} updated successfully.");
+		return redirect()->route('shipments.index')->with('success', "Shipment {$shipment->shipment_number} updated successfully.");
 	}
 
     public function inputDeliveryConfirmation($shipment){
@@ -195,5 +213,15 @@ class ShipmentController extends Controller
         }
 
         return redirect()->route('shipments.confirm', $shipment_confirmation->id)->with('success', "Shipment Confirmation {$shipment->shipment_number} created successfully.");
+    }
+
+    public function completeShipment($shipment)
+    {
+        // feedback to transaction
+
+        $shipment->status = 'SHP_COMPLETED';
+        $shipment->save();
+
+        return redirect()->route('shipments.index')->with('success', "Shipment {$shipment->shipment_number} updated successfully.");
     }
 }

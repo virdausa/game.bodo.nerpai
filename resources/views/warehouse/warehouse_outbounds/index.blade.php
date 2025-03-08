@@ -34,7 +34,7 @@
                                     <x-table-td>{{ $outbound->notes }}</x-table-td>
                                     <x-table-td>
                                         <x-button-show :route="route('warehouse_outbounds.show', $outbound->id)" />
-                                        <x-button-edit :route="route('warehouse_outbounds.edit', $outbound->id)" />
+                                        <!-- <x-button-edit :route="route('warehouse_outbounds.edit', $outbound->id)" /> -->
                                     </x-table-td>
                                 </x-table-tr>
                             @endforeach

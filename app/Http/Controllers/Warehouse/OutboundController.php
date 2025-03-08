@@ -11,7 +11,7 @@ use App\Models\Company\Shipment;
 
 use App\Models\Company\Product;
 use App\Models\Sale;
-use App\Models\Inventory;
+use App\Models\Company\Inventory;
 use App\Models\InventoryHistory;
 
 
@@ -66,7 +66,13 @@ class OutboundController extends Controller
 	public function show($id)
 	{
 		$warehouse_id = session('company_warehouse_id');
+		$outbound_action_allowed = false;
 		
+		if($warehouse_id)
+		{
+			$outbound_action_allowed = true;
+		}
+
 		$outbound = Outbound::with([
 			'source',
 			'shipments',
@@ -81,7 +87,8 @@ class OutboundController extends Controller
 			}
 		])->findOrFail($id);
 
-		return view('warehouse.warehouse_outbounds.show', compact('outbound'));
+
+		return view('warehouse.warehouse_outbounds.show', compact('outbound', 'outbound_action_allowed'));
 	}
 
 	public function edit($id)
@@ -174,7 +181,7 @@ class OutboundController extends Controller
 				abort(404);
 		}
 
-		return redirect()->route('warehouse_outbounds.index')->with('success', "Outbound request {$outbound->number} updated successfully.");
+		return redirect()->route('warehouse_outbounds.show', $outbound->id)->with('success', "Outbound request {$outbound->number} updated successfully.");
 	}
 
 
@@ -183,7 +190,7 @@ class OutboundController extends Controller
 		$outbound->status = 'OUTB_PROCESS';
 		$outbound->save();
 	
-		return redirect()->route('warehouse_outbounds.index')->with('success', "Outbound request {$outbound->number} updated successfully.");
+		return redirect()->route('warehouse_outbounds.show', $outbound->id)->with('success', "Outbound request {$outbound->number} updated successfully.");
 	}
 
 
@@ -211,6 +218,11 @@ class OutboundController extends Controller
 		return redirect()->route('shipments.edit', $shipment->id)->with('success', "Shipment {$shipment->shipment_number} created successfully");
 	}
 
-
-
+	public function completeOutbound($outbound) 
+	{
+		$outbound->status = 'OUTB_COMPLETED';
+		$outbound->save();
+	
+		return redirect()->route('warehouse_outbounds.show', $outbound->id)->with('success', "Outbound {$outbound->number} updated successfully.");
+	}
 }

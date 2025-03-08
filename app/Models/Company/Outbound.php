@@ -33,7 +33,7 @@ class Outbound extends Model
 
     public function generateNumber()
     {
-        $this->number = 'OUTB_' . $this->date . '_' . $this->id;
+        $this->number = 'OUTB_' . $this->date?->format('Y-m-d') . '_' . $this->id;
         return $this->number;
     }
 

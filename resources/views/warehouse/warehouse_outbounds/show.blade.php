@@ -18,7 +18,12 @@
                         </x-div-box-show>
 
                         <x-div-box-show title="Consignee">
-                            {{ $outbound->source->consignee_type ?? 'N/A' }} : {{$outbound->source->consignee->name ?? 'N/A' }}
+                            @if ($outbound->source_type == 'ITF')
+                                {{ $outbound->source->consignee_type ?? 'N/A' }} 
+                                : {{$outbound->source->consignee->name ?? 'N/A' }}
+                            @elseif ($outbound->source_type == 'SO')
+                                {{ $outbound->source->customer->name ?? 'N/A' }}
+                            @endif
                         </x-div-box-show>
                         <x-div-box-show title="Admin">{{ $outbound->employee?->companyuser->user->name ?? 'N/A' }}</x-div-box-show>
                         
@@ -110,36 +115,38 @@
 
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
-                    @if ($outbound->status == 'OUTB_REQUEST')
-                    <div>
-                        <div class="flex justify mt-4">
-                            <form action="{{ route('warehouse_outbounds.action', ['warehouse_outbounds'=> $outbound->id, 'action' => 'OUTB_PROCESS']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Accept Outbound Request & Process</x-primary-button>
-                            </form>
+                    @if ($outbound_action_allowed)
+                        @if ($outbound->status == 'OUTB_REQUEST')
+                        <div>
+                            <div class="flex justify mt-4">
+                                <form action="{{ route('warehouse_outbounds.action', ['warehouse_outbounds'=> $outbound->id, 'action' => 'OUTB_PROCESS']) }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <x-primary-button type="submit">Accept Outbound Request & Process</x-primary-button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    @elseif ($outbound->status == 'OUTB_PROCESS')
-                    <div>
-                        <div class="flex justify mt-4">
-                            <form action="{{ route('warehouse_outbounds.action', ['warehouse_outbounds'=> $outbound->id, 'action' => 'OUTB_IN_TRANSIT']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Process & Kirim Outbound Selesai :)</x-primary-button>
-                            </form>
+                        @elseif ($outbound->status == 'OUTB_PROCESS')
+                        <div>
+                            <div class="flex justify mt-4">
+                                <form action="{{ route('warehouse_outbounds.action', ['warehouse_outbounds'=> $outbound->id, 'action' => 'OUTB_IN_TRANSIT']) }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <x-primary-button type="submit">Process & Kirim Outbound Selesai :)</x-primary-button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    @elseif ($outbound->status == 'OUTB_IN_TRANSIT')
-                    <div>
-                        <div class="flex justify mt-4">
-                            <form action="{{ route('warehouse_outbounds.action', ['warehouse_outbounds'=> $outbound->id, 'action' => 'OUTB_COMPLETED']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Complete Process Outbound Selesai :)</x-primary-button>
-                            </form>
+                        @elseif ($outbound->status == 'OUTB_IN_TRANSIT')
+                        <div>
+                            <div class="flex justify mt-4">
+                                <form action="{{ route('warehouse_outbounds.action', ['warehouse_outbounds'=> $outbound->id, 'action' => 'OUTB_COMPLETED']) }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <x-primary-button type="submit">Complete Process Outbound Selesai :)</x-primary-button>
+                                </form>
+                            </div>
                         </div>
-                    </div>
+                        @endif
                     @endif
 
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>

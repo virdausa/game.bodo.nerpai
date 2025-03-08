@@ -14,6 +14,7 @@ use App\Http\Controllers\Company\PurchaseInvoiceController;
 use App\Http\Controllers\Company\SupplierController;
 
 use App\Http\Controllers\Company\SaleController;
+use App\Http\Controllers\Company\SaleInvoiceController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerComplaintController;
 
@@ -52,7 +53,8 @@ Route::middleware(['auth',
 
     route::resource("customers", CustomerController::class);
     Route::resource('sales', SaleController::class);
-    Route::get('sales/{sale}/status/{status}', [SaleController::class, 'updateStatus'])->name('sales.updateStatus');
+    Route::post('sales/{id}/action/{action}', [SaleController::class, 'handleAction'])->name('sales.action');
+    Route::resource('sale_invoices', SaleInvoiceController::class);
     Route::resource('customer_complaints', CustomerComplaintController::class);
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
     

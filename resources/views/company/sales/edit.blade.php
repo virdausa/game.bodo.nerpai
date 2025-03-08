@@ -10,13 +10,20 @@
         @csrf
         @method('PUT')
         
-        <div class="mb-4">
-            <x-input-label for="customer_id">Select Customer</x-input-label>
-            <select name="customer_id" id="customer_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
-                @foreach($customers as $customer)
-                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                @endforeach
-            </select>
+        <!-- Select Consignee Type -->
+        <div class="form-group mb-4">
+            <x-input-label for="consignee_type" class="block text-sm font-medium text-gray-700">Select Consignee Type</x-input-label>
+            <x-input-select name="consignee_type" id="consignee_type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
+                <option value="CUST" {{ $sale->consignee_type == 'CUST' ? 'selected' : '' }}>Customer</option>
+                <option value="COMP" {{ $sale->consignee_type == 'COMP' ? 'selected' : '' }}>Company</option>
+            </x-input-select>
+        </div>
+        <!-- Select Consignee -->
+        <div class="form-group mb-4">
+            <x-input-label for="consignee_id" class="block text-sm font-medium text-gray-700">Select Consignee</x-input-label>
+            <x-input-select name="consignee_id" id="consignee_id" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
+                <option value="{{ $sale->consignee_id }}">{{ $sale->consignee?->name ?? 'N/A' }}</option>
+            </x-input-select>
         </div>
         
         <div class="mb-4">
@@ -168,19 +175,39 @@
             });
         });
     </script>
-	<script>
-    // JavaScript to prevent selection changes on readonly-select elements
-    document.querySelectorAll('.readonly-select').forEach(function(select) {
-        select.addEventListener('mousedown', function(event) {
-            event.preventDefault();
+</div>
+
+<script>
+    let customers = @json($customers);
+    let companies = @json($companies);
+
+    function updateConsigneeOptions(selectedConsigneeId = null) {
+        let consigneeTypeSelect = document.getElementById('consignee_type').value;
+        let consigneeSelect = document.getElementById('consignee_id');
+        consigneeSelect.innerHTML = '';
+
+        let data = consigneeTypeSelect == 'CUST' ? customers : companies;
+        data.forEach(option => {
+            let optionElement = document.createElement('option');
+            optionElement.value = option.id;
+            optionElement.textContent = option.name;
+
+            if(selectedConsigneeId && selectedConsigneeId == option.id) {
+                optionElement.selected = true;
+            }
+
+            consigneeSelect.appendChild(optionElement);
         });
-        select.addEventListener('click', function(event) {
-            event.preventDefault();
-        });
-        select.addEventListener('change', function(event) {
-            event.preventDefault();
-        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        let existingShipperId = "{{ $sale->consignee_id }}";
+        updateConsigneeOptions(existingShipperId);
     });
-	</script>
-     </div> </div> </div> </div>
+
+    document.getElementById('consignee_type').addEventListener('change', function() {
+        updateConsigneeOptions();
+    });
+</script>
+
 </x-company-layout>

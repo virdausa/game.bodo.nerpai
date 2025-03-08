@@ -163,16 +163,24 @@
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
                     <div>
-                        @if ($shipment->status == 'SHP_IN_TRANSIT' && $shipment_confirm_allowed)
-                        <div class="flex justify mt-4">
-                            <form action="{{ route('shipments.action', ['shipments' => $shipment->id, 'action' => 'SHP_DELIVERY_CONFIRMED']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Input Shipment Confirmation</x-primary-button>
-                            </form>
+                            @if ($shipment->status == 'SHP_IN_TRANSIT' && $shipment_confirm_allowed)
+                            <div class="flex justify mt-4">
+                                <form action="{{ route('shipments.action', ['shipments' => $shipment->id, 'action' => 'SHP_DELIVERY_CONFIRMED']) }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <x-primary-button type="submit">Input Shipment Confirmation</x-primary-button>
+                                </form>
+                            </div>
+                            @elseif ($shipment->status == 'SHP_DELIVERY_CONFIRMED' && $shipment_completed_allowed)
+                            <div class="flex justify mt-4">
+                                <form action="{{ route('shipments.action', ['shipments' => $shipment->id, 'action' => 'SHP_COMPLETED']) }}" method="POST">
+                                    @csrf
+                                    @method('POST')
+                                    <x-primary-button type="submit">Completed Shipment</x-primary-button>
+                                </form>
+                            </div>
+                            @endif
                         </div>
-                        @endif
-                    </div>
 
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 

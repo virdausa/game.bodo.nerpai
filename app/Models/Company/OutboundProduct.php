@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Company\Product;
 use App\Models\Company\WarehouseLocation;
 use App\Models\Company\Outbound;
-use App\Models\Inventory;
+use App\Models\Company\Inventory;
 
 class OutboundProduct extends Model
 {

@@ -4,6 +4,7 @@ namespace App\Models\Company;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Company\Product;
 use App\Models\Employee;
@@ -21,7 +22,8 @@ class Sale extends Model
         'number',
         'date',
         'employee_id',
-        'customer_id',
+        'consignee_type',
+        'consignee_id',
         'warehouse_id',
         'total_amount',
         'status',
@@ -41,7 +43,7 @@ class Sale extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'sales_products')
-            ->withPivot('quantity', 'price', 'total_cost', 'notes')
+            ->withPivot('id', 'quantity', 'price', 'total_cost', 'notes')
             ->withTimestamps();
     }
 
@@ -50,9 +52,9 @@ class Sale extends Model
         return $this->belongsTo(Warehouse::class);
     }
 
-    public function customer()
+    public function consignee()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->morphTo();
     }
 
     public function courier()
@@ -76,5 +78,12 @@ class Sale extends Model
         // shipment with type = "PO" and id = purchase_id
         return $this->hasMany(Shipment::class, 'transaction_id', 'id')
                     ->where('transaction_type', 'SO');
+    }
+
+
+    public function outbounds(): HasMany
+    {
+        return $this->hasMany(Outbound::class, 'source_id', 'id')
+                    ->where('source_type', 'SO');
     }
 }

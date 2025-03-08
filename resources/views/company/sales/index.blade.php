@@ -32,8 +32,8 @@
                             <tr>
 								<x-table-th>SO</x-table-th>
 								<x-table-th>Date</x-table-th>
-                                <x-table-th>Customer</x-table-th>
 								<x-table-th>Warehouse</x-table-th>
+                                <x-table-th>Consignee</x-table-th>
 								<x-table-th>Total Amount</x-table-th>
 								<x-table-th>Team</x-table-th>
 								<x-table-th>Status</x-table-th> <!-- New column -->
@@ -45,22 +45,19 @@
                                 <x-table-tr>
                                     <x-table-td>{{ $sale->number }}</x-table-td>
                                     <x-table-td>{{ $sale->date }}</x-table-td>
-                                    <x-table-td>{{ $sale->customer->name ?? 'N/A' }}</x-table-td>
                                     <x-table-td>{{ $sale->warehouse->name }}</x-table-td>
+                                    <x-table-td>
+                                        {{ $sale?->consignee_type ?? 'N/A' }} : {{ $sale->consignee?->name ?? 'N/A' }}
+                                    </x-table-td>
                                     <x-table-td>{{ $sale->total_amount }}</x-table-td>
                                     <x-table-td>{{ $sale->employee->companyuser->user->name ?? 'N/A' }}</x-table-td>
                                     <x-table-td>{{ $sale->status }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                             <x-button-show :route="route('sales.show', $sale->id)" />
-                                            <x-button-edit :route="route('sales.edit', $sale->id)" />
-                                            @if ($sale->status == 'SO_OFFER')
-                                                <form action="{{ route('sales.destroy', $sale->id) }}" method="POST"
-                                                    style="display:inline;">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <x-button-delete :route="route('sales.destroy', $sale->id)" />
-                                                </form>
+                                            @if ($sale->status == 'SO_OFFER' ||
+                                                $sale->status == 'SO_REQUEST')
+                                                <x-button-delete :route="route('sales.destroy', $sale->id)" />
                                             @endif
                                         </div>
                                     </x-table-td>

@@ -10,15 +10,20 @@ return new class extends Migration {
         Schema::create('sale_invoices', function (Blueprint $table) {
             // Primary key
             $table->id();
+            $table->string('number')->nullable()->unique();
 
             // Foreign keys
-            $table->foreignId('sale_id')->constrained('sales', 'id');
+            $table->foreignId('sale_id')->constrained('sales', 'id')->onDelete('cascade');
 
             // Attributes
-            $table->string('invoice_number')->unique();
             $table->date('date');
             $table->date('due_date')->nullable();
-            $table->decimal('total_amount', 10, 2)->default(0);
+            $table->decimal('cost_products', 25, 2)->default(0);
+            $table->decimal('vat_input', 25, 2)->default(0);
+            $table->decimal('cost_packing', 25, 2)->default(0);
+            $table->decimal('cost_insurance', 25, 2)->default(0);
+            $table->decimal('cost_freight', 25, 2)->default(0);
+            $table->decimal('total_amount', 30, 2)->default(0);
             $table->string('status')->default('unpaid');
             $table->text('notes')->nullable();
 
