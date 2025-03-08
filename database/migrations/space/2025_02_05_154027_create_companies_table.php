@@ -9,6 +9,7 @@ return new class extends Migration {
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
+            $table->string('code')->nullable()->unique();
             $table->string('name');
             $table->json('address')->nullable();
             $table->string('database')->nullable();

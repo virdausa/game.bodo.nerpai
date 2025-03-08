@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->date('birth_date')->nullable();
+            $table->date('left_date')->nullable();
             $table->string('sex')->nullable();
             $table->string('id_card_number')->nullable();
             $table->json('address')->nullable();
