@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('shareholders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('company_id')->constrained('companies', 'id');
+            $table->foreignId('company_id')->constrained('companies', 'id')->onDelete('cascade');
             $table->morphs('owner');    // owner_id, owner_type
             $table->string('shares')->default('100');
             $table->string('notes')->nullable();
