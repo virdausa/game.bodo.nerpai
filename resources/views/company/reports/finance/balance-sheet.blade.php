@@ -14,9 +14,9 @@
 
                     <div class="flex items-center justify-between mb-4">
                         @php
-                            $assets = $accounts->whereBetween('type', [1, 7]);
-                            $liabilities = $accounts->whereBetween('type', [8, 10]);
-                            $equities = $accounts->where('type', 11);
+                            $assets = $accounts->whereBetween('type_id', [1, 7]);
+                            $liabilities = $accounts->whereBetween('type_id', [8, 10]);
+                            $equities = $accounts->where('type_id', 11);
 
                             $totalAssets = $assets->sum('balance');
                             $totalLiabilities = $liabilities->sum('balance');
@@ -34,7 +34,7 @@
                                 
                                 <!-- ASET -->
                                 <x-table-tr><x-table-td colspan="2" class="font-bold text-2xl">Aset</x-table-td></x-table-tr>
-                                @foreach ($assets->groupBy('type') as $type => $accounts)
+                                @foreach ($assets->groupBy('type_id') as $type => $accounts)
                                     <x-table-tr><x-table-td colspan="2" class="font-semibold">{{ $accounts->first()->account_type?->name }}</x-table-td></x-table-tr>
                                     @foreach ($accounts as $account)
                                         <x-table-tr>    
@@ -51,7 +51,7 @@
 
                                 <!-- LIABILITAS -->
                                 <x-table-tr><x-table-td colspan="2" class="font-bold text-2xl">Liabilitas</x-table-td></x-table-tr>
-                                @foreach ($liabilities->groupBy('type') as $type => $accounts)
+                                @foreach ($liabilities->groupBy('type_id') as $type => $accounts)
                                     <x-table-tr><x-table-td colspan="2" class="pl-4 font-semibold">{{ $accounts->first()->account_type?->name }}</x-table-td></x-table-tr>
                                     @foreach ($accounts as $account)
                                         <x-table-tr>

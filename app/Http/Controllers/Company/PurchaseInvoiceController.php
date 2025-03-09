@@ -6,6 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Company\PurchaseInvoice;
+use App\Models\Company\Payable;
+use App\Models\Company\JournalEntry;
+use App\Models\Company\JournalEntryDetail;
+use App\Models\Company\Account;
 
 class PurchaseInvoiceController extends Controller
 {
@@ -38,7 +42,9 @@ class PurchaseInvoiceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $purchase_invoice = PurchaseInvoice::with('purchase')->findOrFail($id);
+
+        return view('company.finance.purchase_invoices.show', compact('purchase_invoice'));
     }
 
     /**
@@ -48,7 +54,7 @@ class PurchaseInvoiceController extends Controller
     {
         $purchase_invoice = PurchaseInvoice::with('purchase')->findOrFail($id);
 
-        return view('company.purchase_invoices.edit', compact('purchase_invoice'));
+        return view('company.finance.purchase_invoices.edit', compact('purchase_invoice'));
     }
 
     /**
@@ -60,6 +66,7 @@ class PurchaseInvoiceController extends Controller
             'date' => 'required|date',
             'due_date' => 'nullable|date',
             'cost_products' => 'required|numeric',
+            'vat_input' => 'required|numeric',
             'cost_packing' => 'required|numeric',
             'cost_insurance' => 'required|numeric',
             'cost_freight' => 'required|numeric',
@@ -79,7 +86,7 @@ class PurchaseInvoiceController extends Controller
         $purchase_invoice->save();
 
         $purchase = $purchase_invoice->purchase;
-        return redirect()->route('purchases.show', $purchase->id)->with('success', "Invoice {$purchase_invoice->invoice_number} updated successfully.");
+        return redirect()->route('purchases.show', $purchase->id)->with('success', "Invoice {$purchase_invoice->number} updated successfully.");
     }
 
     /**
@@ -91,6 +98,100 @@ class PurchaseInvoiceController extends Controller
         $purchase_invoice->forceDelete();
 
         // back to url before
-        return redirect()->to(url()->previous())->with('success', "Invoice {$purchase_invoice->invoice_number} deleted successfully.");
+        return redirect()->to(url()->previous())->with('success', "Invoice {$purchase_invoice->number} deleted successfully.");
+    }
+
+
+    public function handleAction(Request $request, $id, $action){
+		$invoice = PurchaseInvoice::findOrFail($id);
+
+		switch($action){
+			case 'unpaid':
+				$this->confirmInvoice($invoice);
+				break;
+			default:
+				abort(404);
+		}
+
+		return redirect()->route('purchase_invoices.show', $invoice->id)->with('success', "Invoice {$invoice->number} updated successfully.");
+	} 
+
+    
+    public function confirmInvoice($invoice)
+    {
+        // Register to AP
+        $this->addInvoicetoAP($invoice);
+        $this->addInvoicetoJournal($invoice);
+
+        $invoice->status = 'unpaid';
+        $invoice->save();
+    }
+
+
+    public function addInvoicetoAP($invoice)
+    {
+        $payable = Payable::create([
+            'purchase_invoice_id' => $invoice->id,
+            'supplier_id' => $invoice->purchase->supplier_id,
+            'total_amount' => $invoice->total_amount,
+            'status' => 'unpaid',
+        ]);
+    }
+
+
+    public function addInvoicetoJournal($invoice)
+    {
+        $employee = session('employee');
+
+        $journal_entry = JournalEntry::create([
+            'date' => date('Y-m-d'),
+            'purchase_invoice_id' => $invoice->id,
+            'total_amount' => $invoice->total_amount,
+            'description' => 'uang muka',
+            'type' => 'AP',
+            'source_type' => 'POI',
+            'source_id' => $invoice->id,
+            'created_by' => $employee->id,
+        ]);
+
+        $details = [
+            // Debit Uang Muka
+            [
+                'journal_entry_id' => $journal_entry->id,
+                'account_id' => 7,                          // uang muka, 7
+                'debit' => $invoice->total_amount,
+                'credit' => 0,
+            ],
+
+            // Kredit Hutang
+            [
+                'journal_entry_id' => $journal_entry->id,
+                'account_id' => 22,                          // hutang usaha, 22
+                'debit' => 0,
+                'credit' => $invoice->total_amount,
+            ],
+        ];
+
+        JournalEntryDetail::insert($details);
+
+        $journal_entry->generateNumber();
+        $journal_entry->save();
+
+        $this->postJournalEntrytoGeneralLedger($journal_entry->id);
+    }
+
+    public function postJournalEntrytoGeneralLedger($journal_entry_id)
+    {
+        $journal_entry = JournalEntry::with('journal_entry_details')->findOrFail($journal_entry_id);
+
+        foreach ($journal_entry->journal_entry_details as $detail) {
+            $account = Account::findOrFail($detail->account_id);
+
+            if($account){
+                $account->balance += $detail->debit * $account->account_type->debit;
+                $account->balance += $detail->credit * $account->account_type->credit;
+                $account->save();
+            }
+        }
     }
 }

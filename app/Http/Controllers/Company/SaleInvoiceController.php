@@ -79,7 +79,7 @@ class SaleInvoiceController extends Controller
         $sale_invoice->save();
 
         $sale = $sale_invoice->sale;
-        return redirect()->route('sales.show', $sale->id)->with('success', "Invoice {$sale_invoice->invoice_number} updated successfully.");
+        return redirect()->route('sales.show', $sale->id)->with('success', "Invoice {$sale_invoice->number} updated successfully.");
     }
 
     /**
@@ -91,6 +91,6 @@ class SaleInvoiceController extends Controller
         $sale_invoice->forceDelete();
 
         // back to url before
-        return redirect()->to(url()->previous())->with('success', "Invoice {$sale_invoice->invoice_number} deleted successfully.");
+        return redirect()->to(url()->previous())->with('success', "Invoice {$sale_invoice->number} deleted successfully.");
     }
 }

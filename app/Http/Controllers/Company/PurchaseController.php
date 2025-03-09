@@ -21,7 +21,7 @@ class PurchaseController extends Controller
 	{
 		//$purchases = Purchase::all(); // Retrieve all purchase records
 		$purchases = Purchase::with('shipments', 'employee')->orderBy('id', 'desc')->get();
-		return view('purchases.index', compact('purchases')); // Pass data to the view
+		return view('company.purchases.index', compact('purchases')); // Pass data to the view
 	}
 
 	// You can add other methods here for creating, updating, deleting purchases as needed
@@ -31,7 +31,7 @@ class PurchaseController extends Controller
 		$suppliers = Supplier::all();
 		$warehouses = Warehouse::all();
 		$products = Product::all();
-		return view('purchases.create', compact('products', 'warehouses', 'suppliers'));
+		return view('company.purchases.create', compact('products', 'warehouses', 'suppliers'));
 	}
 
 
@@ -110,7 +110,7 @@ class PurchaseController extends Controller
 	public function show($id)
 	{
 		$purchase = Purchase::with(['products', 'warehouse', 'shipments'])->findOrFail($id);
-		return view('purchases.show', compact('purchase'));
+		return view('company.purchases.show', compact('purchase'));
 	}
 
 
@@ -122,7 +122,7 @@ class PurchaseController extends Controller
 		$warehouses = Warehouse::all();
 		$products = Product::all(); // Fetch all available products
 
-		return view('purchases.edit', compact('purchase', 'warehouses', 'products', 'suppliers'));
+		return view('company.purchases.edit', compact('purchase', 'warehouses', 'products', 'suppliers'));
 	}
 
 
@@ -229,11 +229,12 @@ class PurchaseController extends Controller
 			'date' => date('Y-m-d'),
 			'cost_products' => $purchase->total_amount,
 			'total_amount' => $purchase->total_amount,
+			'status' => 'unconfirmed',
 		]);
 		$purchase_invoice->generateInvoiceNumber();
 		$purchase_invoice->save();
 
-		return redirect()->route('purchase_invoices.edit', $purchase_invoice->id)->with('success', "Invoice {$purchase_invoice->invoice_number} created successfully");
+		return redirect()->route('purchase_invoices.edit', $purchase_invoice->id)->with('success', "Invoice {$purchase_invoice->number} created successfully");
 	}
 
 	public function confirmPaymenttoSupplier($purchase){

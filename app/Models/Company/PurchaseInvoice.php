@@ -13,7 +13,7 @@ class PurchaseInvoice extends Model
 
     protected $fillable = [
         'purchase_id',
-        'invoice_number',
+        'number',
         'date',
         'due_date',
         'cost_products',
@@ -39,7 +39,7 @@ class PurchaseInvoice extends Model
 
     public function generateInvoiceNumber(): string
     {
-        $this->invoice_number = 'INV_' . $this->id . '_' . $this->purchase->po_number;
-        return $this->invoice_number;
+        $this->number = 'INV_' . $this->id . '_' . $this->purchase->po_number;
+        return $this->number;
     }
 }

@@ -3,7 +3,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-lg sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-white">
-                    <h1 class="text-2xl font-bold dark:text-white">Edit Invoice: {{ $purchase_invoice->invoice_number }}</h1>
+                    <h1 class="text-2xl font-bold dark:text-white">Edit Invoice: {{ $purchase_invoice->number }}</h1>
                     <p class="text-sm dark:text-gray-200 mb-3">Update the details of your purchase_invoice.</p>
 
                     <div class="p-2 border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-600 mb-4">
@@ -18,7 +18,7 @@
 
                             <div class="mb-4">
                                 <x-input-label for="due_date">Invoice Due Date</x-input-label>
-                                <input type="date" name="due_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ ($purchase_invoice->due_date) }}">
+                                <input type="date" name="due_date" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ ($purchase_invoice->due_date?->format('Y-m-d')) }}">
                             </div>
 
                             <div class="form-group mb-4">
@@ -44,11 +44,6 @@
                             <div class="form-group mb-4">
                                 <x-input-label for="cost_freight">Cost Freight</x-input-label>
                                 <input type="number" name="cost_freight" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $purchase_invoice->cost_freight ?? 0 }}" required>
-                            </div>
-
-                            <div class="form-group mb-4">
-                                <x-input-label for="total_amount">Total Tagihan</x-input-label>
-                                <input type="number" name="total_amount" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $purchase_invoice->total_amount ?? 0 }}" required readonly>
                             </div>
 
                             <div class="mb-4">

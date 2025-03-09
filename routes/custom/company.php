@@ -49,38 +49,42 @@ Route::middleware(['auth',
     route::resource("purchases", PurchaseController::class);
     Route::post('purchases/{purchases}/action/{action}', [PurchaseController::class, 'handleAction'])->name('purchases.action');
     Route::get('purchases/{id}/duplicate', [PurchaseController::class, 'duplicate'])->name('purchases.duplicate');
-    Route::resource('purchase_invoices', PurchaseInvoiceController::class);
     Route::resource('suppliers', SupplierController::class);
     
-
+    
     route::resource("customers", CustomerController::class);
     Route::resource('sales', SaleController::class);
     Route::post('sales/{id}/action/{action}', [SaleController::class, 'handleAction'])->name('sales.action');
-    Route::resource('sale_invoices', SaleInvoiceController::class);
     Route::resource('customer_complaints', CustomerComplaintController::class);
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
     
-
+    
     route::resource("products", controller: ProductController::class);
     route::resource("warehouse_locations", WarehouseLocationController::class);
-
+    
     route::resource("inventory_transfers", controller: InventoryTransferController::class);
     Route::post('inventory_transfers/{id}/action/{action}', [InventoryTransferController::class, 'handleAction'])->name('inventory_transfers.action');
     Route::post('inventory_transfers/storeRequest', [InventoryTransferController::class, 'storeRequest'])->name('inventory_transfers.storeRequest');
-
+    
     route::resource("inbounds", controller: InboundController::class);
     route::resource("outbounds", controller: OutboundController::class);
     Route::resource('inventory', InventoryController::class)->except(['show']);
     Route::get('/inventory/adjust', [InventoryController::class, 'adjust'])->name('inventory.adjust');
     Route::get('/inventory/history', [InventoryController::class, 'history'])->name('inventory.history');
-
-
+    
+    
     Route::resource("shipments", ShipmentController::class);
     Route::post('shipments/{shipments}/action/{action}', [ShipmentController::class, 'handleAction'])->name('shipments.action');
     Route::get('shipments/{id}/confirm', [ShipmentController::class, 'confirm'])->name('shipments.confirm');
     Route::put('shipments/{id}/confirm-update', [ShipmentController::class, 'confirm_update'])->name('shipments.confirm-update');
     Route::get('shipments/{id}/confirm-show', [ShipmentController::class, 'confirm_show'])->name('shipments.confirm-show');
     Route::resource("couriers", CourierController::class);
+
+    
+    // finances
+    Route::resource('purchase_invoices', PurchaseInvoiceController::class);
+    Route::post('purchase_invoices/{id}/action/{action}', [PurchaseInvoiceController::class, 'handleAction'])->name('purchase_invoices.action');
+    Route::resource('sale_invoices', SaleInvoiceController::class);
 
 
     Route::resource("reports", ReportController::class);

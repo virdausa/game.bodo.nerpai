@@ -16,8 +16,8 @@ return new class extends Migration {
             $table->foreignId('customer_id')->constrained('customers', 'id');
 
             // Attributes
-            $table->decimal('total_amount', 12, 2)->default(0);
-            $table->decimal('balance', 12, 2);
+            $table->decimal('total_amount', 25, 2)->default(0);
+            $table->decimal('balance', 25, 2)->default(0);
             $table->string('status')->default('unpaid');
             $table->text('notes')->nullable();
 

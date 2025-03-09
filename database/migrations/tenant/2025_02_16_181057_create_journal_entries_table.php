@@ -14,16 +14,18 @@ return new class extends Migration
         Schema::create('journal_entries', function (Blueprint $table) {
             // Primary key
             $table->id();
+            $table->string('number')->nullable()->unique();
 
             // Foreign key
             $table->foreignId('created_by')->nullable()->constrained('employees', 'id');
+            $table->string('source_type')->nullable();                      // POI, SOI, INV                  
+            $table->unsignedBigInteger('source_id')->nullable();       
 
             // Columns
-            $table->string('no')->unique();
             $table->date('date');
-            $table->string('type')->default("MNL");
+            $table->string('type')->nullable()->default("MNL");                         // MNL, INV
             $table->text('description')->nullable();
-            $table->decimal('total', 20, 2)->default(0);
+            $table->decimal('total', 25, 2)->default(0);
 
             // Timestamps
             $table->timestamps();

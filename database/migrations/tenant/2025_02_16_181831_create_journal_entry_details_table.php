@@ -11,15 +11,18 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('account_types', function (Blueprint $table) {
+        Schema::create('journal_entry_details', function (Blueprint $table) {
             // Primary key
             $table->id();
 
+            // Foreign key
+            $table->foreignId('journal_entry_id')->constrained('journal_entries', 'id')->onDelete('cascade');
+            $table->foreignId('account_id')->nullable()->constrained('accounts', 'id');
+
             // Columns
-            $table->string('basecode')->unique();
-            $table->string('name');
-            $table->string('type')->nullable();
-            $table->integer('debit')->nullable();
+            $table->decimal('debit', 25, 2)->default(0);
+            $table->decimal('credit', 25, 2)->default(0);
+            $table->text('notes')->nullable();
 
             // Timestamps
             $table->timestamps();
@@ -32,6 +35,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('account_types');
+        Schema::dropIfExists('journal_entry_details');
     }
 };

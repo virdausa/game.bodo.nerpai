@@ -87,7 +87,7 @@ class CompanyController extends Controller
 		}
 
 		// drop database
-		$this->dropDatabase($company->id);
+		$this->dropDatabase($company->code);
 
 		$company->delete();
 

@@ -29,11 +29,11 @@
                     <div id="cashflow" class="w-full">
                         @php
                             $method = request('method', 'indirect'); // Default Tidak Langsung
-                            $netIncome = $accounts->where('type', 12)->sum('balance') 
-                                        - $accounts->where('type', 13)->sum('balance') 
-                                        - $accounts->where('type', 14)->sum('balance') 
-                                        + $accounts->where('type', 15)->sum('balance') 
-                                        - $accounts->where('type', 16)->sum('balance');
+                            $netIncome = $accounts->where('type_id', 12)->sum('balance') 
+                                        - $accounts->where('type_id', 13)->sum('balance') 
+                                        - $accounts->where('type_id', 14)->sum('balance') 
+                                        + $accounts->where('type_id', 15)->sum('balance') 
+                                        - $accounts->where('type_id', 16)->sum('balance');
                             
                             $changeReceivables = $accounts->where('code', '1-102')->sum('balance');
                             $changeInventory = $accounts->where('code', '1-103')->sum('balance');

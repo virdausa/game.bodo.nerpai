@@ -18,5 +18,6 @@ class AccountType extends Model
         'name',
         'type',
         'debit',
+        'credit',
     ];
 }

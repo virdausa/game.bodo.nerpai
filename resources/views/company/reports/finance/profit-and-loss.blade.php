@@ -15,11 +15,11 @@
 
                     <div id="profit_loss" class="w-full">
                         @php
-                            $pendapatan = $accounts->where('type', 12);
-                            $beban_pokok = $accounts->where('type', 13);
-                            $biaya_operasional = $accounts->where('type', 14);
-                            $pendapatan_lainnya = $accounts->where('type', 15);
-                            $beban_lainnya = $accounts->where('type', 16);
+                            $pendapatan = $accounts->where('type_id', 12);
+                            $beban_pokok = $accounts->where('type_id', 13);
+                            $biaya_operasional = $accounts->where('type_id', 14);
+                            $pendapatan_lainnya = $accounts->where('type_id', 15);
+                            $beban_lainnya = $accounts->where('type_id', 16);
 
                             $total_pendapatan = $pendapatan->sum('balance');
                             $total_beban_pokok = $beban_pokok->sum('balance');

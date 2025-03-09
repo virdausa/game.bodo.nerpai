@@ -153,7 +153,7 @@
                                 @foreach ($purchase->purchase_invoices as $invoice)
                                     <x-table-tr>
                                         <x-table-td>{{ $invoice->id }}</x-table-td>
-                                        <x-table-td>{{ $invoice->invoice_number }}</x-table-td>
+                                        <x-table-td>{{ $invoice->number }}</x-table-td>
                                         <x-table-td>{{ $invoice->date }}</x-table-td>
                                         <x-table-td>{{ $invoice->due_date }}</x-table-td>
                                         <x-table-td>Rp{{ number_format($invoice->total_amount, 2) }}</x-table-td>
@@ -162,8 +162,8 @@
                                         <x-table-td>
                                             <div class="flex space-x-2">
                                                 <x-button-show :route="route('purchase_invoices.show', $invoice->id)" />
-                                                <x-button-edit :route="route('purchase_invoices.edit', $invoice->id)" />
-                                                <x-button-delete :route="route('purchase_invoices.destroy', $invoice->id)" />
+                                                <!-- <x-button-edit :route="route('purchase_invoices.edit', $invoice->id)" /> -->
+                                                <!-- <x-button-delete :route="route('purchase_invoices.destroy', $invoice->id)" /> -->
                                             </div>
                                         </x-table-td>
                                     </x-table-tr>

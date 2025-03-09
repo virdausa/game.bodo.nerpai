@@ -17,6 +17,7 @@ return new class extends Migration
 
             // Foreign key
             $table->foreignId('parent_id')->nullable()->constrained('accounts', 'id');
+            $table->foreignId('type_id')->nullable()->constrained('account_types', 'id');
 
             // Columns
             $table->string('code')->unique();

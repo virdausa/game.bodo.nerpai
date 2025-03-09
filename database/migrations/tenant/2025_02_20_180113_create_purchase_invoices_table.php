@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->foreignId('purchase_id')->constrained()->onDelete('cascade');
 
             // Attributes
-            $table->string('invoice_number')->unique()->nullable();
+            $table->string('number')->unique()->nullable();
             $table->date('date');
             $table->date('due_date')->nullable();
             $table->decimal('cost_products', 25, 2)->default(0);

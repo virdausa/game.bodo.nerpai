@@ -212,7 +212,7 @@ class SaleController extends Controller
 		$sale->status = 'SO_CONFIRMED';
 		$sale->save();
 
-		return redirect()->route('sale_invoices.edit', $sale_invoice->id)->with('success', "Invoice {$sale_invoice->invoice_number} created successfully");
+		return redirect()->route('sale_invoices.edit', $sale_invoice->id)->with('success', "Invoice {$sale_invoice->number} created successfully");
 	}
 
 	public function confirmPaymenttoCustomer($sale){

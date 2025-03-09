@@ -20,6 +20,8 @@ use App\Models\Space\Company;
 
 use App\Models\Store\StorePos;
 
+use App\Models\Company\PurchaseInvoice;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -54,6 +56,7 @@ class AppServiceProvider extends ServiceProvider
             'POS' => StorePos::class,
             'PERS' => Person::class,
             'COMP' => Company::class,
+            'POI' => PurchaseInvoice::class,
         ]);
 	}
 }
