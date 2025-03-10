@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Company\JournalEntryDetail;
+use App\Models\Company\Account;
 
 class JournalEntry extends Model
 {
@@ -65,5 +66,20 @@ class JournalEntry extends Model
     public function assetDisposal(): HasOne
     {
         return $this->hasOne(AssetDisposal::class);
+    }
+
+
+    // function
+    public function postJournalEntrytoGeneralLedger()
+    {
+        foreach ($this->journal_entry_details as $detail) {
+            $account = Account::findOrFail($detail->account_id);
+
+            if($account){
+                $account->balance += $detail->debit * $account->account_type->debit;
+                $account->balance += $detail->credit * $account->account_type->credit;
+                $account->save();
+            }
+        }
     }
 }

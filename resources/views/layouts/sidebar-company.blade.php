@@ -324,6 +324,7 @@
                 </li>
             @endif
 
+            <!-- Finance -->
             @if(session('employee'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -342,14 +343,28 @@
                         </svg>
                     </button>
                     <ul class="mt-1 space-y-1 ms-6 
-                                {{ Request::routeIs('reports*') || 
+                                {{ Request::routeIs('payments*') || 
                                  Request::routeIs('couriers*')
                                  ? 'block' : 'hidden' }}" id="finance-menu">
                         @if(session('employee'))
                             <li>
                                 <x-sidebar-item icon="icon-checklist-paper" 
-                                                    route="reports.index" 
-                                                    text="Reports">
+                                                    route="payments.index" 
+                                                    text="Payments">
+                                    Reports
+                                </x-sidebar-item>
+                            </li>
+                            <li>
+                                <x-sidebar-item icon="icon-checklist-paper" 
+                                                    route="payables.index" 
+                                                    text="Account Payables">
+                                    Reports
+                                </x-sidebar-item>
+                            </li>
+                            <li>
+                                <x-sidebar-item icon="icon-checklist-paper" 
+                                                    route="receivables.index" 
+                                                    text="Account Receivables">
                                     Reports
                                 </x-sidebar-item>
                             </li>

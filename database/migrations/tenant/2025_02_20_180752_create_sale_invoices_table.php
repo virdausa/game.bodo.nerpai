@@ -24,7 +24,7 @@ return new class extends Migration {
             $table->decimal('cost_insurance', 25, 2)->default(0);
             $table->decimal('cost_freight', 25, 2)->default(0);
             $table->decimal('total_amount', 30, 2)->default(0);
-            $table->string('status')->default('unpaid');
+            $table->string('status')->default('unconfirmed');
             $table->text('notes')->nullable();
 
             // Timestamps

@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Company\PurchaseInvoice;
-use App\Models\Company\Payable;
+use App\Models\Company\Finance\Payable;
 use App\Models\Company\JournalEntry;
 use App\Models\Company\JournalEntryDetail;
 use App\Models\Company\Account;
@@ -80,6 +80,7 @@ class PurchaseInvoiceController extends Controller
 
         // update total amount
         $purchase_invoice->total_amount = $purchase_invoice->cost_products + 
+                                        $purchase_invoice->vat_input +
                                         $purchase_invoice->cost_packing + 
                                         $purchase_invoice->cost_insurance + 
                                         $purchase_invoice->cost_freight;
@@ -134,7 +135,7 @@ class PurchaseInvoiceController extends Controller
             'purchase_invoice_id' => $invoice->id,
             'supplier_id' => $invoice->purchase->supplier_id,
             'total_amount' => $invoice->total_amount,
-            'status' => 'unpaid',
+            'status' => 'unconfirmed',
         ]);
     }
 

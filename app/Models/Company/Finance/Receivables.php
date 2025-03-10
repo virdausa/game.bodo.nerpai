@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Payable extends Model
+class Receivable extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'purchase_invoice_id',
-        'supplier_id',
+        'sales_invoice_id',
+        'customer_id',
         'total_amount',
         'balance',
         'status',
@@ -25,13 +25,13 @@ class Payable extends Model
         'balance' => 'decimal:2',
     ];
 
-    public function purchaseInvoice(): BelongsTo
+    public function salesInvoice(): BelongsTo
     {
-        return $this->belongsTo(PurchaseInvoice::class);
+        return $this->belongsTo(SaleInvoice::class, 'sales_invoice_id');
     }
 
-    public function supplier(): BelongsTo
+    public function customer(): BelongsTo
     {
-        return $this->belongsTo(Supplier::class);
+        return $this->belongsTo(Customer::class);
     }
 }

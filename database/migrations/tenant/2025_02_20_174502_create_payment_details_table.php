@@ -12,12 +12,14 @@ return new class extends Migration {
             $table->id();
 
             // Foreign Keys
-            // $table->foreignId('invoice_id')->constrained();
             $table->foreignId('payment_id')->constrained();
+            $table->string('invoice_type')->nullable()->default('INV');             // POI, SOI, INV
+            $table->unsignedBigInteger('invoice_id')->nullable();
 
             // Attributes
-            $table->decimal('amount', 10, 2)->default(0);
-            $table->string('notes');
+            $table->decimal('amount', 30, 2)->default(0);
+            $table->decimal('balance', 30, 2)->default(0);
+            $table->string('notes')->nullable();
 
             // Timestamps
             $table->timestamps();

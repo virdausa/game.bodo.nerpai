@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+use App\Models\Company\Finance\Payable;
+
 class Supplier extends Model
 {
     protected $connection = 'tenant';
@@ -53,5 +55,10 @@ class Supplier extends Model
     public function getPurchases(): HasMany
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    public function payables(): HasMany
+    {
+        return $this->hasMany(Payable::class);
     }
 }

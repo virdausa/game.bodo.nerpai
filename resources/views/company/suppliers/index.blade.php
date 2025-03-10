@@ -40,14 +40,9 @@
                                     <x-table-td>{{ $supplier->status }}</x-table-td>
                                     <x-table-td>{{ $supplier->notes }}</x-table-td>
                                     <x-table-td>
-                                    <div class="flex items-center space-x-2">
-                                            
+                                        <div class="flex items-center space-x-2">
                                             <x-button-edit :route="route('suppliers.edit', $supplier->id)" />
-                                            <form action="{{ route('suppliers.destroy', $supplier->id) }}" method="POST">
-                                                @csrf
-                                                @method('DELETE')
-                                                <x-button-delete :route="route('suppliers.destroy', $supplier->id)" />
-                                            </form>
+                                            <x-button-delete :route="route('suppliers.destroy', $supplier->id)" />
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>

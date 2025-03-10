@@ -29,6 +29,9 @@ use App\Http\Controllers\Company\ShipmentController;
 use App\Http\Controllers\Company\CourierController;
 
 use App\Http\Controllers\Company\ReportController;
+use App\Http\Controllers\Company\Finance\PaymentController;
+use App\Http\Controllers\Company\Finance\PayableController;
+use App\Http\Controllers\Company\Finance\ReceivableController;
 
 // Company
 Route::middleware(['auth', 
@@ -85,7 +88,12 @@ Route::middleware(['auth',
     Route::resource('purchase_invoices', PurchaseInvoiceController::class);
     Route::post('purchase_invoices/{id}/action/{action}', [PurchaseInvoiceController::class, 'handleAction'])->name('purchase_invoices.action');
     Route::resource('sale_invoices', SaleInvoiceController::class);
-
+    Route::resource('payments', PaymentController::class);
+    Route::post('payments/{id}/action/{action}', [PaymentController::class, 'handleAction'])->name('payments.action');
+    Route::resource('payables', PayableController::class);
+    Route::post('payables/{id}/action/{action}', [PayableController::class, 'handleAction'])->name('payables.action');
+    Route::resource('receivables', ReceivableController::class);
+    Route::post('receivables/{id}/action/{action}', [ReceivableController::class, 'handleAction'])->name('receivables.action');
 
     Route::resource("reports", ReportController::class);
 });

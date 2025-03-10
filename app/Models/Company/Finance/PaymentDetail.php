@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,14 +12,17 @@ class PaymentDetail extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'invoice_id',
         'payment_id',
+        'invoice_type',
+        'invoice_id',
         'amount',
-        'notes'
+        'balance',
+        'notes',
     ];
 
     protected $casts = [
         'amount' => 'decimal:2',
+        'balance' => 'decimal:2',
     ];
 
     public function payment(): BelongsTo
