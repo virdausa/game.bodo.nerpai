@@ -46,11 +46,6 @@
                                 <input type="number" name="cost_freight" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $sale_invoice->cost_freight ?? 0 }}" required>
                             </div>
 
-                            <div class="form-group mb-4">
-                                <x-input-label for="total_amount">Total Tagihan</x-input-label>
-                                <input type="number" name="total_amount" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $sale_invoice->total_amount ?? 0 }}" required readonly>
-                            </div>
-
                             <div class="mb-4">
                                 <x-input-label for="status">Invoice Status</x-input-label>
                                 <input type="text" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" name="status" value="{{ $sale_invoice->status }}" readonly>

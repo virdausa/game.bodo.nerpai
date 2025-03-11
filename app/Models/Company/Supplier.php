@@ -61,4 +61,9 @@ class Supplier extends Model
     {
         return $this->hasMany(Payable::class);
     }
+
+    public function entity()
+    {
+        return $this->morphTo();
+    }
 }

@@ -22,6 +22,7 @@ class Sale extends Model
         'number',
         'date',
         'employee_id',
+        'customer_id',
         'consignee_type',
         'consignee_id',
         'warehouse_id',

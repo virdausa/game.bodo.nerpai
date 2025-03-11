@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+use App\Models\Company\SaleInvoice;
+use App\Models\Company\Customer;
+
 class Receivable extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'sales_invoice_id',
+        'sale_invoice_id',
         'customer_id',
         'total_amount',
         'balance',
@@ -25,9 +28,9 @@ class Receivable extends Model
         'balance' => 'decimal:2',
     ];
 
-    public function salesInvoice(): BelongsTo
+    public function invoice(): BelongsTo
     {
-        return $this->belongsTo(SaleInvoice::class, 'sales_invoice_id');
+        return $this->belongsTo(SaleInvoice::class, 'sale_invoice_id');
     }
 
     public function customer(): BelongsTo

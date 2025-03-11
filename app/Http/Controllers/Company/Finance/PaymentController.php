@@ -124,6 +124,10 @@ class PaymentController extends Controller
                 $detail->invoice->payable->status = 'paid';
                 $detail->invoice->payable->balance += $detail->amount;
                 $detail->invoice->payable->save();
+            } else if($payment->type == 'AR'){
+                $detail->invoice->receivable->status = 'paid';
+                $detail->invoice->receivable->balance += $detail->amount;
+                $detail->invoice->receivable->save();
             }
         }
     }
@@ -177,7 +181,7 @@ class PaymentController extends Controller
                     // Kredit Piutang Usaha
                     [
                         'journal_entry_id' => $journal_entry->id,
-                        'account_id' => 4,     // akun piutang usaha
+                        'account_id' => 4,                              // akun piutang usaha
                         'debit' => 0,
                         'credit' => $payment->total_amount,
                     ],

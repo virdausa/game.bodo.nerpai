@@ -12,7 +12,7 @@ return new class extends Migration {
             $table->id();
 
             // Foreign keys
-            $table->foreignId('sales_invoice_id')->constrained('sale_invoices', 'id');
+            $table->foreignId('sale_invoice_id')->constrained('sale_invoices', 'id');
             $table->foreignId('customer_id')->constrained('customers', 'id');
 
             // Attributes

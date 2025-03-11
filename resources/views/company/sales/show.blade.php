@@ -81,8 +81,8 @@
                                         <x-table-td>{{ $invoice->status }}</x-table-td>
                                         <x-table-td>
                                             <div class="flex space-x-2">
-                                                <!-- <x-button-show :route="route('sale_invoices.show', $invoice->id)" /> -->
-                                                <x-button-edit :route="route('sale_invoices.edit', $invoice->id)" />
+                                                <x-button-show :route="route('sale_invoices.show', $invoice->id)" />
+                                                <!-- <x-button-edit :route="route('sale_invoices.edit', $invoice->id)" /> -->
                                                 <!-- <x-button-delete :route="route('sale_invoices.destroy', $invoice->id)" /> -->
                                             </div>
                                         </x-table-td>

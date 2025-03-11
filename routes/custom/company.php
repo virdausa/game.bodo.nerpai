@@ -62,6 +62,7 @@ Route::middleware(['auth',
     Route::put('customer_complaints/{customer_complaint}/resolve', [CustomerComplaintController::class, 'resolve'])->name('customer_complaints.resolve');
     
     
+
     route::resource("products", controller: ProductController::class);
     route::resource("warehouse_locations", WarehouseLocationController::class);
     
@@ -83,11 +84,13 @@ Route::middleware(['auth',
     Route::get('shipments/{id}/confirm-show', [ShipmentController::class, 'confirm_show'])->name('shipments.confirm-show');
     Route::resource("couriers", CourierController::class);
 
+
     
     // finances
     Route::resource('purchase_invoices', PurchaseInvoiceController::class);
     Route::post('purchase_invoices/{id}/action/{action}', [PurchaseInvoiceController::class, 'handleAction'])->name('purchase_invoices.action');
     Route::resource('sale_invoices', SaleInvoiceController::class);
+    Route::post('sale_invoices/{id}/action/{action}', [SaleInvoiceController::class, 'handleAction'])->name('sale_invoices.action');
     Route::resource('payments', PaymentController::class);
     Route::post('payments/{id}/action/{action}', [PaymentController::class, 'handleAction'])->name('payments.action');
     Route::resource('payables', PayableController::class);

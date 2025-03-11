@@ -12,6 +12,10 @@ return new class extends Migration
             // Primary Key
             $table->id();
 
+            // Foreign keys
+            $table->string('entity_type')->default('PERS');                  // PERS / COMP
+            $table->unsignedBigInteger('entity_id')->nullable();
+
             // Columns
             $table->string('name');
             $table->json('address')->nullable();

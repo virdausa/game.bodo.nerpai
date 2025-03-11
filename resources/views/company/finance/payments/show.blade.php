@@ -1,3 +1,11 @@
+
+@php 
+    $payment_methods = $payment_methods;
+    if($payment->payment_method) {
+        $payment_method = $payment_methods->where('id', $payment->payment_method)->first();
+    }
+@endphp
+
 <x-company-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -11,6 +19,7 @@
                         <x-div-box-show title="Number">{{ $payment->number }}</x-div-box-show>
                         <x-div-box-show title="Date">{{ $payment->date?->format('Y-m-d') }}</x-div-box-show>
                         <x-div-box-show title="Type">{{ $payment->type }}</x-div-box-show>
+                        <x-div-box-show title="Payment Method">{{ $payment_method?->name ?? 'N/A' }}</x-div-box-show>
                         <x-div-box-show title="Total Amount">Rp{{ number_format($payment->total_amount, 2) }}</x-div-box-show>
                         <x-div-box-show title="Source">{{ $payment?->source_type ?? 'N/A' }} : {{ $payment->source?->name ?? 'N/A' }}</x-div-box-show>
                         <x-div-box-show title="Status">{{ ucfirst($payment->status) }}</x-div-box-show>
@@ -63,7 +72,7 @@
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
                     <div>
-                        @if ($payment->status == 'PENDING')
+                        @if ($payment->status == 'PYM_PENDING')
                         <div class="flex justify mt-4">
                             <form action="{{ route('payments.action', ['id' => $payment->id, 'action' => 'PAYMENT_PROCESS']) }}" method="POST">
                                 @csrf
@@ -75,10 +84,6 @@
                             <form action="{{ route('payments.action', ['id' => $payment->id, 'action' => 'PAYMENT_PAID']) }}" method="POST">
                                 @csrf
                                 @method('POST')
-
-                                @php 
-                                    $payment_methods = $payment_methods;
-                                @endphp
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-6">
                                     <div class="form-group">

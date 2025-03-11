@@ -5,6 +5,9 @@ namespace App\Models\Company;
 use App\Models\Store\StoreCustomer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
+use App\Models\Company\Finance\Receivable;
 
 class Customer extends Model
 {
@@ -21,6 +24,8 @@ class Customer extends Model
         'address',
         'status',
         'notes',
+        'entity_type',
+        'entity_id',
     ];
 
     
@@ -32,5 +37,15 @@ class Customer extends Model
     public function storeCustomers()
     {
         return $this->hasMany(StoreCustomer::class);
+    }
+
+    public function receivables()
+    {
+        return $this->hasMany(Receivable::class);
+    }
+
+    public function entity()
+    {
+        return $this->morphTo();
     }
 }

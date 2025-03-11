@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use App\Models\Company\SaleInvoice;
+use App\Models\Company\Finance\Receivable;
+use App\Models\Company\JournalEntry;
 
 class SaleInvoiceController extends Controller
 {
@@ -38,7 +40,9 @@ class SaleInvoiceController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $sale_invoice = SaleInvoice::with('sale')->findOrFail($id);
+
+        return view('company.sale_invoices.show', compact('sale_invoice'));
     }
 
     /**
@@ -60,6 +64,7 @@ class SaleInvoiceController extends Controller
             'date' => 'required|date',
             'due_date' => 'nullable|date',
             'cost_products' => 'required|numeric',
+            'vat_input' => 'required|numeric',
             'cost_packing' => 'required|numeric',
             'cost_insurance' => 'required|numeric',
             'cost_freight' => 'required|numeric',
@@ -73,6 +78,7 @@ class SaleInvoiceController extends Controller
 
         // update total amount
         $sale_invoice->total_amount = $sale_invoice->cost_products + 
+                                        $sale_invoice->vat_input +
                                         $sale_invoice->cost_packing + 
                                         $sale_invoice->cost_insurance + 
                                         $sale_invoice->cost_freight;
@@ -92,5 +98,86 @@ class SaleInvoiceController extends Controller
 
         // back to url before
         return redirect()->to(url()->previous())->with('success', "Invoice {$sale_invoice->number} deleted successfully.");
+    }
+
+
+
+    public function handleAction(Request $request, $id, $action){
+		$invoice = SaleInvoice::findOrFail($id);
+
+		switch($action){
+			case 'unpaid':
+				$this->confirmInvoice($invoice);
+				break;
+			default:
+				abort(404);
+		}
+
+		return redirect()->route('sale_invoices.show', $invoice->id)->with('success', "Invoice {$invoice->number} updated successfully.");
+	} 
+
+    
+    public function confirmInvoice($invoice)
+    {
+        // Register to AR
+        $this->addInvoicetoAR($invoice);
+        $this->addInvoicetoJournal($invoice);
+
+        $invoice->status = 'unpaid';
+        $invoice->save();
+    }
+
+
+    public function addInvoicetoAR($invoice)
+    {
+        $receivable = Receivable::create([
+            'sale_invoice_id' => $invoice->id,
+            'customer_id' => $invoice->sale->customer_id,
+            'total_amount' => $invoice->total_amount,
+            'status' => 'unconfirmed',
+        ]);
+    }
+
+
+    public function addInvoicetoJournal($invoice)
+    {
+        $employee = session('employee');
+
+        $journal_entry = JournalEntry::create([
+            'date' => date('Y-m-d'),
+            'sale_invoice_id' => $invoice->id,
+            'total_amount' => $invoice->total_amount,
+            'description' => 'pendapatan dimuka',
+            'type' => 'AR',
+            'source_type' => 'SOI',
+            'source_id' => $invoice->id,
+            'created_by' => $employee->id,
+        ]);
+
+        $details = [
+            // Debit Uang Muka
+            [
+                'journal_entry_id' => $journal_entry->id,
+                'account_id' => 4,                          // piutang usaha, 4
+                'debit' => $invoice->total_amount,
+                'credit' => 0,
+            ],
+
+            // Kredit Hutang
+            [
+                'journal_entry_id' => $journal_entry->id,
+                'account_id' => 24,                          // pendapatan diterima di muka, 24
+                'debit' => 0,
+                'credit' => $invoice->total_amount,
+            ],
+        ];
+
+        $journal_entry->journal_entry_details()->createMany($details);
+
+        // post journal to GL
+        $journal_entry->postJournalEntrytoGeneralLedger();
+
+        $journal_entry->generateNumber();
+        $journal_entry->save();
     }
 }

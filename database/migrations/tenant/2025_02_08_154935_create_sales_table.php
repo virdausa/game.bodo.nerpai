@@ -15,6 +15,7 @@ return new class extends Migration
 
             // Foreign Keys
             $table->foreignId('warehouse_id')->constrained('warehouses');
+            $table->foreignId('customer_id')->constrained('customers');
             $table->string('consignee_type')->nullable()->default('CUST');                   // 'WH', 'SUP', 'CUST'
             $table->unsignedBigInteger('consignee_id')->nullable();
 

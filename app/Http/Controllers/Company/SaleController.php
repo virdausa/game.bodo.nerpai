@@ -42,8 +42,7 @@ class SaleController extends Controller
 	public function store(Request $request)
 	{
 		$validated = $request->validate([
-			'consignee_type' => 'required|in:CUST,COMP',
-			'consignee_id' => 'required|integer',
+			'customer_id' => 'required|exists:customers,id',
 			'date' => 'required|date',
 			'warehouse_id' => 'required|exists:warehouses,id',
 			'products' => 'required|array', // Expecting products as an array
@@ -58,8 +57,9 @@ class SaleController extends Controller
 		// Create sale
 		$sale = Sale::create([
 			'date' => $validated['date'],
-			'consignee_type' => $validated['consignee_type'],
-			'consignee_id' => $validated['consignee_id'],
+			'customer_id' => $validated['customer_id'],
+			'consignee_type' => 'CUST',
+			'consignee_id' => $validated['customer_id'],
 			'warehouse_id' => $validated['warehouse_id'],
 			'employee_id' => $employee->id,
 			'total_amount' => collect($validated['products'])->sum(function ($product) {
@@ -109,8 +109,7 @@ class SaleController extends Controller
 	{
 		$validated = $request->validate([
 			'date' => 'required|date',
-			'consignee_type' => 'required|in:CUST,COMP',
-			'consignee_id' => 'required|integer',
+			'customer_id' => 'required|exists:customers,id',
 			'warehouse_id' => 'required|exists:warehouses,id',
 			'products' => 'required|array', // Validate products as an array
 			'products.*.product_id' => 'required|exists:products,id',
@@ -126,6 +125,10 @@ class SaleController extends Controller
 		
 		$sale = Sale::findOrFail($id);
 		$sale->update($validated);
+
+		$sale->consignee_type = 'CUST';
+		$sale->consignee_id = $validated['customer_id'];
+
 		$sale->generateSoNumber();
 
 		// Sync products with updated quantities, prices, and notes
@@ -205,6 +208,7 @@ class SaleController extends Controller
 			'cost_packing' => 0,
 			'cost_freight' => $sale->estimated_shipping_fee,
 			'total_amount' => $sale->total_amount,
+			'status' => 'unconfirmed',
 		]);
 		$sale_invoice->generateNumber();
 		$sale_invoice->save();

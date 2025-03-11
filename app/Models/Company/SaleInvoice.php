@@ -5,7 +5,10 @@ namespace App\Models\Company;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
+use App\Models\Company\Finance\Receivable;
 
 class SaleInvoice extends Model
 {
@@ -32,14 +35,24 @@ class SaleInvoice extends Model
         'total_amount' => 'decimal:2',
     ];
 
-    public function sale(): BelongsTo
-    {
-        return $this->belongsTo(Sale::class);
-    }
 
     public function generateNumber(): string
     {
         $this->number = 'INV_' . $this->id . '_' . $this->sale->number;
         return $this->number;
+    }
+
+
+
+    // relations 
+
+    public function sale(): BelongsTo
+    {
+        return $this->belongsTo(Sale::class);
+    }
+
+    public function receivable(): HasOne
+    {
+        return $this->hasOne(Receivable::class);
     }
 }
