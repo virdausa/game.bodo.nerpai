@@ -15,6 +15,8 @@ Route::middleware([
     // Store
     Route::get('/dashboard-warehouse', function () { return view('warehouse.dashboard-warehouse');})->name('dashboard-warehouse');
 
+    Route::resource('warehouse_settings', WarehouseController::class);
+
     Route::resource('warehouse_employees', WarehouseController::class);
     
     Route::resource('warehouse_roles', WarehouseController::class);

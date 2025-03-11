@@ -37,7 +37,8 @@ class WarehouseController extends Controller
 	public function show(string $id)
 	{
 		$warehouse = Warehouse::with('warehouse_locations')->findOrFail($id);
-		return view('company.warehouses.show', compact('warehouse'));
+		
+		return view('warehouse.warehouse_settings.show', compact('warehouse'));
 	}
 
 	public function edit(string $id)

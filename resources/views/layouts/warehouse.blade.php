@@ -51,6 +51,12 @@
                 ],
             ]
         ],
+        'Settings' => [
+            'icon' => 'icon-sidebar',
+            'route' => "warehouse_settings.show",
+            'route_params' => session('company_warehouse_id'),
+            'text' => 'Warehouse Settings',
+        ],
         'Exit' => [
             'icon' => 'icon-arrow-right',
             'route' => "warehouses.exit",
