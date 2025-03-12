@@ -38,12 +38,12 @@
         <div class="form-group mb-4">
             <x-input-label for="status-for-{{ $edit_account->id }}"
                 class="block text-sm font-medium text-gray-700">Status</x-input-label>
-            <x-input-select name="status" id="status-for-{{ $edit_account->id }}" class="mt-1 block w-full"
-                x-model="status" required>
-                <x-select-option value="Active" :selected="$edit_account->status === 'Active'">Active</x-select-option>
-                <x-select-option value="Inactive" :selected="$edit_account->status === 'Inactive'">Inactive</x-select-option>
+            <x-input-select name="status" class="mt-1 block w-full" required>
+                <option value="Active" {{ $edit_account->status == 'Active' ? 'selected' : '' }}>Active</option>
+                <option value="Inactive" @selected($edit_account->status == 'Inactive')>Inactive</option>
             </x-input-select>
         </div>
+
         <div class="form-group mb-4">
             <x-input-label for="parent_id" class="block text-sm font-medium text-gray-700">Parent
                 Account</x-input-label>

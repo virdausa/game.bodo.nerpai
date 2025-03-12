@@ -50,6 +50,10 @@
         .sidebar-collapsed #main-content {
             margin-left: 4rem;
         }
+
+        [x-cloak] {
+            display: none !important;
+        }
     </style>
 
     <script>

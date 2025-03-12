@@ -5,7 +5,7 @@
     <div class="py-12">
         <div class="max-w-7xl my-10 mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900 dark:text-white">
+                <div class="p-6 text-gray-900 dark:text-white" x-data="{ isOpen: false, item: {} }">
                     <h3 class="text-lg font-bold dark:text-white">Manage Accounts</h3>
                     <p class="text-sm dark:text-gray-200 mb-6">Create, edit, and manage your Accounts</p>
                     <div class="my-6 flex-grow border-t border-gray-300 dark:border-gray-700"></div>
@@ -17,7 +17,7 @@
                         </div>
                     </div>
 
-                    <!-- Supplier Table -->
+                    <!-- Accounts Table -->
                     <x-table-table id="search-table">
                         <x-table-thead>
                             <tr>
@@ -41,7 +41,7 @@
                                     <x-table-td>
                                         <div class="flex space-x-2">
                                             @include('company.finance.accounts.edit', [
-                                                'edit_account' => $account,
+                                                    'edit_account' => $account,
                                             ])
                                             <x-button-delete :route="route('accounts.destroy', $account->id)" />
                                         </div>
@@ -54,5 +54,4 @@
             </div>
         </div>
     </div>
-
 </x-dynamic-component>

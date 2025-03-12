@@ -18,7 +18,7 @@ class AccountController extends Controller
 {
     public function index()
     {
-        $accounts = Account::all();
+        $accounts = Account::with('account_type', 'parent', 'children')->where('balance', '!=', 0)->get();
         $account_types = AccountType::all();
         return view('company.finance.accounts.index', compact("accounts", "account_types"));
     }

@@ -1,4 +1,4 @@
-<div x-data="{ isOpen: false }" class="relative">
+<div x-data="{ isOpen: false, item: {} }" class="relative">
     <!-- Trigger Button -->
     <button @click="isOpen = true" type="button" class="inline-block p-2 bg-yellow-300 rounded-lg">
         <svg class="w-5 h-5 text-stone-900" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
@@ -7,7 +7,7 @@
     </button>
 
     <!-- Modal Dialog -->
-    <div x-show="isOpen"
+    <div x-cloak x-show="isOpen"
          class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50"
          x-transition:enter="transition ease-out duration-300"
          x-transition:enter-start="opacity-0"
