@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Spatie\Permission\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
@@ -14,11 +14,14 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory()->create([
+        $user = User::factory()->create([
             'name' => 'Owner',
             'email' => 'owner@gmail.com',
             'role_id' => '3',
             'password' => Hash::make('owner123'),
         ]);
+
+        $role = Role::findOrFail(3);
+        $user->syncRoles($role);
     }
 }

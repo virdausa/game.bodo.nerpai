@@ -4,6 +4,8 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
+use Database\Seeders\Space\SpaceSeeder;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -14,6 +16,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             RolePermissionSeeder::class,
             UserSeeder::class,
+
+            SpaceSeeder::class,
             //BackupUsersSeeder::class,
         ]);
     }
