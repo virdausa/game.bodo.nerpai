@@ -1,19 +1,17 @@
 <?php
 
-namespace Database\Seeders\Space;
+namespace Database\Seeders\Store;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SpaceSeeder extends Seeder
+class StoreLocationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        $this->call([
-            PersonSeeder::class,
-        ]);
+        
     }
 }

@@ -8,6 +8,9 @@ use App\Models\Store\StoreCustomer;
 use App\Models\Store\StoreEmployee;
 use App\Models\Store\StoreProduct;
 use App\Models\Store\StoreInventory;
+use App\Models\Store\StoreLocation;
+use App\Models\Store\StoreInventoryMovement;
+
 use App\Models\Customer;
 use App\Models\Company\Product;
 use App\Models\Company\Courier;
@@ -38,7 +41,7 @@ class StorePosController extends Controller
 
 		$store_customers = StoreCustomer::all();
 
-        $store_products = StoreInventory::with(['store_product', 'warehouse_location'])
+        $store_products = StoreInventory::with(['store_product', 'store_location'])
                                 ->where('store_id', $store_id)
                                 ->get();
         
@@ -64,7 +67,7 @@ class StorePosController extends Controller
 			'products.*.notes' => 'nullable|string', // Note for each product
             'products.*.cost_per_unit' => 'required|numeric|min:0',
             'products.*.total_cost' => 'required|numeric|min:0',
-			'products.*.warehouse_location_id' => 'required|integer',
+			'products.*.store_location_id' => 'nullable|integer',
             'notes' => 'nullable|string',
 		]);
 
@@ -86,6 +89,7 @@ class StorePosController extends Controller
         
 		// Create Sales Products
         $total_amount = 0;
+		$product_to_inventory_movements = [];
 		foreach ($validated['products'] as $product) {
             StorePosProduct::create([
                 'store_pos_id' => $pos->id,
@@ -101,12 +105,27 @@ class StorePosController extends Controller
 
             $total_amount += $product['subtotal'];
 
-			$product_inventory = StoreInventory::where('store_id', $store_id)
-							->where('store_product_id', $product['product_id'])
-							->where('warehouse_location_id', $product['warehouse_location_id'])
-							->first();
-			$product_inventory->decrement('quantity', $product['quantity']);
-			$product_inventory->save();
+			$product_to_inventory_movements[] = [
+				'store_id' => $store_id,
+				'store_product_id' => $product['product_id'],
+				'store_location_id' => $product['store_location_id'],
+				'quantity' => $product['quantity'],
+				'cost_per_unit' => $product['cost_per_unit'],
+				'notes' => $product['notes'],
+				'source_type' => 'POS',
+				'source_id' => $pos->id,
+			];
+		}
+
+		// listing to inventory movement
+		foreach($product_to_inventory_movements as $product_to_inventory_movement){
+			$inventory_movement = StoreInventoryMovement::create($product_to_inventory_movement);
+	
+			// input cogs
+			$inventory_movement->postingCost();
+
+			// update inventory
+			$inventory_movement->postMovementtoStoreInventory();
 		}
         
         $pos->total_amount = $total_amount;

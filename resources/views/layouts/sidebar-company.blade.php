@@ -155,6 +155,7 @@
                 </li>
             @endif
 
+            <!-- Inventory -->
             @if(session('employee')?->can('products sidebar') ||
                 session('employee')?->can('warehouses sidebar') ||
                 session('employee')?->can('inventory sidebar') ||
@@ -215,6 +216,7 @@
                             <x-sidebar-item :icon="'icon-checklist-paper'" :route="'inventory_transfers.index'" :text="'Inventory Transfers'" />
                         </li>
 
+<!--                         
                         @if(session('employee')?->can('inventory sidebar'))
                             <li>
                                 <a href="{{ route('inventory.index') }}"
@@ -263,6 +265,7 @@
                                 </a>
                             </li>
                         @endif
+                        -->
                     </ul>
                 </li>
             @endif
@@ -380,6 +383,7 @@
                 </li>
             @endif
 
+            <!-- HR -->
             @if(session('employee')?->can('employees sidebar'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"

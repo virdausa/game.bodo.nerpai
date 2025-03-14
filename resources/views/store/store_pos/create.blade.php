@@ -143,7 +143,7 @@
                                 <option data-price="{{ $store_product->store_product->store_price ?? 0 }}"
                                         data-weight="{{ $store_product->store_product->product->weight ?? 0 }}"
                                         data-cost="{{ $store_product->cost_per_unit ?? 0 }}"
-                                        data-location="{{ $store_product->warehouse_location_id ?? 1 }}"
+                                        data-location="{{ $store_product->store_location_id }}"
                                         value="{{ $store_product->store_product->id }}">{{ $store_product->store_product->product->name }}
                                                 : {{ $store_product->quantity }}pcs</option>
                             @endforeach
@@ -175,7 +175,7 @@
                     <input type="hidden" class="item-subweight" value="0"> <!-- Total weight per row -->
                     <input type="hidden" name="products[${productIndex}][cost_per_unit]" class="item-cost" value="0"> <!-- Cost per unit -->
                     <input type="hidden" name="products[${productIndex}][total_cost]" class="item-subcost" value="0">
-                    <input type="hidden" name="products[${productIndex}][warehouse_location_id]" class="item-location" value="1">
+                    <input type="hidden" name="products[${productIndex}][store_location_id]" class="item-location">
                 </tr>
             `;
             $("#item-list").append(newRow);

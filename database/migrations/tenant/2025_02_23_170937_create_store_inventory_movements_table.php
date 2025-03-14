@@ -11,21 +11,22 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('store_inventories', function (Blueprint $table) {
+        Schema::create('store_inventory_movements', function (Blueprint $table) {
             // Primary key
             $table->id();
 
             // Foreign keys
             $table->foreignId('store_id')->constrained('stores', 'id')->onDelete('cascade');
             $table->foreignId('store_product_id')->constrained('store_products', 'id')->onDelete('cascade');
-            $table->foreignId('store_location_id')->nullable()->constrained('store_locations', 'id')->onDelete('set null');
+            $table->foreignId('store_location_id')->nullable()->constrained('store_locations', 'id')->onDelete('restrict');
+
+            $table->string('source_type')->nullable();                  // INB, POS, MOVE, SOP
+            $table->unsignedBigInteger('source_id')->nullable();
 
             // Attributes
-            $table->date('expire_date')->nullable();
             $table->integer('quantity')->default(0);
-            $table->integer('reserved_quantity')->default(0);
-            $table->integer('in_transit_quantity')->default(0);
             $table->decimal('cost_per_unit', 20, 2)->default(0);
+            $table->text('notes')->nullable();
 
             // Timestamps
             $table->timestamps();
@@ -38,6 +39,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('store_inventories');
+        Schema::dropIfExists('store_inventory_movements');
     }
 };

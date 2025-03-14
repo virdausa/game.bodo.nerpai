@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 
 use App\Models\Company\SaleInvoice;
 use App\Models\Company\Finance\Receivable;
-use App\Models\Company\JournalEntry;
+use App\Models\Company\Finance\JournalEntry;
 
 class SaleInvoiceController extends Controller
 {

@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Seeders\Space;
+namespace Database\Seeders\Store;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class SpaceSeeder extends Seeder
+class StoreSeederCaller extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,7 +13,7 @@ class SpaceSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-            PersonSeeder::class,
+            StoreLocationSeeder::class,
         ]);
     }
 }

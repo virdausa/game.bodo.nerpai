@@ -52,7 +52,7 @@
                                     <x-table-td>{{ $store_product->quantity }}</x-table-td>
                                     <x-table-td>{{ $store_product->store_product->price * 0.5 }}</x-table-td>
                                     <x-table-td>{{ $store_product->notes ?? 'N/A' }}</x-table-td>
-                                    <x-table-td>{{ $store_product->warehouse_location->print_location() ?? 'N/A' }}</x-table-td>
+                                    <x-table-td>{{ $store_product->store_location?->print_location() ?? 'N/A' }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                         </div>

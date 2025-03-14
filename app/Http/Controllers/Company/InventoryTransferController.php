@@ -112,8 +112,22 @@ class InventoryTransferController extends Controller
     public function edit(string $id)
     {
         $inventory_transfer = InventoryTransfer::with('products')->findOrFail($id);
-        $stores = Store::all();
-        $warehouses = Warehouse::all();
+
+        $consignee_type = $inventory_transfer->consignee_type;
+        $consignee_id = $inventory_transfer->consignee_id;
+
+        if($consignee_type == 'ST') {
+            $stores = Store::where('id', '!=', $consignee_id)->get();
+        } else {
+            $stores = Store::where();
+        }
+
+        if($consignee_type == 'WH') {
+            $warehouses = Warehouse::where('id', '!=', $consignee_id)->get();
+        } else {
+            $warehouses = Warehouse::all();
+        }
+
         $products = Product::all();
         $couriers = Courier::all();
 

@@ -74,14 +74,6 @@ class StoreInboundController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
     public function handleAction(Request $request, $inbounds, $action) {
 		if($inbounds != '0') 
 			$inbound = StoreInbound::findOrFail($inbounds);
@@ -106,7 +98,6 @@ class StoreInboundController extends Controller
     public function createInboundFromShipment($shipment_confirmation) {
 		$shipment_confirmation = ShipmentConfirmation::with('products', 'shipment')->findOrFail($shipment_confirmation);
 		$products = $shipment_confirmation->products;
-        $store_products = 
 		$shipment = $shipment_confirmation->shipment;
         $store_employee = StoreEmployee::where('store_id', $shipment->consignee_id)
                                         ->where('employee_id', $shipment_confirmation->employee_id)
@@ -137,7 +128,7 @@ class StoreInboundController extends Controller
                 'store_inbound_id' => $inbound->id,
                 'store_product_id' => $storeProductMap[$product->id],
                 'quantity' => $product->pivot->quantity,
-                'warehouse_location_id' => '1',
+                'store_location_id' => null,
                 'cost_per_unit' => $product->pivot->cost_per_unit ?? 0,
                 'total_cost' => 0,
                 'created_at' => now(),
@@ -172,7 +163,7 @@ class StoreInboundController extends Controller
 			$inventory = StoreInventory::create([
 				'store_id' => $inbound->store_id,
 				'store_product_id' => $inbound_product->store_product_id,
-				'warehouse_location_id' => $inbound_product->warehouse_location_id,
+				'store_location_id' => $inbound_product->store_location_id,
 				'quantity' => $inbound_product->quantity,
 				'cost_per_unit' => $inbound_product->cost_per_unit,
 			]);

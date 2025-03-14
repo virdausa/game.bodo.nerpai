@@ -7,8 +7,8 @@ use Illuminate\Http\Request;
 
 use App\Models\Company\Finance\Payment;
 use App\Models\Company\Finance\PaymentDetail;
-use App\Models\Company\JournalEntry;
-use App\Models\Company\Account;
+use App\Models\Company\Finance\JournalEntry;
+use App\Models\Company\Finance\Account;
 
 class PaymentController extends Controller
 {

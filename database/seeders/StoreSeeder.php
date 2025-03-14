@@ -7,6 +7,8 @@ use Illuminate\Database\Seeder;
 
 use Database\Seeders\Store\StoreRolePermissionSeeder;
 
+use Database\Seeders\Store\StoreSeederCaller;
+
 class StoreSeeder extends Seeder
 {
     /**
@@ -15,7 +17,7 @@ class StoreSeeder extends Seeder
     public function run(): void
     {
         $this->call([
-
+            StoreSeederCaller::class,
         ]);
     }
 }

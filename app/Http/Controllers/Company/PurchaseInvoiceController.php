@@ -7,9 +7,9 @@ use Illuminate\Http\Request;
 
 use App\Models\Company\PurchaseInvoice;
 use App\Models\Company\Finance\Payable;
-use App\Models\Company\JournalEntry;
-use App\Models\Company\JournalEntryDetail;
-use App\Models\Company\Account;
+use App\Models\Company\Finance\JournalEntry;
+use App\Models\Company\Finance\JournalEntryDetail;
+use App\Models\Company\Finance\Account;
 
 class PurchaseInvoiceController extends Controller
 {

@@ -18,7 +18,7 @@ return new class extends Migration
             // Foreign keys
             $table->foreignId('store_inbound_id')->nullable()->constrained('store_inbounds', 'id')->onDelete('cascade');
             $table->foreignId('store_product_id')->nullable()->constrained('store_products', 'id')->onDelete('cascade');
-            $table->foreignId('warehouse_location_id')->nullable()->constrained('warehouse_locations', 'id')->onDelete('set null');
+            $table->foreignId('store_location_id')->nullable()->constrained('store_locations', 'id')->onDelete('set null');
 
             // Attributes
             $table->decimal('cost_per_unit', 20, 2)->default(0);

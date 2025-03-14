@@ -16,13 +16,15 @@ return new class extends Migration
             $table->id();
 
             // Foreign keys
-            $table->foreignId('sale_id')->constrained('sales', 'id');
             $table->foreignId('product_id')->constrained('products', 'id');
+            
+            $table->string('source_type')->nullable();              // Possible values: 'SO', 'POS', 'ADJUST', 'SOP'
+            $table->unsignedBigInteger('source_id')->nullable();
 
             // Attributes
             $table->integer('quantity');
             $table->decimal('cost_per_unit', 20, 2)->nullable();
-            $table->decimal('total_cost', 20, 2)->nullable();
+            $table->decimal('total_cost', 25, 2)->nullable();
             $table->date('date')->nullable();
             $table->text('notes')->nullable();
 

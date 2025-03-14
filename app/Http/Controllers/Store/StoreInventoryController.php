@@ -17,7 +17,7 @@ class StoreInventoryController extends Controller
     {
         $store = Store::findOrFail(session('company_store_id'));
 
-        $inventories = StoreInventory::with(['store_product', 'warehouse_location'])
+        $inventories = StoreInventory::with(['store_product', 'store_location'])
                                 ->where('store_id', $store->id)
                                 ->get();
 

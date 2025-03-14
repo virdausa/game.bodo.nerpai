@@ -15,11 +15,13 @@ return new class extends Migration
             // Foreign Keys
             $table->foreignId('product_id')->constrained();
             $table->foreignId('warehouse_id')->constrained();
+            // warehouse location
 
             // Columns
             $table->integer('quantity');
-            $table->string('transaction_type'); // Possible values: 'PO', 'SO', 'ADJUST', 'MOVE'
-            $table->unsignedBigInteger('transaction_id')->nullable();
+            $table->decimal('cost_per_unit', 20, 2);
+            $table->string('source_type')->nullable();              // Possible values: 'PO', 'SO', 'ADJUST', 'MOVE'
+            $table->unsignedBigInteger('source_id')->nullable();
             
             $table->text('notes')->nullable();
             $table->dateTime('time');

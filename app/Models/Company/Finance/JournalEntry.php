@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Finance;
 
 use App\Models\Company\AssetDisposal;
 use App\Models\Company\AssetMaintenance;
@@ -10,8 +10,9 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-use App\Models\Company\JournalEntryDetail;
-use App\Models\Company\Account;
+use App\Models\Company\Finance\JournalEntryDetail;
+use App\Models\Company\Finance\Account;
+use App\Models\Employee;
 
 class JournalEntry extends Model
 {

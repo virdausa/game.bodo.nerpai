@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Finance;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -10,16 +10,18 @@ class CogsEntry extends Model
     use HasFactory;
 
     protected $table = 'cogs_entries';
-    protected $timestamps = true;
+
+    public $timestamps = true;
 
     protected $fillable = [
-        'sale_id',
+        'source_type',
+        'source_id',
         'product_id',
         'quantity',
         'cost_per_unit',
         'total_cost',
         'date',
-        'notes'
+        'notes',
     ];
 
     protected $casts = [
@@ -27,13 +29,13 @@ class CogsEntry extends Model
         'total_cost' => 'decimal:2',
     ];
 
-    public function sale()
-    {
-        return $this->belongsTo(Sale::class);
-    }
-
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function source()
+    {
+        return $this->morphTo();
     }
 }

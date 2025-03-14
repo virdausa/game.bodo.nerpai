@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-use App\Models\Company\WarehouseLocation;
+use App\Models\Company\StoreLocation;
 
 class StoreInboundProduct extends Model
 {
@@ -19,12 +19,12 @@ class StoreInboundProduct extends Model
     protected $fillable = [
         'store_inbound_id',
         'store_product_id',
-        'warehouse_location_id',
+        'store_location_id',
         'quantity',
         'notes',
     ];
 
-    public function storeInbound(): BelongsTo
+    public function store_inbound(): BelongsTo
     {
         return $this->belongsTo(StoreInbound::class);
     }
@@ -34,8 +34,8 @@ class StoreInboundProduct extends Model
         return $this->belongsTo(StoreProduct::class);
     }
 
-    public function warehouse_location(): BelongsTo
+    public function store_location(): BelongsTo
     {
-        return $this->belongsTo(WarehouseLocation::class);
+        return $this->belongsTo(StoreLocation::class);
     }
 }

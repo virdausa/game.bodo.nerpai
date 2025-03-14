@@ -2,7 +2,7 @@
 
 namespace App\Models\Store;
 
-use App\Models\WarehouseLocation;
+use App\Models\StoreLocation;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,7 +18,7 @@ class StoreOutboundProduct extends Model
     protected $fillable = [
         'store_outbound_id',
         'store_product_id',
-        'warehouse_location_id',
+        'stock_location_id',
         'quantity',
         'notes'
     ];
@@ -33,8 +33,8 @@ class StoreOutboundProduct extends Model
         return $this->belongsTo(StoreProduct::class);
     }
 
-    public function warehouseLocation(): BelongsTo
+    public function store_location(): BelongsTo
     {
-        return $this->belongsTo(WarehouseLocation::class);
+        return $this->belongsTo(StoreLocation::class);
     }
 }
