@@ -63,7 +63,7 @@
             document.documentElement.classList.remove('dark')
         }
     </script>
-    <script src="//unpkg.com/alpinejs" defer></script>
+    <!-- <script src="//unpkg.com/alpinejs" defer></script> -->
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
