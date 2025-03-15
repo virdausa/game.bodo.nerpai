@@ -32,6 +32,7 @@ use App\Http\Controllers\Company\ReportController;
 use App\Http\Controllers\Company\Finance\PaymentController;
 use App\Http\Controllers\Company\Finance\PayableController;
 use App\Http\Controllers\Company\Finance\ReceivableController;
+use App\Http\Controllers\Company\Finance\ExpenseController;
 
 // Company
 Route::middleware(['auth', 
@@ -98,6 +99,8 @@ Route::middleware(['auth',
     Route::resource('receivables', ReceivableController::class);
     Route::post('receivables/{id}/action/{action}', [ReceivableController::class, 'handleAction'])->name('receivables.action');
     Route::resource('accounts', AccountController::class);
+    Route::resource('expenses', ExpenseController::class);
+    Route::post('expenses/{id}/action/{action}', [ExpenseController::class, 'handleAction'])->name('expenses.action');
 
     Route::resource("reports", ReportController::class);
 });

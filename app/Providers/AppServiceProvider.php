@@ -23,6 +23,8 @@ use App\Models\Store\StorePos;
 use App\Models\Company\PurchaseInvoice;
 use App\Models\Company\SaleInvoice;
 
+use App\Models\Company\Finance\Expense;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -59,6 +61,7 @@ class AppServiceProvider extends ServiceProvider
             'COMP' => Company::class,
             'POI' => PurchaseInvoice::class,
             'SOI' => SaleInvoice::class,
+            'EXP' => Expense::class,
         ]);
 	}
 }

@@ -40,6 +40,7 @@
                 </li>
             @endif
 
+            <!-- Purchases -->
             @if(session('employee')?->can('purchases sidebar') ||
                 session('employee')?->can('suppliers sidebar'))
                 <li class="relative">
@@ -94,6 +95,7 @@
                 </li>
             @endif
 
+            <!-- Store -->
             @if(session('employee')?->can('customers sidebar') ||
                 session('employee')?->can('sales sidebar'))
                 <li class="relative">
@@ -270,6 +272,7 @@
                 </li>
             @endif
 
+            <!-- Shipping -->
             @if(session('employee'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -349,7 +352,8 @@
                                 {{ Request::routeIs('payments*') || 
                                  Request::routeIs('accounts*') ||
                                  Request::routeIs('payables*') ||
-                                 Request::routeIs('receivables*')
+                                 Request::routeIs('receivables*') ||
+                                 Request::routeIs('expenses*')
                                  ? 'block' : 'hidden' }}" id="finance-menu">
                         @if(session('employee'))
                             <li>
@@ -380,6 +384,7 @@
                                     Reports
                                 </x-sidebar-item>
                             </li>
+                            <li><x-sidebar-item icon="icon-checklist-paper" route="expenses.index" text="Expenses" /></li>
                         @endif
                     </ul>
                 </li>
@@ -436,6 +441,7 @@
                 </li>
             @endif
 
+            <!-- Company Users -->
             @if(session('employee')?->can('user sidebar'))
                 <li class="relative">
                     <button class="flex items-center justify-between w-full p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
@@ -475,6 +481,7 @@
                 </li>
             @endif
 
+            <!-- Access -->
             @if(session('employee')?->can('role-access sidebar') ||
                 session('employee')?->can('permissions sidebar'))
                 <li class="relative">
