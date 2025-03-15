@@ -22,8 +22,8 @@
                                 <div class="form-group">
                                     <x-input-label for="shipper_type" class="block text-sm font-medium text-gray-700">Select Shipper Type</x-input-label>
                                     <x-input-select name="shipper_type" id="shipper_type" class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md">
-                                        <option value="ST" {{ $inventory_transfer->shipper_type == 'ST' ? 'selected' : '' }}>Store</option>
                                         <option value="WH" {{ $inventory_transfer->shipper_type == 'WH' ? 'selected' : '' }}>Warehouse</option>
+                                        <option value="ST" {{ $inventory_transfer->shipper_type == 'ST' ? 'selected' : '' }}>Store</option>
                                     </x-input-select>
                                 </div>
                                 <!-- Select Shipper -->
@@ -50,6 +50,7 @@
                                 <div class="form-group">
                                     <x-input-label for="courier_id">Expedition Kurir</x-input-label>
                                     <select name="courier_id" class="bg-gray-100 w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
+                                        <option value="">Select Expedition</option>
                                         @foreach($couriers as $courier)
                                             <option value="{{ $courier->id }}" {{ $inventory_transfer->courier_id == $courier->id ? 'selected' : '' }}>
                                                 {{ $courier->name }}
@@ -115,7 +116,7 @@
 
                             <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
                             <div class="m-4">
-                                <a href="{{ route('inventory_transfers.index') }}">
+                                <a href="{{ route('inventory_transfers.show', $inventory_transfer->id) }}">
                                     <x-secondary-button type="button">Cancel</x-secondary-button>
                                 </a>
                                 <x-primary-button>Update Inventory Transfer</x-primary-button>
@@ -123,57 +124,60 @@
                         </form>
 
                         <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
-
-                        <script>
-                            document.addEventListener('DOMContentLoaded', () => {
-                                const productSelection = document.getElementById('product-selection');
-                                let productIndex = {{ $inventory_transfer->products->count() }};
-								
-
-                                document.getElementById('add-product').addEventListener('click', function () {
-                                    const newProductDiv = document.createElement('div');
-                                    newProductDiv.classList.add('product-item', 'mb-4', 'p-4', 'border', 'border-gray-200', 'rounded-lg', 'shadow-md', 'dark:bg-gray-800', 'dark:border-gray-600');
-                                    newProductDiv.innerHTML = `
-                                    <div class="flex inline justify-between space items-center">
-										<h3 class="text-md font-bold">Products 1</h3>
-										<button type="button"
-											class="ml-3 bg-red-500 text-sm text-white px-4 py-1 rounded-md hover:bg-red-700 remove-product">
-											Remove
-										</button>
-									</div>
-									<div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700">
-									</div>
-                                        <x-input-label for="product_id">Select Product</x-input-label>
-                                        <select name="products[${productIndex}][product_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
-                                            @foreach ($products as $availableProduct)
-                                                <option value="{{ $availableProduct->id }}">{{ $availableProduct->name }} - Rp{{ $availableProduct->price }}</option>
-                                            @endforeach
-                                        </select>
-
-                                        <x-input-label for="quantity">Quantity</x-input-label>
-                                        <input type="number" name="products[${productIndex}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" min="1" required>
-
-                                        <x-input-label for="notes">Notes</x-input-label>
-                                        <x-input-textarea name="products[${productIndex}][notes]" class="form-control"></x-input-textarea>
-                                    `;
-
-                                    productSelection.appendChild(newProductDiv);
-                                    productIndex++;
-                                });
-                                productSelection.addEventListener('click', function (event) {
-                                    if (event.target && event.target.classList.contains('remove-product')) {
-                                        const productDiv = event.target.closest('.product-item');
-                                        productDiv.remove(); // Remove the product div
-                                    }
-                                });
-                            });
-                        </script>
-
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+
+    <!-- script product -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const productSelection = document.getElementById('product-selection');
+            let productIndex = {{ $inventory_transfer->products->count() }};
+            
+
+            document.getElementById('add-product').addEventListener('click', function () {
+                const newProductDiv = document.createElement('div');
+                newProductDiv.classList.add('product-item', 'mb-4', 'p-4', 'border', 'border-gray-200', 'rounded-lg', 'shadow-md', 'dark:bg-gray-800', 'dark:border-gray-600');
+                newProductDiv.innerHTML = `
+                <div class="flex inline justify-between space items-center">
+                    <h3 class="text-md font-bold">Products 1</h3>
+                    <button type="button"
+                        class="ml-3 bg-red-500 text-sm text-white px-4 py-1 rounded-md hover:bg-red-700 remove-product">
+                        Remove
+                    </button>
+                </div>
+                <div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700">
+                </div>
+                    <x-input-label for="product_id">Select Product</x-input-label>
+                    <select name="products[${productIndex}][product_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
+                        @foreach ($inventories as $inventory)
+                            <option value="{{ $inventory->product->id }}">{{ $inventory->product->name }} - Rp{{ $inventory->quantity }}</option>
+                        @endforeach
+                    </select>
+
+                    <x-input-label for="quantity">Quantity</x-input-label>
+                    <input type="number" name="products[${productIndex}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" min="1" required>
+
+                    <x-input-label for="notes">Notes</x-input-label>
+                    <x-input-textarea name="products[${productIndex}][notes]" class="form-control"></x-input-textarea>
+                `;
+
+                productSelection.appendChild(newProductDiv);
+                productIndex++;
+            });
+            productSelection.addEventListener('click', function (event) {
+                if (event.target && event.target.classList.contains('remove-product')) {
+                    const productDiv = event.target.closest('.product-item');
+                    productDiv.remove(); // Remove the product div
+                }
+            });
+        });
+    </script>
+
+
 
     <script>
         let stores = @json($stores);

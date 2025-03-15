@@ -66,6 +66,8 @@
                     </x-table-table>
                     <div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
+
+
                     <h3 class="text-lg font-bold mt-6">Outbounds</h3>
                     <x-table-table id="search-table">
                         <x-table-thead>
@@ -97,6 +99,8 @@
                     </x-table-table>
                     <div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
+
+
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
                     <div>
@@ -110,7 +114,8 @@
                                 </form>
                             </div>
                         </div>
-                        @elseif ($inventory_transfers->status == 'ITF_PROCESS')
+                        @elseif ($inventory_transfers->status == 'ITF_PROCESS' 
+                                && $itf_ready_to_outbound)
                             <div class="flex justify-end m-4">
                                 <form action="{{ route('inventory_transfers.action', ['id' => $inventory_transfers->id, 'action' => 'ITF_OUTBOUND']) }}" method="POST">
                                     @csrf
@@ -127,6 +132,11 @@
                     <x-secondary-button>
                         <a href="{{ route('inventory_transfers.index') }}">Back to List</a>
                     </x-secondary-button>
+                    @if($inventory_transfers->status == 'ITF_PROCESS' &&
+                        $layout == 'company')
+                        <x-button href="{{ route('inventory_transfers.edit', $inventory_transfers->id) }}" text="Edit Inventory Transfer"
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 focus:bg-gray-700 active:bg-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition ease-in-out duration-150 dark:bg-green-700 dark:hover:bg-green-800">Edit Expense</x-button>
+                    @endif
                 </div>
             </div>
         </div>

@@ -11,6 +11,7 @@ use App\Models\Company\Product;
 use App\Models\Company\Outbound;
 use App\Models\Company\OutboundProduct;
 
+use App\Models\Company\Inventory;
 use App\Models\Company\InventoryTransfer;
 use App\Models\Company\Courier;
 
@@ -41,13 +42,6 @@ class InventoryTransferController extends Controller
         return view('company.inventory_transfers.index', compact('inventory_transfers', 'stores', 'warehouses', 'view_create'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -103,7 +97,17 @@ class InventoryTransferController extends Controller
     {
         $inventory_transfers = InventoryTransfer::with('products', 'outbounds')->findOrFail($id);
 
-        return view('company.inventory_transfers.show', compact('inventory_transfers'));
+
+        // validasi ready to outbound
+        $itf_ready_to_outbound = false;
+        if($inventory_transfers->status == 'ITF_PROCESS') {
+            $itf_ready_to_outbound = !is_null($inventory_transfers->shipper_type) &&
+                                    !is_null($inventory_transfers->shipper_id) &&
+                                    !is_null($inventory_transfers->courier_id);
+            $itf_ready_to_outbound = $inventory_transfers->products->count() > 0;
+        }
+
+        return view('company.inventory_transfers.show', compact('inventory_transfers', 'itf_ready_to_outbound'));
     }
 
     /**
@@ -112,7 +116,20 @@ class InventoryTransferController extends Controller
     public function edit(string $id)
     {
         $inventory_transfer = InventoryTransfer::with('products')->findOrFail($id);
+        $products = Product::all();
+        $couriers = Courier::all();
+        $inventories = [];
 
+        // pick inventories from shipper 
+        $shipper_type = $inventory_transfer->shipper_type;
+        $shipper_id = $inventory_transfer->shipper_id;
+        if($shipper_type == 'WH') {
+            $inventories = Inventory::with(['product', 'warehouse'])
+                        ->where('warehouse_id', $shipper_id)
+                        ->get();
+        }
+         
+        // cant sent to itself        
         $consignee_type = $inventory_transfer->consignee_type;
         $consignee_id = $inventory_transfer->consignee_id;
 
@@ -121,17 +138,14 @@ class InventoryTransferController extends Controller
         } else {
             $stores = Store::where();
         }
-
+        
         if($consignee_type == 'WH') {
             $warehouses = Warehouse::where('id', '!=', $consignee_id)->get();
         } else {
             $warehouses = Warehouse::all();
         }
 
-        $products = Product::all();
-        $couriers = Courier::all();
-
-        return view('company.inventory_transfers.edit', compact('inventory_transfer', 'warehouses', 'products', 'stores', 'couriers'));
+        return view('company.inventory_transfers.edit', compact('inventory_transfer', 'warehouses', 'products', 'stores', 'couriers', 'inventories'));
     }
 
     /**
@@ -154,14 +168,21 @@ class InventoryTransferController extends Controller
         $inventory_transfer = InventoryTransfer::findOrFail($id);
         $inventory_transfer->update($validated);
 
+        $inventory_transfer->origin_address = $inventory_transfer->shipper?->address;
+        $inventory_transfer->destination_address = $inventory_transfer->consignee?->address;
+
         $inventory_transfer->generateNumber();
         
+        $itf_before = $inventory_transfer;
+
         // products
         $this->SyncInventoryTransferProducts($request, $inventory_transfer);
         
+        //dd($inventory_transfer, $itf_before);
+
         $inventory_transfer->save();
 
-        return redirect()->route('inventory_transfers.index')->with('success', "Inventory transfer request: {$inventory_transfer->number} updated successfully. :)");
+        return redirect()->route('inventory_transfers.show', $inventory_transfer->id)->with('success', "Inventory transfer request: {$inventory_transfer->number} updated successfully. :)");
     }
 
 
@@ -170,7 +191,8 @@ class InventoryTransferController extends Controller
 
         if(isset($request->products)){
             foreach ($request->products as $product) {
-                $transfer_products[$product['product_id']] = [
+                $transfer_products[] = [
+                    'product_id' => $product['product_id'],
                     'quantity' => $product['quantity'],
                     'notes' => $product['notes'],
                 ];
@@ -252,7 +274,7 @@ class InventoryTransferController extends Controller
             foreach ($inventory_transfer->products as $product) {
                 OutboundProduct::create([
                     'outbound_id' => $outbound->id,
-                    'product_id' => $product->pivot->id,
+                    'product_id' => $product->pivot->product_id,
                     'quantity' => $product->pivot->quantity,
                     'cost_per_unit' => $product->pivot->cost_per_unit,
                     'warehouse_location_id' => '1',
