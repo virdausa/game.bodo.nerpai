@@ -12,7 +12,7 @@ use App\Models\Company\Shipment;
 use App\Models\Company\Product;
 use App\Models\Sale;
 use App\Models\Company\Inventory;
-use App\Models\InventoryHistory;
+use App\Models\InventoryMovement;
 
 
 

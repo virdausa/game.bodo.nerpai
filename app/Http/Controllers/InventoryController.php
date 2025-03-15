@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company\Product;
 use App\Models\Warehouse;
 use App\Models\Company\Inventory;
-use App\Models\InventoryHistory;
+use App\Models\InventoryMovement;
 use App\Models\Location;
 use App\Models\InboundRequest;
 use App\Models\Sale;
@@ -20,7 +20,7 @@ class InventoryController extends Controller
 		$inventories = Inventory::with(['product', 'warehouse'])->get();
 		
 		// Fetch inventory details grouped by location
-		$inventoryByLocations = InventoryHistory::with(['product', 'warehouse', 'location'])
+		$inventoryByLocations = InventoryMovement::with(['product', 'warehouse', 'location'])
 			->select('product_id', 'warehouse_id', 'warehouse_location_id', DB::raw('SUM(quantity) as total_quantity'))
 			->groupBy('product_id', 'warehouse_id', 'warehouse_location_id')
 			->get();
@@ -32,7 +32,7 @@ class InventoryController extends Controller
 
 	public function history()
 	{
-		$history = InventoryHistory::with('product', 'warehouse')->orderBy('created_at', 'desc')->get();
+		$history = InventoryMovement::with('product', 'warehouse')->orderBy('created_at', 'desc')->get();
 		return view('inventory.history', compact('history'));
 	}
 
@@ -90,7 +90,7 @@ class InventoryController extends Controller
 		$inventory->save();
 		
 		// Record transaction in inventory history
-		InventoryHistory::create([
+		InventoryMovement::create([
 			'product_id' => $productId,
 			'warehouse_id' => $warehouseId,
 			'quantity' => $quantity,

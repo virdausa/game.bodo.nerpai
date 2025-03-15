@@ -24,7 +24,7 @@ return new class extends Migration
             $table->unsignedBigInteger('source_id')->nullable();
             
             $table->text('notes')->nullable();
-            $table->dateTime('time');
+            $table->dateTime('time')->nullable();
 
             // Timestamps (optional, not in schema but commonly used)
             $table->timestamps();

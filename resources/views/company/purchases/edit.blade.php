@@ -92,15 +92,7 @@
                         </form>
 
                         <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
-                        @if ($purchase->status == 'PO_REQUEST_TO_SUPPLIER')
-                        <div class="flex justify-end m-4">
-                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_CONFIRMED']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Input Invoice Pembelian dari Supplier</x-primary-button>
-                            </form>
-                        </div>
-                        @endif
+                        
 
                         <script>
                             document.addEventListener('DOMContentLoaded', () => {

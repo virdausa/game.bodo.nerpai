@@ -52,8 +52,6 @@
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                             <x-button-show :route="route('shipments.show', $shipment->id)" />
-                                            <!-- <x-button-edit :route="route('shipments.edit', $shipment->id)" />
-                                            <x-button-delete :route="route('shipments.destroy', $shipment->id)" /> -->
                                         </div>
                                     </x-table-td>
                                 </x-table-tr>

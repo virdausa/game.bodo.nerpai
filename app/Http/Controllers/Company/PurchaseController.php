@@ -6,11 +6,13 @@ use App\Models\Company\Purchase; // Ensure you import the Purchase model
 use App\Models\Company\PurchaseInvoice;
 use App\Models\Company\Product;
 use App\Models\Company\Warehouse;
-use App\Models\InventoryHistory;
+use App\Models\InventoryMovement;
 use App\Models\InboundRequest;
 use App\Models\Company\Supplier;
 use App\Models\Company\Shipment;
 use Illuminate\Http\Request;
+
+use App\Services\Company\Finance\JournalEntryService;
 
 use App\Http\Controllers\Controller;
 
@@ -197,7 +199,7 @@ class PurchaseController extends Controller
 				$this->sendPORequestToSupplier($purchase);
 				break;
 			case 'PO_CONFIRMED':
-				$this->inputInvoiceFromSupplier($purchase);
+				return $this->inputInvoiceFromSupplier($purchase);
 				break;
 			case 'PO_DP_CONFIRMED':
 				$this->confirmPaymenttoSupplier($purchase);
@@ -205,11 +207,17 @@ class PurchaseController extends Controller
 			case 'PO_SHIPMENT_CONFIRMED':
 				return $this->inputShipmentFromSupplier($purchase);
 				break;
+			case 'PO_COMPLETE_PAYMENT':
+				$this->completePaymenttoSupplier($purchase);
+				break;
+			case 'PO_COMPLETED':
+				$this->completePurchase($purchase);
+				break;
 			default:
 				abort(404);
 		}
 
-		return redirect()->route('purchases.index')->with('success', "Purchase {$purchase->po_number} updated successfully.");
+		return redirect()->route('purchases.show', $purchase->id)->with('success', "Purchase {$purchase->po_number} updated successfully.");
 	}
 
 	public function sendPORequestToSupplier($purchase){
@@ -267,5 +275,51 @@ class PurchaseController extends Controller
 		$shipment->save();
 
 		return redirect()->route('shipments.edit', $shipment->id)->with('success', "Shipment {$shipment->shipment_number} created successfully");
+	}
+
+	public function completePaymenttoSupplier($purchase){
+		$purchase->status = 'PO_COMPLETE_PAYMENT';
+	
+		$purchase->save();
+	}
+
+	public function completePurchase($purchase){
+		// notify supplier
+
+		// finish journal
+		$this->completePurchaseJournal($purchase);
+
+		$purchase->status = 'PO_COMPLETED';
+	
+		$purchase->save();
+	}
+
+	public function completePurchaseJournal($purchase){
+		// $invoices = $purchase->purchase_invoices;
+
+		// $details = [];
+		// foreach($invoices as $invoice){
+		// 	$details['cost_products'] += $invoice->cost_products;
+		// 	$details['vat_input'] += $invoice->vat_input;
+		// 	$details['cost_packing'] += $invoice->cost_packing;
+		// 	$details['cost_insurance'] += $invoice->cost_insurance;
+		// 	$details['cost_freight'] += $invoice->cost_freight;
+		// 	$details['total_amount'] += $invoice->total_amount;
+		// }
+
+		// $journalService = app(JournalEntryService::class);
+		// $journalService->addJournalEntry([
+		// 	'source_type' => 'PO',
+		// 	'source_id' => $purchase->id,
+		// 	'date' => date('Y-m-d'),
+		// 	'type' => 'PO',
+		// 	'description' => 'Pembelian Barang',
+		// 	'total' => $details['total_amount'],
+		// ], [
+		// 	[
+		// 		'account_id' => 5,                  // inventory
+		// 		'credit' => $details['cost_products'],
+		// 	],
+		// ]);
 	}
 }

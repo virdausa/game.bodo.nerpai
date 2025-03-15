@@ -9,10 +9,12 @@ use App\Models\Company\Purchase;
 use App\Models\User;
 use App\Models\Location;
 use App\Models\Company\Inventory;
-use App\Models\InventoryHistory;
+use App\Models\Company\InventoryMovement;
 use App\Models\Company\Shipment;
 use App\Models\Company\Warehouse;
 use App\Models\Company\ShipmentConfirmation;
+
+use App\Services\Company\Finance\JournalEntryService;
 
 use Illuminate\Http\Request;
 
@@ -63,73 +65,6 @@ class InboundController extends Controller
     }
 
 
-	// Update method to handle form submission
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-			'status' => 'required',
-			'verified_by' => 'nullable|exists:users,id',
-			'notes' => 'nullable|string',
-			'received_quantities' => 'array',
-			'received_quantities.*' => 'integer|min:0',
-			'arrival_date' => 'nullable|date',  // Add this line
-		]);
-
-
-        $inboundRequest = Inbound::findOrFail($id);
-		
-		// Handle checking quantities action
-		if ($request->action === 'check_quantities') {
-			$hasDiscrepancy = false;
-			$receivedQuantities = $request->input('received_quantities', []);
-
-			// Check for discrepancies
-			foreach ($receivedQuantities as $productId => $receivedQuantity) {
-				$requestedQuantity = $inboundRequest->requested_quantities[$productId] ?? 0;
-				if ($requestedQuantity != $receivedQuantity) {
-					$hasDiscrepancy = true;
-					break;
-				}
-			}
-
-			// Set status based on discrepancy
-			if ($hasDiscrepancy) {
-				$inboundRequest->status = 'Quantity Discrepancy';
-				$inboundRequest->notes = 'Quantity discrepancy detected. Awaiting purchase team decision.';
-			} else {
-				$inboundRequest->status = 'Ready to Complete';
-				$inboundRequest->notes = 'Quantities match; ready for completion.';
-			}
-
-			$inboundRequest->received_quantities = $receivedQuantities;
-			$inboundRequest->save();
-
-			return redirect()->route('warehouse_inbounds.show', $inboundRequest->id)
-				->with('success', 'Quantities checked successfully.');
-		}
-		
-        $inboundRequest->update([
-			'status' => $request->status,
-			'verified_by' => $request->verified_by,
-			'notes' => $request->notes,
-			'received_quantities' => $request->input('received_quantities', []),
-			'arrival_date' => $request->arrival_date,
-		]);
-
-		// Check if arrival_date is set and status is In Transit, then update status to Received - Pending Verification
-		if ($request->arrival_date && $inboundRequest->status == 'In Transit') {
-			$inboundRequest->status = 'Received - Pending Verification';
-			$inboundRequest->save();
-		}
-
-		// Check overall status of all inbound requests for this purchase
-		$this->updatePurchaseStatus($inboundRequest->purchase_order_id);
-
-        return redirect()->route('warehouse_inbounds.index')
-            ->with('success', 'Inbound request updated successfully.');
-    }
-
-
 
 	public function handleAction(Request $request, $inbounds, $action) {
 		if($inbounds != '0') 
@@ -156,6 +91,15 @@ class InboundController extends Controller
 		$shipment_confirmation = ShipmentConfirmation::with('products', 'shipment')->findOrFail($shipment_confirmation);
 		$products = $shipment_confirmation->products;
 		$shipment = $shipment_confirmation->shipment;
+		$source_products = [];
+		$cost_products = [];
+
+		if($shipment->transaction_type == 'PO') {
+			$source = $shipment->transaction;
+			$source_products = $source->products;
+
+			$cost_products = $source_products->pluck('pivot.buying_price', 'pivot.product_id');
+		}
 
 		$inbound = Inbound::create([
 			'warehouse_id' => $shipment->consignee_id,
@@ -166,11 +110,14 @@ class InboundController extends Controller
 		]);
 
 		foreach($products as $product){
+			$cost_per_unit = $cost_products[$product->id] ?? 0.5 * $product->price;
+
 			$inbound_product = InboundProducts::create([
 				'inbound_id' => $inbound->id,
 				'product_id' => $product->id,
+				'warehouse_location_id' => null,
 				'quantity' => $product->pivot->quantity,
-				'warehouse_location_id' => '1',
+				'cost_per_unit' => $cost_per_unit,
 			]);
 		}
 
@@ -197,14 +144,46 @@ class InboundController extends Controller
 
 	public function inputInboundProductsToWarehouse($inbound) {
 		$inbound_products = $inbound->inbound_products;
+
+		$inventory_value = 0;
 		foreach($inbound_products as $inbound_product){
-			$inventory = Inventory::create([
-				'warehouse_id' => $inbound->warehouse_id,
+			$inventory_movement = InventoryMovement::create([
 				'product_id' => $inbound_product->product_id,
+				'warehouse_id' => $inbound->warehouse_id,
 				'warehouse_location_id' => $inbound_product->warehouse_location_id,
 				'quantity' => $inbound_product->quantity,
-				'cost_per_unit' => 0.5 * $inbound_product->product->price,
+				'cost_per_unit' => $inbound_product->cost_per_unit,
+				'employee_id' => $inbound->employee_id,
+				'source_type' => 'INB',
+				'source_id' => $inbound->id,
 			]);
+
+			$inventory_movement->postMovement();
+
+			$inventory_value += $inbound_product->quantity * $inbound_product->cost_per_unit;
 		}
+
+		// create journal
+		$journalService = app(JournalEntryService::class);
+		$journalService->addJournalEntry([
+			'source_type' => 'INB',
+			'source_id' => $inbound->id,
+			'date' => date('Y-m-d'),
+			'type' => 'INB',
+			'description' => 'Inbound',
+			'total' => $inventory_value,
+			'created_by' => $inbound->employee_id,
+		], [
+			[
+				'account_id' => 5,                  // inventory
+				'debit' => $inventory_value,
+			],
+			[
+				'account_id' => 7,                  // uang muka supplier
+				'credit' => $inventory_value,
+				'notes' => 'uang muka supplier',
+			],
+		]);
 	}
+	
 }

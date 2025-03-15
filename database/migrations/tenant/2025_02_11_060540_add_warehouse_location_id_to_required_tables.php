@@ -12,19 +12,19 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('outbound_products', function (Blueprint $table) {
-            $table->foreignId('warehouse_location_id')->constrained('warehouse_locations')->nullable();
+            $table->foreignId('warehouse_location_id')->nullable()->constrained('warehouse_locations');
         });
 
         Schema::table('inbound_products', function (Blueprint $table) {
-            $table->foreignId('warehouse_location_id')->constrained('warehouse_locations')->nullable();
+            $table->foreignId('warehouse_location_id')->nullable()->constrained('warehouse_locations');
         });
 
         Schema::table('inventories', function (Blueprint $table) {
-            $table->foreignId('warehouse_location_id')->constrained('warehouse_locations')->nullable();
+            $table->foreignId('warehouse_location_id')->nullable()->constrained('warehouse_locations');
         });
 
         Schema::table('inventory_movements', function (Blueprint $table) {
-            $table->foreignId('warehouse_location_id')->constrained('warehouse_locations')->nullable();
+            $table->foreignId('warehouse_location_id')->nullable()->constrained('warehouse_locations');
         });
     }
 

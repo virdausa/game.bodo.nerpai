@@ -11,6 +11,8 @@ use App\Models\Company\Finance\JournalEntry;
 use App\Models\Company\Finance\JournalEntryDetail;
 use App\Models\Company\Finance\Account;
 
+use App\Services\Company\Finance\JournalEntryService;
+
 class PurchaseInvoiceController extends Controller
 {
     /**
@@ -144,41 +146,33 @@ class PurchaseInvoiceController extends Controller
     {
         $employee = session('employee');
 
-        $journal_entry = JournalEntry::create([
-            'date' => date('Y-m-d'),
-            'purchase_invoice_id' => $invoice->id,
-            'total_amount' => $invoice->total_amount,
-            'description' => 'uang muka',
-            'type' => 'AP',
+        $journalService = app(JournalEntryService::class);
+        $journalService->addJournalEntry([
             'source_type' => 'POI',
             'source_id' => $invoice->id,
+            'date' => date('Y-m-d'),
+            'type' => 'AP',
+            'description' => 'pendapatan dimuka purchase',
+            'total' => $invoice->total_amount,
             'created_by' => $employee->id,
-        ]);
-
-        $details = [
-            // Debit Uang Muka
+        ], [
             [
-                'journal_entry_id' => $journal_entry->id,
-                'account_id' => 7,                          // uang muka, 7
-                'debit' => $invoice->total_amount,
-                'credit' => 0,
+                'account_id' => 7,                  // uang muka
+                'debit' => $invoice->cost_products,
             ],
-
-            // Kredit Hutang
             [
-                'journal_entry_id' => $journal_entry->id,
-                'account_id' => 22,                          // hutang usaha, 22
-                'debit' => 0,
+                'account_id' => 8,                  // ppn masukan
+                'debit' => $invoice->vat_input,
+            ],
+            [
+                'account_id' => 39,                  // biaya pengiriman dan pengangkutan
+                'debit' => $invoice->cost_freight + $invoice->cost_packing + $invoice->cost_insurance,
+            ],
+            [
+                'account_id' => 22,                  // hutang supplier
                 'credit' => $invoice->total_amount,
             ],
-        ];
-
-        JournalEntryDetail::insert($details);
-
-        $journal_entry->generateNumber();
-        $journal_entry->save();
-
-        $this->postJournalEntrytoGeneralLedger($journal_entry->id);
+        ]);
     }
 
     public function postJournalEntrytoGeneralLedger($journal_entry_id)

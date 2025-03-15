@@ -17,6 +17,7 @@ class InboundProducts extends Model
         'product_id',
         'quantity',
         'warehouse_location_id',
+        'cost_per_unit',
         'notes',
     ];
 

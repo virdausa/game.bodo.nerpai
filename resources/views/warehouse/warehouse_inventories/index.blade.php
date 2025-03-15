@@ -41,7 +41,7 @@
                                 <x-table-tr>
                                     <x-table-td>{{ $inventory->product->name }}</x-table-td>
                                     <x-table-td>{{ $inventory->quantity }}</x-table-td>
-                                    <x-table-td>{{ $inventory->warehouse_location->print_location() ?? 'N/A' }}</x-table-td>
+                                    <x-table-td>{{ $inventory->warehouse_location?->print_location() ?? 'N/A' }}</x-table-td>
                                     <x-table-td>0</x-table-td> <!-- Replace with logic for incoming -->
                                     <x-table-td>{{ $inventory->reserved_quantity }}</x-table-td>
                                     <x-table-td>{{ $inventory->in_transit_quantity }}</x-table-td>

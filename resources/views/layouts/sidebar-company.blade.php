@@ -216,7 +216,7 @@
                             <x-sidebar-item :icon="'icon-checklist-paper'" :route="'inventory_transfers.index'" :text="'Inventory Transfers'" />
                         </li>
 
-<!--                         
+                        <!--                         
                         @if(session('employee')?->can('inventory sidebar'))
                             <li>
                                 <a href="{{ route('inventory.index') }}"
@@ -347,7 +347,9 @@
                     </button>
                     <ul class="mt-1 space-y-1 ms-6 
                                 {{ Request::routeIs('payments*') || 
-                                 Request::routeIs('couriers*')
+                                 Request::routeIs('accounts*') ||
+                                 Request::routeIs('payables*') ||
+                                 Request::routeIs('receivables*')
                                  ? 'block' : 'hidden' }}" id="finance-menu">
                         @if(session('employee'))
                             <li>

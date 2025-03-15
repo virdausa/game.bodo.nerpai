@@ -16,7 +16,7 @@ class ShipmentController extends Controller
      */
     public function index()
     {
-        $shipments = Shipment::all();
+        $shipments = Shipment::orderBy('updated_at', 'desc')->get();
         return view('company.shipments.index', compact('shipments'));
     }
 

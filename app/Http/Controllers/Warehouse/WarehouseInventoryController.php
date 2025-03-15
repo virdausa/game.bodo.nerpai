@@ -21,7 +21,7 @@ class WarehouseInventoryController extends Controller
                                 ->where('warehouse_id', $warehouse->id)
                                 ->get();
 
-        return view('warehouse.warehouse-inventories.index', compact('inventories'));
+        return view('warehouse.warehouse_inventories.index', compact('inventories'));
     }
 
     /**

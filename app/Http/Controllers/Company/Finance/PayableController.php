@@ -99,7 +99,7 @@ class PayableController extends Controller
             'type' => 'AP',
             'source_type' => 'SUP',
             'source_id' => $supplier->id,
-            'status' => 'PENDING',
+            'status' => 'PYM_PENDING',
             'notes' => 'Payment Request',
             'total_amount' => $unpaid_payables->sum('total_amount'),
         ]);

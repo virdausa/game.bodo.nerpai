@@ -60,7 +60,7 @@
                                     <x-table-td>{{ $outbound_product->quantity }}</x-table-td>
                                     <x-table-td>{{ $outbound_product->stock ?? 0 }}</x-table-td>
                                     <x-table-td>{{ $outbound_product->cost_per_unit }}</x-table-td>
-                                    <x-table-td>{{ $outbound_product->warehouse_location->print_location() ?? 'N/A' }}</x-table-td>
+                                    <x-table-td>{{ $outbound_product->warehouse_location?->print_location() ?? 'N/A' }}</x-table-td>
                                     <x-table-td>{{ $outbound_product->notes ?? 'N/A' }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">

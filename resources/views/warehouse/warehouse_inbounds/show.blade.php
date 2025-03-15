@@ -50,9 +50,9 @@
                                     <x-table-td>{{ $product->id }}</x-table-td>
                                     <x-table-td>{{ $product->product->id }} : {{ $product->product->name }}</x-table-td>
                                     <x-table-td>{{ $product->quantity }}</x-table-td>
-                                    <x-table-td>{{ $product->product->price * 0.5 }}</x-table-td>
+                                    <x-table-td>{{ $product->cost_per_unit }}</x-table-td>
                                     <x-table-td>{{ $product->notes ?? 'N/A' }}</x-table-td>
-                                    <x-table-td>{{ $product->warehouse_location->print_location() ?? 'N/A' }}</x-table-td>
+                                    <x-table-td>{{ $product->warehouse_location?->print_location() ?? 'N/A' }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                         </div>

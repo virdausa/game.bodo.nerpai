@@ -1,3 +1,6 @@
+@php 
+    $purchase_shipments_confirmed = true;
+@endphp
 <x-company-layout>
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -74,63 +77,13 @@
                     </div>
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
                         <div
                             class="mt-6 p-4 border border-gray-100 rounded-lg shadow-md dark:bg-gray-80 dark:border-gray-600">
                             <p class="text-sm text-gray-500 dark:text-gray-300">Notes</p>
                             <p class="text-lg font-medium text-gray-900 dark:text-gray-100">
                                 {{ $purchase->notes ?? 'No additional notes' }}</p>
                         </div>
-                        <div
-                            class="mt-6 p-4 border border-gray-100 rounded-lg shadow-md dark:bg-gray-80 dark:border-gray-600">
-
-                            <p class="text-sm text-gray-500 dark:text-gray-300">Inbound Request Status</p>
-                            @if ($purchase->inboundRequests && $purchase->inboundRequests->isNotEmpty())
-                                @foreach ($purchase->inboundRequests as $inboundRequest)
-                                    <div
-                                        class="p-4 border border-gray-200 rounded-lg shadow-md dark:bg-gray-700 dark:border-gray-600">
-                                        <p><strong>Status:</strong> <span
-                                                class="inline-block bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-300">
-                                                {{ $inboundRequest->status }}
-                                            </span></p>
-                                        <p class="mt-2"><strong>Requested Quantities:</strong></p>
-                                        <ul class="list-disc ml-6">
-                                            @foreach ($inboundRequest->requested_quantities as $productId => $quantity)
-                                                <li>{{ $purchase->products->firstWhere('id', $productId)->name }}: {{ $quantity }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                        <p class="mt-2"><strong>Received Quantities:</strong></p>
-                                        <ul class="list-disc ml-6">
-                                            @foreach ($inboundRequest->received_quantities as $productId => $quantity)
-                                                <li>{{ $purchase->products->firstWhere('id', $productId)->name }}: {{ $quantity }}
-                                                </li>
-                                            @endforeach
-                                        </ul>
-                                        <p class="mt-2"><strong>Notes:</strong> {{ $inboundRequest->notes }}</p>
-
-                                        @if ($inboundRequest->status == 'Quantity Discrepancy')
-                                            <h4 class="font-bold mt-4">Handle Quantity Discrepancy</h4>
-                                            <form
-                                                action="{{ route('inbound_requests.handleDiscrepancyAction', $inboundRequest->id) }}"
-                                                method="POST" class="mt-2 space-y-2">
-                                                @csrf
-                                                <x-primary-button name="action" value="accept_partial">Accept Partial
-                                                    Shipment</x-primary-button>
-                                                <x-secondary-button name="action" value="request_additional">Request Additional
-                                                    Shipment</x-secondary-button>
-                                                <x-secondary-button name="action" value="record_excess">Record Excess as Extra
-                                                    Stock</x-secondary-button>
-                                            </form>
-                                        @endif
-                                    </div>
-
-                                @endforeach
-                            @else
-                                        <p class="text-lg font-medium text-gray-900 dark:text-gray-100">No Inbound Request</p>
-                                    </div>
-                                </div>
-                            @endif
+                    </div>
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
                     <!-- Invoice Section -->
@@ -162,8 +115,6 @@
                                         <x-table-td>
                                             <div class="flex space-x-2">
                                                 <x-button-show :route="route('purchase_invoices.show', $invoice->id)" />
-                                                <!-- <x-button-edit :route="route('purchase_invoices.edit', $invoice->id)" /> -->
-                                                <!-- <x-button-delete :route="route('purchase_invoices.destroy', $invoice->id)" /> -->
                                             </div>
                                         </x-table-td>
                                     </x-table-tr>
@@ -191,6 +142,10 @@
                             </x-table-thead>
                             <x-table-tbody>
                                 @foreach ($purchase->shipments as $shipment)
+                                    @php
+                                        $purchase_shipments_confirmed = $shipment->status == 'SHP_DELIVERY_CONFIRMED';
+                                    @endphp
+
                                     <x-table-tr>
                                         <x-table-td>{{ $shipment->id }}</x-table-td>
                                         <x-table-td>{{ $shipment->shipper_type }} : {{ $shipment->shipper_id }}</x-table-td>
@@ -202,7 +157,6 @@
                                         <x-table-td>
                                             <div class="flex items-center space-x-2">
                                                 <x-button-show :route="route('shipments.show', $shipment->id)" />
-                                                <x-button-edit :route="route('shipments.edit', $shipment->id)" />
                                             </div>
                                         </x-table-td>
                                     </x-table-tr>
@@ -212,42 +166,52 @@
                     </div>
                     <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
+
+
                     <!-- Action Section -->
                     <h3 class="text-lg font-bold my-3">Actions</h3>
                     <div>
-                        @if ($purchase->status == 'PO_PLANNED')
-                        <div class="flex justify mt-4">
-                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_REQUEST_TO_SUPPLIER']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Kirim Pembelian ke Supplier</x-primary-button>
-                            </form>
-                        </div>
-                        @endif
-                        @if ($purchase->status == 'PO_REQUEST_TO_SUPPLIER')
-                        <div class="flex justify-end mt-4">    
-                            <x-primary-button>
-                                <a href="{{ route('purchases.edit', $purchase->id) }}">Input Invoice Fix dari Supplier</a>
-                            </x-primary-button>
-                        </div>
-                        @endif
+                        @php
+                            switch ($purchase->status) {
+                                case 'PO_PLANNED':
+                                    $action = 'PO_REQUEST_TO_SUPPLIER';
+                                    $submit_text = 'Kirim Pembelian ke Supplier';
+                                    break;
+                                case 'PO_REQUEST_TO_SUPPLIER':
+                                    $action = 'PO_CONFIRMED';
+                                    $submit_text = 'Input Invoice Pembelian dari Supplier';
+                                    break;
+                                case 'PO_CONFIRMED':
+                                    $action = 'PO_DP_CONFIRMED';
+                                    $submit_text = 'Konfirmasi Pembayaran ke Supplier';
+                                    break;
+                                case 'PO_DP_CONFIRMED':
+                                    $action = 'PO_SHIPMENT_CONFIRMED';
+                                    $submit_text = 'Input Shipment Pembelian dari Supplier';
+                                    break;
 
-                        @if ($purchase->status == 'PO_CONFIRMED')
-                        <div class="flex justify mt-4">
-                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_DP_CONFIRMED']) }}" method="POST">
-                                @csrf
-                                @method('POST')
-                                <x-primary-button type="submit">Konfirmasi Pembayaran/DP Lunas ke Supplier</x-primary-button>
-                            </form>
-                        </div>
-                        @endif
+                                case 'PO_COMPLETE_PAYMENT':
+                                    $action = 'PO_COMPLETED';
+                                    $submit_text = 'Complete Purchase & Close Order';
+                                    break;
+                                default:
+                                    $action = '';
+                                    $submit_text = '';
+                            }
 
-                        @if ($purchase->status == 'PO_DP_CONFIRMED')
+                            if($purchase_shipments_confirmed && $purchase->status == 'PO_SHIPMENT_CONFIRMED')
+                            {
+                                $action = 'PO_COMPLETE_PAYMENT';
+                                $submit_text = 'Konfirmasi Pembayaran Lunas ke Supplier';
+                            }
+                        @endphp
+                        
+                        @if($action != '')
                         <div class="flex justify mt-4">
-                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => 'PO_SHIPMENT_CONFIRMED']) }}" method="POST">
+                            <form action="{{ route('purchases.action', ['purchases' => $purchase->id, 'action' => $action]) }}" method="POST">
                                 @csrf
                                 @method('POST')
-                                <x-primary-button type="submit">Input Shipment dari Supplier</x-primary-button>
+                                <x-primary-button type="submit">{{ $submit_text }}</x-primary-button>
                             </form>
                         </div>
                         @endif

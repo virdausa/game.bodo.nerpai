@@ -22,6 +22,7 @@ return new class extends Migration
 
             // Columns
             $table->integer('quantity')->nullable();
+            $table->decimal('cost_per_unit', 20, 2)->nullable()->default(0);
             $table->text('notes')->nullable();
 
             // Timestamps (optional, not in ERD but commonly used)
