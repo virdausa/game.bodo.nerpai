@@ -14,7 +14,7 @@ class EmployeeController extends Controller
         $employees = Employee::with('companyuser', 'role')
                     ->where('status', 'active')
                     ->get();
-        return view('employees.index', compact('employees'));
+        return view('company.employees.index', compact('employees'));
     }
     public function create()
     {
@@ -22,7 +22,7 @@ class EmployeeController extends Controller
             ->where('status', 'approved')
             ->get(); // List all users which not employees
         $roles = \Spatie\Permission\Models\Role::all(); // List all roles
-        return view('employees.create', compact('users', 'roles'));
+        return view('company.employees.create', compact('users', 'roles'));
     }
 
     public function store(Request $request)
@@ -53,7 +53,7 @@ class EmployeeController extends Controller
     {
         $employee = Employee::find($id);
         $roles = \Spatie\Permission\Models\Role::all(); // List all roles
-        return view('employees.edit', compact('employee', 'roles'));
+        return view('company.employees.edit', compact('employee', 'roles'));
     }
     
     public function update(Request $request, string $id)

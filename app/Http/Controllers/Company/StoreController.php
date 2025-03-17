@@ -23,7 +23,7 @@ class StoreController extends Controller
         $employee = Employee::with('store')->find($employeeId);
         $stores = $employee->store;
 
-        return view('stores.index', compact('stores'));
+        return view('company.stores.index', compact('stores'));
     }
 
     /**

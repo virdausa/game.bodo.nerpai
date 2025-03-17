@@ -18,7 +18,7 @@ class CompanyUserController extends Controller
         $rejected_users = $company_users->where('status', '!=','rejected');
         $users_to_invite = $users->whereNotIn('id', $rejected_users->pluck('user_id'));
 
-        return view('company_users.index', compact('company_users', 'users', 'users_to_invite'));
+        return view('company.company_users.index', compact('company_users', 'users', 'users_to_invite'));
     }
 
     /**
@@ -26,7 +26,7 @@ class CompanyUserController extends Controller
      */
     public function create()
     {
-        return view('company_users.create');
+        return view('company.company_users.create');
     }
 
     /**

@@ -23,12 +23,12 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->productService->getProducts();
-        return view('products.index', compact('products'));
+        return view('company.products.index', compact('products'));
     }
 
     public function create()
     {
-        return view('products.create');
+        return view('company.products.create');
     }
 
     // Store the new product in the database
@@ -58,13 +58,13 @@ class ProductController extends Controller
     public function show($id)
     {
         $product = $this->productService->getProduct($id);
-        return view('products.show', compact('product'));
+        return view('company.products.show', compact('product'));
     }
 
     public function edit(String $id)
     {
         $product = $this->productService->getProduct($id);
-        return view('products.edit', compact('product'));
+        return view('company.products.edit', compact('product'));
     }
 
     public function update(UpdateProductRequest $request, String $id)

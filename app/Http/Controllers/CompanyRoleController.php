@@ -14,7 +14,7 @@ class CompanyRoleController extends Controller
     public function index()
     {
         $company_roles = Role::with('permissions')->get();
-        return view('company_roles.index', compact('company_roles'));
+        return view('company.company_roles.index', compact('company_roles'));
     }
     public function getRolesData(Request $request)
     {
@@ -44,7 +44,7 @@ class CompanyRoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('company_roles.create', compact('groupedPermissions'));
+        return view('company.company_roles.create', compact('groupedPermissions'));
     }
 
     public function store(Request $request)
@@ -74,7 +74,7 @@ class CompanyRoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('company_roles.edit', compact('role', 'groupedPermissions'));
+        return view('company.company_roles.edit', compact('role', 'groupedPermissions'));
     }
 
     public function update(Request $request, string $id)

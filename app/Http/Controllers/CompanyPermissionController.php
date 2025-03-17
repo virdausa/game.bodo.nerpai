@@ -11,13 +11,13 @@ class CompanyPermissionController extends Controller
     public function index()
     {
         $company_permissions = Permission::all();
-        return view('company_permissions.index', compact('company_permissions'));
+        return view('company.company_permissions.index', compact('company_permissions'));
     }
 
     // Menampilkan form untuk membuat permission baru
     public function create()
     {
-        return view('company_permissions.create');
+        return view('company.company_permissions.create');
     }
 
     // Menyimpan permission baru
@@ -36,7 +36,7 @@ class CompanyPermissionController extends Controller
     public function edit(string $id)
     {
         $permission = Permission::findOrFail($id);
-        return view('company_permissions.edit', compact('permission'));
+        return view('company.company_permissions.edit', compact('permission'));
     }
 
     // Mengupdate permission
