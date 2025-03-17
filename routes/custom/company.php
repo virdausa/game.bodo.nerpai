@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CompanyMiddleware;
 
+use App\Http\Controllers\CompanySettingController;
+
 use App\Http\Controllers\CompanyUserController;
 use App\Http\Controllers\CompanyRoleController;
 use App\Http\Controllers\CompanyPermissionController;
@@ -38,6 +40,9 @@ use App\Http\Controllers\Company\Finance\ExpenseController;
 Route::middleware(['auth', 
                 CompanyMiddleware::class,
 ])->group(function () {
+    // CompanySettings
+    Route::resource('company_settings', CompanySettingController::class);
+
     Route::resource('company_users', CompanyUserController::class);
     Route::delete('/company_users/cancelInvite/{id}', [CompanyUserController::class, 'cancelInvite'])->name('company_users.cancelInvite');
 

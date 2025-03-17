@@ -1,4 +1,4 @@
-<p align="center"><a href="https://nerpai.space" target="_blank"><img src="https://app.nerpai.space/svg/hehe.svg" width="400" alt="Nerpai Logo"></a></p>
+<p align="center"><a href="https://nerpai.space" target="_blank"><img src="https://app.nerpai.space/svg/hehe.svg" width="200" alt="Nerpai Logo"></a></p>
 
 <p align="center">
 <a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
@@ -31,7 +31,7 @@ Network ERP & AI
     * Couriers
     * Employee
     * Role Access
-    * Settings
+    * CompanySettings
 
 Nerpai is accessible, powerful, and provides tools required for large, robust Business. 
 

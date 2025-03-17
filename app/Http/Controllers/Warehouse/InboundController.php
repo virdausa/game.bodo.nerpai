@@ -175,11 +175,11 @@ class InboundController extends Controller
 			'created_by' => $inbound->employee_id,
 		], [
 			[
-				'account_id' => 5,                  // inventory
+				'account_id' => get_company_setting('comp.account_inventories'),                  // inventory
 				'debit' => $inventory_value,
 			],
 			[
-				'account_id' => 7,                  // uang muka supplier
+				'account_id' => get_company_setting('comp.account_downpayment_supplier'),		// uang muka supplier
 				'credit' => $inventory_value,
 				'notes' => 'uang muka supplier',
 			],

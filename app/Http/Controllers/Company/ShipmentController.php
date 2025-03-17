@@ -197,7 +197,7 @@ class ShipmentController extends Controller
 
             if($products->isNotEmpty()){
                 foreach($products as $product){
-                    $shipment_confirmation->products()->attach($product->id, [
+                    $shipment_confirmation->products()->attach($product->product_id, [
                         'quantity' => $product->quantity,
                         'condition' => 'SC_OK',
                     ]);

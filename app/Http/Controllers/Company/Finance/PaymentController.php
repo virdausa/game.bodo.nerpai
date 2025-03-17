@@ -115,7 +115,7 @@ class PaymentController extends Controller
                 $details = [
                     // Debit Hutang Usaha
                     [
-                        'account_id' => 22,                          // uang muka, 7
+                        'account_id' => get_company_setting('comp.account_payables'),                          // akun hutang usaha
                         'debit' => $payment->total_amount,
                     ],
         
@@ -136,7 +136,7 @@ class PaymentController extends Controller
         
                     // Kredit Piutang Usaha
                     [
-                        'account_id' => 4,                              // akun piutang usaha
+                        'account_id' => get_company_setting('comp.account_receivables'),                              // akun piutang usaha
                         'credit' => $payment->total_amount,
                     ],
                 ];

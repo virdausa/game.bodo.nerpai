@@ -153,18 +153,18 @@ class StorePosController extends Controller
 
 		$details = [
 			[
-				'account_id' => $pos->payment_method,						// Kas / Bank
+				'account_id' => $pos->payment_method,							// Kas / Bank
 				'debit' => $pos->payment_amount,
 			],
 			[
-				'account_id' => 33,											// Pendapatan
+				'account_id' => get_company_setting('comp.account_revenue'),	// Pendapatan
 				'credit' => $pos->total_amount + $data['discount_amount'],
 			],
 		];
 
 		if($data['discount_amount'] > 0){
 			$details[] = [
-				'account_id' => 34,											// Diskon
+				'account_id' => get_company_setting('comp.account_discount_sales'),		// Diskon
 				'debit' => $data['discount_amount'],
 			];
 		}

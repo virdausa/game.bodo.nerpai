@@ -157,36 +157,21 @@ class PurchaseInvoiceController extends Controller
             'created_by' => $employee->id,
         ], [
             [
-                'account_id' => 7,                  // uang muka
+                'account_id' => get_company_setting('comp.account_downpayment_supplier'),                  // uang muka
                 'debit' => $invoice->cost_products,
             ],
             [
-                'account_id' => 8,                  // ppn masukan
+                'account_id' => get_company_setting('comp.account_vat_input'),                  // ppn masukan
                 'debit' => $invoice->vat_input,
             ],
             [
-                'account_id' => 39,                  // biaya pengiriman dan pengangkutan
+                'account_id' => get_company_setting('comp.account_shipping_freight'),                  // biaya pengiriman dan pengangkutan
                 'debit' => $invoice->cost_freight + $invoice->cost_packing + $invoice->cost_insurance,
             ],
             [
-                'account_id' => 22,                  // hutang supplier
+                'account_id' => get_company_setting('comp.account_payables'),                  // hutang supplier
                 'credit' => $invoice->total_amount,
             ],
         ]);
-    }
-
-    public function postJournalEntrytoGeneralLedger($journal_entry_id)
-    {
-        $journal_entry = JournalEntry::with('journal_entry_details')->findOrFail($journal_entry_id);
-
-        foreach ($journal_entry->journal_entry_details as $detail) {
-            $account = Account::findOrFail($detail->account_id);
-
-            if($account){
-                $account->balance += $detail->debit * $account->account_type->debit;
-                $account->balance += $detail->credit * $account->account_type->credit;
-                $account->save();
-            }
-        }
     }
 }
