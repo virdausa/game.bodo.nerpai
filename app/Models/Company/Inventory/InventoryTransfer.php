@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Inventory;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,6 +12,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use App\Models\Employee;
 use App\Models\Company\Courier;
 use App\Models\Company\Product;
+use App\Models\Warehouse\Outbound;
+
+use App\Models\Company\Inventory\InventoryTransferItem;
 
 class InventoryTransfer extends Model
 {
@@ -48,6 +51,9 @@ class InventoryTransfer extends Model
         return $this->number;
     }
 
+
+
+    // relationship
     public function shipper()
     {
         return $this->morphTo();
@@ -73,10 +79,9 @@ class InventoryTransfer extends Model
         return $this->belongsTo(Employee::class, 'team_id', 'id');
     }
 
-    public function products() :BelongsToMany
+    public function items() :HasMany
     {
-        return $this->belongsToMany(Product::class, 'inventory_transfer_products')
-                    ->withPivot('id', 'quantity', 'cost_per_unit', 'total_cost', 'notes');
+        return $this->hasMany(InventoryTransferItem::class);
     }
 
     public function outbounds() :HasMany

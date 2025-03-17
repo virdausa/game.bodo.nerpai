@@ -81,12 +81,12 @@
                             </div>
                             <div class="my-6 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
-                            <h3 class="text-lg font-bold mt-6">Products</h3>
+                            <h3 class="text-lg font-bold mt-6">Items</h3>
                             <div id="product-selection" class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                                @foreach ($inventory_transfer->products as $index => $product)
+                                @foreach ($inventory_transfer->items as $index => $item)
                                 <div class="product-item mb-4 p-4 border border-gray-200 rounded-lg shadow-md dark:bg-gray-800 dark:border-gray-600">
                                 <div class="flex inline justify-between space items-center">
-										<h3 class="text-md font-bold">Products</h3>
+										<h3 class="text-md font-bold">Items</h3>
 										<button type="button"
 											class="ml-3 bg-red-500 text-sm text-white px-4 py-1 rounded-md hover:bg-red-700 remove-product">
 											Remove
@@ -94,18 +94,18 @@
 									</div>
 									<div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700">
 									</div>    
-                                <x-input-label for="product_id">Select Product</x-input-label>
-                                    <select name="products[{{ $index }}][product_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"  required>
-                                        @foreach ($products as $availableProduct)
-                                        <option value="{{ $availableProduct->id }}" {{ $availableProduct->id == $product->id ? 'selected' : '' }}>{{ $availableProduct->name }} - Rp{{ $availableProduct->price }}</option>
+                                <x-input-label for="item_id">Select Product</x-input-label>
+                                    <select name="items[{{ $index }}][item_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white"  required>
+                                        @foreach ($items as $availableItem)
+                                            <option value="{{ $availableItem->id }}" {{ $item->id == $availableItem->id ? 'selected' : '' }}>{{ $availableItem->product->name }} - qty:{{ $availableItem->quantity }}</option>
                                         @endforeach
                                     </select>
 
                                     <x-input-label for="quantity">Quantity</x-input-label>
-                                    <input type="number" name="products[{{ $index }}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $product->pivot->quantity }}" required >
+                                    <input type="number" name="items[{{ $index }}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" value="{{ $item->quantity }}" required >
 
                                     <x-input-label for="notes">Notes</x-input-label>
-                                    <x-input-textarea name="products[{{ $index }}][notes]" class="form-control" value="{{ $product->pivot->notes }}"></x-input-textarea>
+                                    <x-input-textarea name="items[{{ $index }}][notes]" class="form-control" value="{{ $item->notes }}"></x-input-textarea>
                                 </div>
                                 @endforeach
                             </div>
@@ -135,7 +135,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const productSelection = document.getElementById('product-selection');
-            let productIndex = {{ $inventory_transfer->products->count() }};
+            let productIndex = {{ $inventory_transfer->items->count() }};
             
 
             document.getElementById('add-product').addEventListener('click', function () {
@@ -143,7 +143,7 @@
                 newProductDiv.classList.add('product-item', 'mb-4', 'p-4', 'border', 'border-gray-200', 'rounded-lg', 'shadow-md', 'dark:bg-gray-800', 'dark:border-gray-600');
                 newProductDiv.innerHTML = `
                 <div class="flex inline justify-between space items-center">
-                    <h3 class="text-md font-bold">Products 1</h3>
+                    <h3 class="text-md font-bold">Items 1</h3>
                     <button type="button"
                         class="ml-3 bg-red-500 text-sm text-white px-4 py-1 rounded-md hover:bg-red-700 remove-product">
                         Remove
@@ -151,18 +151,18 @@
                 </div>
                 <div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700">
                 </div>
-                    <x-input-label for="product_id">Select Product</x-input-label>
-                    <select name="products[${productIndex}][product_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
-                        @foreach ($inventories as $inventory)
-                            <option value="{{ $inventory->product->id }}">{{ $inventory->product->name }} - Rp{{ $inventory->quantity }}</option>
+                    <x-input-label for="item_id">Select Product</x-input-label>
+                    <select name="items[${productIndex}][item_id]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" required>
+                        @foreach ($items as $item)
+                            <option value="{{ $item->id }}">{{ $item->product->name }} - qty:{{ $item->quantity }}</option>
                         @endforeach
                     </select>
 
                     <x-input-label for="quantity">Quantity</x-input-label>
-                    <input type="number" name="products[${productIndex}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" min="1" required>
+                    <input type="number" name="items[${productIndex}][quantity]" class="w-full px-4 py-2 border rounded-md focus:ring focus:ring-blue-300 dark:bg-gray-700 dark:text-white" min="1" required>
 
                     <x-input-label for="notes">Notes</x-input-label>
-                    <x-input-textarea name="products[${productIndex}][notes]" class="form-control"></x-input-textarea>
+                    <x-input-textarea name="items[${productIndex}][notes]" class="form-control"></x-input-textarea>
                 `;
 
                 productSelection.appendChild(newProductDiv);

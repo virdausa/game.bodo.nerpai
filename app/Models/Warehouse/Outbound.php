@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Warehouse;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +9,8 @@ use App\Models\Company\Shipment;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 use App\Models\Employee;
+use App\Models\Company\Warehouse;
+use App\Models\Warehouse\OutboundItem;
 
 class Outbound extends Model
 {
@@ -38,6 +40,8 @@ class Outbound extends Model
     }
 
 
+
+    // RELATIONSHIPS
     public function source()
     {
         return $this->morphTo();
@@ -53,9 +57,9 @@ class Outbound extends Model
         return $this->belongsTo(Employee::class);
     }
 
-    public function outbound_products()
+    public function items()
     {
-        return $this->hasMany(OutboundProduct::class);
+        return $this->hasMany(OutboundItem::class);
     }
 
     public function shipments() :hasMany

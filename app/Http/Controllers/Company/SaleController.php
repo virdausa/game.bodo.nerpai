@@ -14,8 +14,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 use App\Models\Company\SaleInvoice;
-use App\Models\Company\Outbound;
-use App\Models\Company\OutboundProduct;
+use App\Models\Warehouse\Outbound;
+use App\Models\Warehouse\OutboundItem;
 
 use App\Models\Space\Company;
 
@@ -259,7 +259,7 @@ class SaleController extends Controller
         
         if(isset($sale->products)) {
             foreach ($sale->products as $product) {
-                OutboundProduct::create([
+                OutboundItem::create([
                     'outbound_id' => $outbound->id,
                     'product_id' => $product->pivot->product_id,
                     'quantity' => $product->pivot->quantity,

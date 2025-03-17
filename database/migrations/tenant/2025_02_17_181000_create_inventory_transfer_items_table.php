@@ -11,13 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('inventory_transfer_products', function (Blueprint $table) {
+        Schema::create('inventory_transfer_items', function (Blueprint $table) {
             // Primary key
             $table->id();
 
             // foreign key
             $table->foreignId('inventory_transfer_id')->constrained('inventory_transfers', 'id')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained()->onDelete('cascade');
+            $table->string('item_type')->nullable()->default('IVT');
+            $table->unsignedBigInteger('item_id')->nullable();
 
             // Attributes
             $table->integer('quantity')->default(1);
@@ -36,6 +37,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('shipments');
+        Schema::dropIfExists('inventory_transfer_items');
     }
 };

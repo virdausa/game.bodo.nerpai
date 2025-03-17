@@ -8,11 +8,11 @@ use Illuminate\Http\Request;
 use App\Models\Company\Store;
 use App\Models\Company\Warehouse;
 use App\Models\Company\Product;
-use App\Models\Company\Outbound;
-use App\Models\Company\OutboundProduct;
+use App\Models\Warehouse\Outbound;
+use App\Models\Warehouse\OutboundItem;
 
-use App\Models\Company\Inventory;
-use App\Models\Company\InventoryTransfer;
+use App\Models\Company\Inventory\Inventory;
+use App\Models\Company\Inventory\InventoryTransfer;
 use App\Models\Company\Courier;
 
 class InventoryTransferController extends Controller
@@ -95,7 +95,7 @@ class InventoryTransferController extends Controller
      */
     public function show(string $id)
     {
-        $inventory_transfers = InventoryTransfer::with('products', 'outbounds')->findOrFail($id);
+        $inventory_transfers = InventoryTransfer::with('items', 'outbounds')->findOrFail($id);
 
 
         // validasi ready to outbound
@@ -104,7 +104,7 @@ class InventoryTransferController extends Controller
             $itf_ready_to_outbound = !is_null($inventory_transfers->shipper_type) &&
                                     !is_null($inventory_transfers->shipper_id) &&
                                     !is_null($inventory_transfers->courier_id);
-            $itf_ready_to_outbound = $inventory_transfers->products->count() > 0;
+            $itf_ready_to_outbound = $inventory_transfers->items->count() > 0;
         }
 
         return view('company.inventory_transfers.show', compact('inventory_transfers', 'itf_ready_to_outbound'));
@@ -115,20 +115,22 @@ class InventoryTransferController extends Controller
      */
     public function edit(string $id)
     {
-        $inventory_transfer = InventoryTransfer::with('products')->findOrFail($id);
-        $products = Product::all();
+        $inventory_transfer = InventoryTransfer::with('items')->findOrFail($id);
         $couriers = Courier::all();
-        $inventories = [];
+        $items = [];
 
         // pick inventories from shipper 
         $shipper_type = $inventory_transfer->shipper_type;
         $shipper_id = $inventory_transfer->shipper_id;
         if($shipper_type == 'WH') {
-            $inventories = Inventory::with(['product', 'warehouse'])
+            $items = Inventory::with(['product', 'warehouse'])
                         ->where('warehouse_id', $shipper_id)
                         ->get();
+        } else if($shipper_type == 'ST') {
+            
         }
          
+
         // cant sent to itself        
         $consignee_type = $inventory_transfer->consignee_type;
         $consignee_id = $inventory_transfer->consignee_id;
@@ -145,9 +147,12 @@ class InventoryTransferController extends Controller
             $warehouses = Warehouse::all();
         }
 
-        return view('company.inventory_transfers.edit', compact('inventory_transfer', 'warehouses', 'products', 'stores', 'couriers', 'inventories'));
+
+        return view('company.inventory_transfers.edit', compact('inventory_transfer', 'warehouses', 'items', 'stores', 'couriers'));
     }
 
+
+    
     /**
      * Update the specified resource in storage.
      */
@@ -160,9 +165,9 @@ class InventoryTransferController extends Controller
             'courier_id' => 'required|exists:couriers,id',
             'admin_notes' => 'nullable',
             'team_notes' => 'nullable',
-            'products.*.product_id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|numeric',
-            'products.*.notes' => 'nullable',
+            'items.*.item_id' => 'required|numeric',
+            'items.*.quantity' => 'required|numeric',
+            'items.*.notes' => 'nullable',
         ]);
 
         $inventory_transfer = InventoryTransfer::findOrFail($id);
@@ -175,8 +180,8 @@ class InventoryTransferController extends Controller
         
         $itf_before = $inventory_transfer;
 
-        // products
-        $this->SyncInventoryTransferProducts($request, $inventory_transfer);
+        // items
+        $this->SyncInventoryTransferItems($request, $inventory_transfer);
         
         //dd($inventory_transfer, $itf_before);
 
@@ -186,35 +191,49 @@ class InventoryTransferController extends Controller
     }
 
 
-    public function SyncInventoryTransferProducts($request, $inventory_transfer){
-        $transfer_products = [];
+    public function SyncInventoryTransferItems($request, $inventory_transfer){
+        $item_type = 'IVT';
+        if($request->shipper_type == 'ST') {
+            $item_type = 'SIVT';
+        }
+        $transfer_items = [];
 
-        if(isset($request->products)){
-            foreach ($request->products as $product) {
-                $transfer_products[] = [
-                    'product_id' => $product['product_id'],
-                    'quantity' => $product['quantity'],
-                    'notes' => $product['notes'],
+
+        // build transfer items
+        if(isset($request->items)){
+            foreach ($request->items as $item) {
+                $transfer_items[] = [
+                    'inventory_transfer_id' => $inventory_transfer->id,
+                    'item_type' => $item_type,
+                    'item_id' => $item['item_id'],
+                    'quantity' => $item['quantity'],
+                    'notes' => $item['notes'],
                 ];
             }
         }
 
-        $inventory_transfer->products()->sync($transfer_products);
+
+        // Sync 
+        if(is_null($request->items)) {
+            $request->items = [];
+        }
+        $request_item_ids = array_column($request->items, 'item_id');
+        
+        // delete items that are not in the request
+        $inventory_transfer->items()->whereNotIn('item_id', $request_item_ids)->delete();
+
+        $inventory_transfer->items()->upsert($transfer_items,
+            ['inventory_transfer_id', 'item_type', 'item_id'],
+            ['quantity', 'notes']
+        );
 
         $inventory_transfer->save();
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
 
 
     public function handleAction(Request $request, $inventory_transfer_id, $action) {
-		$inventory_transfer = InventoryTransfer::findOrFail($inventory_transfer_id);
+		$inventory_transfer = InventoryTransfer::with('items')->findOrFail($inventory_transfer_id);
 
 		switch ($action) {
 			case 'ITF_PROCESS':
@@ -241,6 +260,16 @@ class InventoryTransferController extends Controller
 
 
     public function requestOutboundForInventoryTransfer(Request $request, $inventory_transfer) {
+        //dd($inventory_transfer->items);
+
+        // update inventory transfer
+        foreach($inventory_transfer->items as $item) {
+            $item->cost_per_unit = $item->item->cost_per_unit;
+            $item->total_cost = $item->quantity * $item->cost_per_unit;
+            $item->save();
+        }
+
+
         // check shipper
         if($inventory_transfer->shipper_type == 'WH') {
             $this->requestOutboundWarehouse($request, $inventory_transfer);
@@ -249,6 +278,7 @@ class InventoryTransferController extends Controller
         } else {
             abort(404);
         }
+
 
         // $inventory_transfer->status = 'ITF_OUTBOUND';
         // $inventory_transfer->save();
@@ -270,16 +300,19 @@ class InventoryTransferController extends Controller
         $outbound->generateNumber();
         $outbound->save();
         
-        if(isset($inventory_transfer->products)) {
-            foreach ($inventory_transfer->products as $product) {
-                OutboundProduct::create([
+        if(isset($inventory_transfer->items)) {
+            $outbound_items = [];
+            foreach ($inventory_transfer->items as $item) {
+                $outbound_items[] = [
                     'outbound_id' => $outbound->id,
-                    'product_id' => $product->pivot->product_id,
-                    'quantity' => $product->pivot->quantity,
-                    'cost_per_unit' => $product->pivot->cost_per_unit,
-                    'warehouse_location_id' => '1',
-                ]);
+                    'inventory_id' => $item->item_id,
+                    'quantity' => $item->quantity,
+                    'cost_per_unit' => $item->cost_per_unit,
+                    'total_cost' => $item->total_cost,
+                    'notes' => $item->notes,
+                ];
             }
+            $outbound->items()->createMany($outbound_items);
         }
     }
 

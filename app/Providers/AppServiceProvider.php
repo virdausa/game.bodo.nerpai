@@ -12,13 +12,15 @@ use App\Models\Company\Customer;
 use App\Models\Company\Purchase;
 use App\Models\Company\Sale;
 use App\Models\Company\Store;
-use App\Models\Company\InventoryTransfer;
-use App\Models\Company\Outbound;
+use App\Models\Company\Inventory\InventoryTransfer;
+use App\Models\Warehouse\Outbound;
+use App\Models\Company\Inventory\Inventory;
 
 use App\Models\Space\Person;
 use App\Models\Space\Company;
 
 use App\Models\Store\StorePos;
+use App\Models\Store\StoreInventory;
 
 use App\Models\Company\PurchaseInvoice;
 use App\Models\Company\SaleInvoice;
@@ -62,6 +64,8 @@ class AppServiceProvider extends ServiceProvider
             'POI' => PurchaseInvoice::class,
             'SOI' => SaleInvoice::class,
             'EXP' => Expense::class,
+            'IVT' => Inventory::class,
+            'SIVT' => StoreInventory::class,
         ]);
 	}
 }

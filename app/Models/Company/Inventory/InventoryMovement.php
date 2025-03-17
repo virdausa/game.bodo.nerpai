@@ -1,9 +1,15 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Inventory;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Company\Product;
+use App\Models\Company\Inventory\Inventory;
+use App\Models\Company\Employee;
+use App\Models\Company\Warehouse;
+use App\Models\Company\WarehouseLocation;
 
 class InventoryMovement extends Model
 {
@@ -54,12 +60,16 @@ class InventoryMovement extends Model
     // functions
     public function postMovement()
     {
-        $inventory = Inventory::updateOrCreate([
-            'product_id' => $this->product_id,
-            'warehouse_id' => $this->warehouse_id,
-            'warehouse_location_id' => $this->warehouse_location_id,
-            'cost_per_unit' => $this->cost_per_unit,
-        ]);
+        $inventory = Inventory::updateOrCreate(
+            [
+                'product_id' => $this->product_id,
+                'warehouse_id' => $this->warehouse_id,
+                'warehouse_location_id' => $this->warehouse_location_id,
+            ],
+            [
+                'cost_per_unit' => $this->cost_per_unit,
+            ]
+        );
 
         if($this->source_type == 'INB') {
             $inventory->increment('quantity', $this->quantity);

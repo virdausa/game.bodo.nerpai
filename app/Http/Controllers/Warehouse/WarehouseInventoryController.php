@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Warehouse;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Company\Inventory;
+use App\Models\Company\Inventory\Inventory;
 use App\Models\Company\Warehouse;
 
 class WarehouseInventoryController extends Controller

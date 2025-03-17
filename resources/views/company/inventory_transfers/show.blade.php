@@ -36,12 +36,12 @@
                     <div class="mb-3 mt-1 flex-grow border-t border-gray-500 dark:border-gray-700"></div>
 
 
-                    <h3 class="text-lg font-bold mt-6">Products</h3>
+                    <h3 class="text-lg font-bold mt-6">Items</h3>
                     <x-table-table id="search-table">
                         <x-table-thead>
                             <tr>
                                 <x-table-th>#</x-table-th>
-                                <x-table-th>Product</x-table-th>
+                                <x-table-th>Item</x-table-th>
                                 <x-table-th>Quantity</x-table-th>
                                 <x-table-th>Cost</x-table-th>
                                 <x-table-th>Notes</x-table-th>
@@ -49,13 +49,13 @@
                             </tr>
                         </x-table-thead>
                         <x-table-tbody>
-                            @foreach ($inventory_transfers->products as $index => $product)
+                            @foreach ($inventory_transfers->items as $index => $item)
                                 <x-table-tr>
-                                    <x-table-td>{{ $product->id }}</x-table-td>
-                                    <x-table-td>{{ $product->id }} : {{ $product->name }}</x-table-td>
-                                    <x-table-td>{{ $product->pivot->quantity }}</x-table-td>
-                                    <x-table-td>{{ $product->pivot->cost_per_unit }}</x-table-td>
-                                    <x-table-td>{{ $product->pivot->notes ?? 'N/A' }}</x-table-td>
+                                    <x-table-td>{{ $item->item_id }}</x-table-td>
+                                    <x-table-td>{{ $item->item_type }} : {{ $item->item?->product->name }}</x-table-td>
+                                    <x-table-td>{{ $item->quantity ?? 'N/A'}}</x-table-td>
+                                    <x-table-td>{{ $item->cost_per_unit ?? 'N/A' }}</x-table-td>
+                                    <x-table-td>{{ $item->notes ?? 'N/A' }}</x-table-td>
                                     <x-table-td>
                                         <div class="flex items-center space-x-2">
                                         </div>

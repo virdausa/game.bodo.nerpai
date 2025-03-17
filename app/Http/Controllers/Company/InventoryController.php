@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Company;
 
 use App\Models\Company\Product;
 use App\Models\Warehouse;
-use App\Models\Company\Inventory;
+use App\Models\Company\Inventory\Inventory;
 use App\Models\InventoryMovement;
 use App\Models\Location;
 use App\Models\InboundRequest;

@@ -1,19 +1,19 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Warehouse;
 
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Company\Product;
 use App\Models\Company\WarehouseLocation;
-use App\Models\Company\Outbound;
-use App\Models\Company\Inventory;
+use App\Models\Warehouse\Outbound;
+use App\Models\Company\Inventory\Inventory;
 
-class OutboundProduct extends Model
+class OutboundItem extends Model
 {
 	protected $fillable = [
 		'outbound_id',
-		'product_id',
+		'inventory_id',
 		'warehouse_location_id',
 		'quantity',
 		'cost_per_unit',
@@ -21,17 +21,21 @@ class OutboundProduct extends Model
 		'notes',
 	];
 
+
+
+
+	// Relationships
 	public function outbound() {
 		return $this->belongsTo(Outbound::class);
 	}
 
-	public function product() {
-		return $this->belongsTo(Product::class);
+	public function item() {
+		return $this->belongsTo(Inventory::class, 'inventory_id');
 	}
 
 	public function inventory() {
 		return $this->hasMany(Inventory::class, 'product_id', 'product_id')
-					->whereColumn('warehouse_location_id', 'outbound_products.warehouse_location_id');
+					->whereColumn('warehouse_location_id', 'outbound_items.warehouse_location_id');
 	}
 
 	public function warehouse_location() {
