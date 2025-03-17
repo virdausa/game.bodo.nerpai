@@ -16,7 +16,7 @@
                     <!-- Search and Add New Store Employees -->
                     <div class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 mb-4">             
                         <div class="flex flex-col md:flex-row items-center space-x-3">
-                                @include('store_employees.create')
+                                @include('store.store_employees.create')
                          </div>
                     </div>
                     <x-table-table id="search-table"> 
@@ -41,7 +41,7 @@
                                     <x-table-td>
                                     <div class="flex items-center space-x-2">
                                             
-                                            @include('store_employees.edit', ['employee' => $employee, 'store_roles' => $store_roles])
+                                            @include('store.store_employees.edit', ['employee' => $employee, 'store_roles' => $store_roles])
                                             <x-button-delete :route="route('store_employees.destroy', $employee->id)" />
                                         </div>
                                     </x-table-td>

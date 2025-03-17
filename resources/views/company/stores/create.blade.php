@@ -15,10 +15,10 @@
         </div>
 
         <!-- Address -->
-        <div class="form-group mb-4">
+        <!-- <div class="form-group mb-4">
             <x-input-label for="address">Alamat</x-input-label>
             <x-text-input type="text" id="address" name="address" class="w-full" placeholder="Alamat toko ?"/>
-        </div>
+        </div> -->
 
         <!-- Actions -->
         <div class="flex justify-end space-x-4 mt-4">

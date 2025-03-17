@@ -42,7 +42,7 @@ class StoreController extends Controller
         $validated = $request->validate([
             'code' => 'required|string|max:255',
             'name' => 'required|string|max:255',
-            'address' => 'nullable|string|max:255',
+            // 'address' => 'nullable|string|max:255',
         ]);
 
         $store = Store::updateOrCreate(
