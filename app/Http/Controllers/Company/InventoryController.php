@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
 
 use App\Models\Company\Product;
 use App\Models\Warehouse;
@@ -12,6 +12,7 @@ use App\Models\Sale;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+use App\Http\Controllers\Controller;
 
 class InventoryController extends Controller
 {

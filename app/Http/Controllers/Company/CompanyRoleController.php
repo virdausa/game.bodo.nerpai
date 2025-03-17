@@ -1,5 +1,8 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Company;
+
+use App\Http\Controllers\Controller;
+
 // use App\Http\Controllers\Permission;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -8,12 +11,13 @@ use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
-class RoleController extends Controller
+
+class CompanyRoleController extends Controller
 {
     public function index()
     {
-        $roles = Role::with('permissions')->get();
-        return view('space.roles.index', compact('roles'));
+        $company_roles = Role::with('permissions')->get();
+        return view('company.company_roles.index', compact('company_roles'));
     }
     public function getRolesData(Request $request)
     {
@@ -24,7 +28,7 @@ class RoleController extends Controller
                 return $role->permissions->pluck('name')->implode(', '); // List permissions as a string
             })
             ->addColumn('actions', function ($role) {
-                return view('space.roles.partials.actions', compact('role'))->render(); // Action buttons
+                return view('roles.partials.actions', compact('role'))->render(); // Action buttons
             })
             ->filterColumn('permissions', function ($query, $keyword) {
                 $query->whereHas('permissions', function ($query) use ($keyword) {
@@ -43,7 +47,7 @@ class RoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('space.roles.create', compact('groupedPermissions'));
+        return view('company.company_roles.create', compact('groupedPermissions'));
     }
 
     public function store(Request $request)
@@ -61,27 +65,29 @@ class RoleController extends Controller
             $role->syncPermissions($permissions);
         }
     
-        return redirect()->route('roles.index')->with('success', 'Role created successfully!');
+        return redirect()->route('company_roles.index')->with('success', 'Role created successfully!');
     }
-    public function edit(Role $role)
+    public function edit(string $id)
     {
         $permissions = Permission::all();
 
+        $role = Role::with('permissions')->findOrFail($id);
         $groupedPermissions = $permissions->groupBy(function ($permission) {
             $parts = explode(' ', $permission->name); // Pisahkan nama permission berdasarkan spasi
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('space.roles.edit', compact('role', 'groupedPermissions'));
+        return view('company.company_roles.edit', compact('role', 'groupedPermissions'));
     }
 
-    public function update(Request $request, Role $role)
+    public function update(Request $request, string $id)
     {
         $request->validate([
-            'name' => 'required|unique:roles,name,' . $role->id,
+            'name' => 'required|unique:roles,name,' . $id,
             'permissions' => 'array|exists:permissions,id', // Validate permission IDs
         ]);
 
+        $role = Role::findOrFail($id);
         $role->update(['name' => $request->name]);
 
         // Convert permission IDs to names before syncing
@@ -90,12 +96,14 @@ class RoleController extends Controller
             $role->syncPermissions($permissions);
         }
 
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully!');
+        return redirect()->route('company_roles.index')->with('success', 'Role updated successfully!');
     }
 
-    public function destroy(Role $role)
+    public function destroy(string $id)
     {
+        $role = Role::findOrFail($id);
         $role->delete();
-        return redirect()->route('roles.index')->with('success', 'Role deleted successfully!');
+
+        return redirect()->route('company_roles.index')->with('success', 'Role deleted successfully!');
     }
 }

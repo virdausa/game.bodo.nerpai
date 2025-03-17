@@ -1,5 +1,7 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Space;
+
+use App\Http\Controllers\Controller;
 
 use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;

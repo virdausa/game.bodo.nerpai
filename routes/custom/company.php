@@ -3,13 +3,13 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CompanyMiddleware;
 
-use App\Http\Controllers\CompanySettingController;
+use App\Http\Controllers\Company\CompanySettingController;
 
-use App\Http\Controllers\CompanyUserController;
-use App\Http\Controllers\CompanyRoleController;
-use App\Http\Controllers\CompanyPermissionController;
+use App\Http\Controllers\Company\CompanyUserController;
+use App\Http\Controllers\Company\CompanyRoleController;
+use App\Http\Controllers\Company\CompanyPermissionController;
 
-use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\Company\EmployeeController;
 
 use App\Http\Controllers\Company\PurchaseController;
 use App\Http\Controllers\Company\PurchaseInvoiceController;
@@ -18,12 +18,12 @@ use App\Http\Controllers\Company\SupplierController;
 use App\Http\Controllers\Company\SaleController;
 use App\Http\Controllers\Company\SaleInvoiceController;
 use App\Http\Controllers\Company\CustomerController;
-use App\Http\Controllers\CustomerComplaintController;
+use App\Http\Controllers\Company\CustomerComplaintController;
 
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Company\ProductController;
 use App\Http\Controllers\Company\WarehouseLocationController;
 use App\Http\Controllers\Company\InventoryTransferController;
-use App\Http\Controllers\InventoryController;
+use App\Http\Controllers\Company\InventoryController;
 use App\Http\Controllers\Company\InboundController;
 use App\Http\Controllers\Company\OutboundController;
 

@@ -1,5 +1,8 @@
 <?php
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Space;
+
+use App\Http\Controllers\Controller;
+
 // use App\Http\Controllers\Permission;
 use Spatie\Permission\Models\Permission;
 use Yajra\DataTables\Facades\DataTables;
@@ -8,13 +11,12 @@ use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 use Spatie\Permission\Models\Role;
-
-class CompanyRoleController extends Controller
+class RoleController extends Controller
 {
     public function index()
     {
-        $company_roles = Role::with('permissions')->get();
-        return view('company.company_roles.index', compact('company_roles'));
+        $roles = Role::with('permissions')->get();
+        return view('space.roles.index', compact('roles'));
     }
     public function getRolesData(Request $request)
     {
@@ -25,7 +27,7 @@ class CompanyRoleController extends Controller
                 return $role->permissions->pluck('name')->implode(', '); // List permissions as a string
             })
             ->addColumn('actions', function ($role) {
-                return view('roles.partials.actions', compact('role'))->render(); // Action buttons
+                return view('space.roles.partials.actions', compact('role'))->render(); // Action buttons
             })
             ->filterColumn('permissions', function ($query, $keyword) {
                 $query->whereHas('permissions', function ($query) use ($keyword) {
@@ -44,7 +46,7 @@ class CompanyRoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('company.company_roles.create', compact('groupedPermissions'));
+        return view('space.roles.create', compact('groupedPermissions'));
     }
 
     public function store(Request $request)
@@ -62,29 +64,27 @@ class CompanyRoleController extends Controller
             $role->syncPermissions($permissions);
         }
     
-        return redirect()->route('company_roles.index')->with('success', 'Role created successfully!');
+        return redirect()->route('roles.index')->with('success', 'Role created successfully!');
     }
-    public function edit(string $id)
+    public function edit(Role $role)
     {
         $permissions = Permission::all();
 
-        $role = Role::with('permissions')->findOrFail($id);
         $groupedPermissions = $permissions->groupBy(function ($permission) {
             $parts = explode(' ', $permission->name); // Pisahkan nama permission berdasarkan spasi
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('company.company_roles.edit', compact('role', 'groupedPermissions'));
+        return view('space.roles.edit', compact('role', 'groupedPermissions'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, Role $role)
     {
         $request->validate([
-            'name' => 'required|unique:roles,name,' . $id,
+            'name' => 'required|unique:roles,name,' . $role->id,
             'permissions' => 'array|exists:permissions,id', // Validate permission IDs
         ]);
 
-        $role = Role::findOrFail($id);
         $role->update(['name' => $request->name]);
 
         // Convert permission IDs to names before syncing
@@ -93,14 +93,12 @@ class CompanyRoleController extends Controller
             $role->syncPermissions($permissions);
         }
 
-        return redirect()->route('company_roles.index')->with('success', 'Role updated successfully!');
+        return redirect()->route('roles.index')->with('success', 'Role updated successfully!');
     }
 
-    public function destroy(string $id)
+    public function destroy(Role $role)
     {
-        $role = Role::findOrFail($id);
         $role->delete();
-
-        return redirect()->route('company_roles.index')->with('success', 'Role deleted successfully!');
+        return redirect()->route('roles.index')->with('success', 'Role deleted successfully!');
     }
 }

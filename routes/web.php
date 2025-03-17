@@ -2,14 +2,14 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Space\ProfileController;
 
-use App\Http\Controllers\UserController;
+use App\Http\Controllers\Space\UserController;
 
-use App\Http\Controllers\RoleController;
-use App\Http\Controllers\PermissionController;
+use App\Http\Controllers\Space\RoleController;
+use App\Http\Controllers\Space\PermissionController;
 
-use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\Space\CompanyController;
 
 use App\Http\Controllers\Company\StoreController;
 

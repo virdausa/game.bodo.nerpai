@@ -1,5 +1,5 @@
 @php
-    $layout = session('layout');
+    $layout = session('layout') ?? 'guest';
 @endphp
 <x-dynamic-component :component="'layouts.' . $layout">
     <div class="flex flex-col items-center justify-center h-screen bg-gray-100 text-center">

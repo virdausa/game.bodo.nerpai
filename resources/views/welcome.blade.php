@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>{{ config('app.name', 'Nerpai') }}</title>
+    <title>{{ config('app.name', 'Bodo') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -17,11 +17,11 @@
 
 <body class="">
     <main>
-        <div class="min-h-screen flex items-center justify-center bg-background text-primary-foreground">
-            <div class="max-w-md p-6 bg-card shadow-lg rounded-lg flex flex-col items-center">
-                <img aria-hidden="true" alt="haebot" src="{{ asset('svg/hehe.svg') }}"
-                    class="w-24 h-24 mb-4" />
-                <h1 class="text-3xl font-bold mb-2 text-center text-primary">Welcome to Nerpai!!</h1>
+        <div class="min-h-screen flex items-center justify-center bg-background">
+            <div class="p-6 shadow-lg rounded-lg flex flex-col items-center">
+                <img aria-hidden="true" alt="bodo" src="{{ asset('svg/hehe.svg') }}"
+                    class="w-48 h-48 mb-4" />
+                <h1 class="text-3xl font-bold mb-2 text-center text-primary">Welcome to Bodo by Nerpai!!</h1>
                 <p class="text-sm text-center text-gray-500">Your go-to destination for a highly
                     performant, highly adaptive ERP solution</p>
                 <div class="flex space-x-4 mt-4">
