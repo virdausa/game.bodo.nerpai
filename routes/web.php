@@ -23,7 +23,7 @@ Route::get('/', function () {
 });
 
 Route::get('/lobby', function () {
-    return view('lobby');
+    return view('space.lobby');
 })->middleware(['auth', 'verified'])->name('lobby');
 
 // App

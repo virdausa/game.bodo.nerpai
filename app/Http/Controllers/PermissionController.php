@@ -10,13 +10,13 @@ class PermissionController extends Controller
     public function index()
     {
         $permissions = Permission::all();
-        return view('permissions.index', compact('permissions'));
+        return view('space.permissions.index', compact('permissions'));
     }
 
     // Menampilkan form untuk membuat permission baru
     public function create()
     {
-        return view('permissions.create');
+        return view('space.permissions.create');
     }
 
     // Menyimpan permission baru
@@ -34,7 +34,7 @@ class PermissionController extends Controller
     // Menampilkan form untuk mengedit permission
     public function edit(Permission $permission)
     {
-        return view('permissions.edit', compact('permission'));
+        return view('space.permissions.edit', compact('permission'));
     }
 
     // Mengupdate permission

@@ -13,7 +13,7 @@ class RoleController extends Controller
     public function index()
     {
         $roles = Role::with('permissions')->get();
-        return view('roles.index', compact('roles'));
+        return view('space.roles.index', compact('roles'));
     }
     public function getRolesData(Request $request)
     {
@@ -24,7 +24,7 @@ class RoleController extends Controller
                 return $role->permissions->pluck('name')->implode(', '); // List permissions as a string
             })
             ->addColumn('actions', function ($role) {
-                return view('roles.partials.actions', compact('role'))->render(); // Action buttons
+                return view('space.roles.partials.actions', compact('role'))->render(); // Action buttons
             })
             ->filterColumn('permissions', function ($query, $keyword) {
                 $query->whereHas('permissions', function ($query) use ($keyword) {
@@ -43,7 +43,7 @@ class RoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('roles.create', compact('groupedPermissions'));
+        return view('space.roles.create', compact('groupedPermissions'));
     }
 
     public function store(Request $request)
@@ -72,7 +72,7 @@ class RoleController extends Controller
             return $parts[1] ?? 'others'; // Ambil kata kedua sebagai key, default 'others' jika tidak ada kata kedua
         });
 
-        return view('roles.edit', compact('role', 'groupedPermissions'));
+        return view('space.roles.edit', compact('role', 'groupedPermissions'));
     }
 
     public function update(Request $request, Role $role)

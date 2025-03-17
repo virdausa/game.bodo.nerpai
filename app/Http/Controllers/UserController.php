@@ -16,7 +16,7 @@ class UserController extends Controller
     {
         $users = User::with('role', 'companies')->get();
 
-        return view('users.index', compact('users'));
+        return view('space.users.index', compact('users'));
     }
 
     /**
@@ -50,7 +50,7 @@ class UserController extends Controller
     {
         $user = User::find($id);
         $roles = \Spatie\Permission\Models\Role::all();
-        return view('users.edit', compact('user', 'roles'));
+        return view('space.users.edit', compact('user', 'roles'));
     }
 
     /**
