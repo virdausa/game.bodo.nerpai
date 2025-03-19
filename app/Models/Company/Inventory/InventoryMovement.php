@@ -11,6 +11,11 @@ use App\Models\Company\Employee;
 use App\Models\Company\Warehouse;
 use App\Models\Company\WarehouseLocation;
 
+use App\Models\Company\Finance\CogsEntry;
+
+// services
+use App\Services\Company\Finance\JournalEntryService;
+
 class InventoryMovement extends Model
 {
     use HasFactory;
@@ -58,6 +63,41 @@ class InventoryMovement extends Model
 
 
     // functions
+
+    public function postCogs()
+    {
+        $cogs_entry = CogsEntry::create([
+            'product_id' => $this->product_id,
+            'source_type' => $this->source_type,
+            'source_id' => $this->source_id,
+            'quantity' => $this->quantity,
+            'cost_per_unit' => $this->cost_per_unit,
+            'total_cost' => $this->cost_per_unit * $this->quantity,
+            'date' => $this->created_at,
+        ]);
+
+        $journalService = app(JournalEntryService::class);
+        $journalService->addJournalEntry([
+            'created_by' => $this->employee_id,
+            'source_type' => $this->source_type,
+            'source_id' => $this->source_id,
+            'date' => $this->created_at,
+            'type' => 'COGS',
+            'description' => 'Cost of Goods Sold',
+            'total' => $cogs_entry->total_cost,
+        ], [
+            [
+                'account_id' => get_company_setting('comp.account_cogs'),                 // beban pokok pendapatan
+                'debit' => $cogs_entry->total_cost,
+            ],
+            [
+                'account_id' => get_company_setting('comp.account_inventories'),                  // inventory
+                'credit' => $cogs_entry->total_cost,
+            ]
+        ]);
+    }
+
+
     public function postMovement()
     {
         $inventory = Inventory::updateOrCreate(
@@ -75,6 +115,8 @@ class InventoryMovement extends Model
             $inventory->increment('quantity', $this->quantity);
         } else if($this->source_type == 'OUTB') {
             $inventory->decrement('quantity', $this->quantity);
+        } else if($this->source_type == 'SO') {
+            $inventory->decrement('in_transit_quantity', $this->quantity);
         }
 
         $inventory->save();

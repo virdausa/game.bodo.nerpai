@@ -222,10 +222,21 @@ class InventoryTransferController extends Controller
         // delete items that are not in the request
         $inventory_transfer->items()->whereNotIn('item_id', $request_item_ids)->delete();
 
-        $inventory_transfer->items()->upsert($transfer_items,
-            ['inventory_transfer_id', 'item_type', 'item_id'],
-            ['quantity', 'notes']
-        );
+        foreach($transfer_items as $item){
+            $inventory_transfer->items()->updateOrCreate(
+                [
+                    'inventory_transfer_id' => $item['inventory_transfer_id'],
+                    'item_type' => $item['item_type'],
+                    'item_id' => $item['item_id'],
+                ],
+                $item
+            );
+        }
+        
+        // $inventory_transfer->items()->upsert($transfer_items,
+        //     ['inventory_transfer_id', 'item_type', 'item_id'],
+        //     ['quantity', 'notes']
+        // );
 
         $inventory_transfer->save();
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Company;
+namespace App\Models\Company\Sale;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +11,13 @@ use App\Models\Employee;
 
 use App\Models\Company\Warehouse;
 use App\Models\Company\Customer;
+use App\Models\Company\Courier;
+use App\Models\Company\Shipment;
+
+use App\Models\Company\Sale\SaleItems;
+use App\Models\Company\Sale\SaleInvoice;
+
+use App\Models\Warehouse\Outbound;
 
 class Sale extends Model
 {
@@ -41,11 +48,11 @@ class Sale extends Model
         return $this->number;
     }
 
-    public function products()
+
+    // relations
+    public function items(): HasMany
     {
-        return $this->belongsToMany(Product::class, 'sales_products')
-            ->withPivot('id', 'quantity', 'price', 'total_cost', 'notes')
-            ->withTimestamps();
+        return $this->hasMany(SaleItems::class);
     }
 
     public function warehouse()
@@ -74,11 +81,17 @@ class Sale extends Model
     }
 
 
-    public function shipments(): HasMany
+    public function shipments()
     {
-        // shipment with type = "PO" and id = purchase_id
-        return $this->hasMany(Shipment::class, 'transaction_id', 'id')
-                    ->where('transaction_type', 'SO');
+        return $this->hasManyThrough(
+            Shipment::class,
+            Outbound::class,
+            'source_id', // Foreign key di `outbounds` yang mengarah ke `sales.id`
+            'transaction_id', // Foreign key di `shipments` yang mengarah ke `outbounds.id`
+            'id', // Local key di `sales`
+            'id' // Local key di `outbounds`
+        )->where('outbounds.source_type', 'SO')
+         ->where('shipments.transaction_type', 'OUTB');
     }
 
 

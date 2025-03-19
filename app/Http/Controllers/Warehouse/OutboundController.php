@@ -97,6 +97,13 @@ class OutboundController extends Controller
 		$shipment->generateShipmentNumber();
 		$shipment->save();
 
+
+
+		// update inventory quantity move to in_transit_quantity
+		$this->updateOutboundProductstoInventory($outbound);
+
+		
+
 		$outbound->status = 'OUTB_IN_TRANSIT';
 		$outbound->save();
 	
@@ -109,5 +116,17 @@ class OutboundController extends Controller
 		$outbound->save();
 	
 		return redirect()->route('warehouse_outbounds.show', $outbound->id)->with('success', "Outbound {$outbound->number} updated successfully.");
+	}
+
+
+	public function updateOutboundProductstoInventory($outbound) {
+		$outbound_items = $outbound->items;
+
+		// update inventory quantity to in_transit_quantity
+		foreach($outbound_items as $item) {
+			$item->inventory->in_transit_quantity += $item->quantity;
+			$item->inventory->quantity -= $item->quantity;
+			$item->inventory->save();
+		}
 	}
 }

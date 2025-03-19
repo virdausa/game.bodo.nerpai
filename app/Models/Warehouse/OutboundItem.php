@@ -34,8 +34,7 @@ class OutboundItem extends Model
 	}
 
 	public function inventory() {
-		return $this->hasMany(Inventory::class, 'product_id', 'product_id')
-					->whereColumn('warehouse_location_id', 'outbound_items.warehouse_location_id');
+		return $this->belongsTo(Inventory::class);
 	}
 
 	public function warehouse_location() {

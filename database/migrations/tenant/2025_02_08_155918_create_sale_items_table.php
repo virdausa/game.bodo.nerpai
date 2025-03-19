@@ -8,13 +8,15 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('sales_products', function (Blueprint $table) {
+        Schema::create('sale_items', function (Blueprint $table) {
             // Primary Key
             $table->id('id');
 
             // Foreign Keys
             $table->foreignId('sale_id')->constrained()->onDelete('cascade');
-            $table->foreignId('product_id')->constrained();
+            $table->string('item_type')->nullable()->default('PRD');            // PRD, SRV
+            $table->unsignedBigInteger('item_id')->nullable();
+            $table->foreignId('inventory_id')->constrained();
 
             // Columns
             $table->integer('quantity');
@@ -33,6 +35,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('sales_products');
+        Schema::dropIfExists('sale_items');
     }
 };

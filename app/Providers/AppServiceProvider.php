@@ -10,8 +10,8 @@ use App\Models\Company\Supplier;
 use App\Models\Company\Warehouse;
 use App\Models\Company\Customer;
 use App\Models\Company\Purchase;
-use App\Models\Company\Sale;
 use App\Models\Company\Store;
+use App\Models\Company\Product;
 use App\Models\Company\Inventory\InventoryTransfer;
 use App\Models\Warehouse\Outbound;
 use App\Models\Company\Inventory\Inventory;
@@ -23,7 +23,8 @@ use App\Models\Store\StorePos;
 use App\Models\Store\StoreInventory;
 
 use App\Models\Company\PurchaseInvoice;
-use App\Models\Company\SaleInvoice;
+use App\Models\Company\Sale\Sale;
+use App\Models\Company\Sale\SaleInvoice;
 
 use App\Models\Company\Finance\Expense;
 
@@ -66,6 +67,7 @@ class AppServiceProvider extends ServiceProvider
             'EXP' => Expense::class,
             'IVT' => Inventory::class,
             'SIVT' => StoreInventory::class,
+            'PRD' => Product::class,
         ]);
 	}
 }

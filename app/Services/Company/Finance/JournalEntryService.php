@@ -13,7 +13,7 @@ class JournalEntryService
 
         $journal_entry = JournalEntry::create([
             'created_by' => $data['created_by'] ?? $employee->id,
-            'source_type' => $date['source_type'] ?? null,
+            'source_type' => $data['source_type'] ?? null,
             'source_id' => $data['source_id'] ?? null,
             'date' => $data['date'] ?? date('Y-m-d'),
             'type' => $data['type'] ?? 'MNL',

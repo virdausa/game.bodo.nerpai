@@ -152,7 +152,7 @@ class PurchaseInvoiceController extends Controller
             'source_id' => $invoice->id,
             'date' => date('Y-m-d'),
             'type' => 'AP',
-            'description' => 'pendapatan dimuka purchase',
+            'description' => 'uang muka purchase',
             'total' => $invoice->total_amount,
             'created_by' => $employee->id,
         ], [

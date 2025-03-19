@@ -43,4 +43,13 @@ class Inventory extends Model
     {
         return $this->belongsTo(WarehouseLocation::class);
     }
+
+
+
+    // functions
+
+    // update stock quantity, in_transit, reserved, etc
+    public function updateInventoryStatus($data = []){
+
+    }
 }

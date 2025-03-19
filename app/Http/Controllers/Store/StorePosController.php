@@ -92,6 +92,7 @@ class StorePosController extends Controller
 		]);
 		$pos->generatePosNumber();
         
+		
 		// Create Sales Products
         $total_amount = 0;
 		$discount_amount = 0;
@@ -176,7 +177,7 @@ class StorePosController extends Controller
 				'source_id' => $pos->id,
 				'type' => 'POS',
 				'description' => "POS {$pos->number}",
-				'total' => $pos->total_amount,
+				'total' => $pos->total_amount + $data['discount_amount'],
 			],
 			$details
 		);
@@ -218,7 +219,7 @@ class StorePosController extends Controller
 	{
 		$store_pos = StorePos::with(['store_customer', 'store_employee', 'store_pos_products'])->findOrFail($id);
 		
-		$pdf = Pdf::loadView('invoices.pos_receipt', compact('store_pos'));
+		$pdf = Pdf::loadView('company.invoices.pos_receipt', compact('store_pos'));
 		
 		return $pdf->stream('pos.pdf');
 	}
