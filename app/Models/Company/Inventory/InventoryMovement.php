@@ -22,7 +22,7 @@ class InventoryMovement extends Model
 	
 	protected $table = 'inventory_movements';
 	
-    public $timestamps = false;
+    public $timestamps = true;
 
     protected $fillable = [
 		'product_id', 
@@ -105,9 +105,9 @@ class InventoryMovement extends Model
                 'product_id' => $this->product_id,
                 'warehouse_id' => $this->warehouse_id,
                 'warehouse_location_id' => $this->warehouse_location_id,
+                'cost_per_unit' => $this->cost_per_unit,
             ],
             [
-                'cost_per_unit' => $this->cost_per_unit,
             ]
         );
 
