@@ -64,7 +64,11 @@ Route::middleware(['auth',
     Route::resource('suppliers', SupplierController::class);
     
     
+    route::get('/customers/data', [CustomerController::class, 'getCustomersData'])->name('customers.data');
     route::resource("customers", CustomerController::class);
+
+
+
     Route::resource('sales', SaleController::class);
     Route::post('sales/{id}/action/{action}', [SaleController::class, 'handleAction'])->name('sales.action');
     

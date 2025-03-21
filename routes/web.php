@@ -15,6 +15,8 @@ use App\Http\Controllers\Company\StoreController;
 
 use App\Http\Controllers\Company\WarehouseController;
 
+use App\Http\Controllers\Company\Client\MigrateClientController;
+
 use App\Http\Middleware\AppMiddleware;
 use App\Http\Middleware\CompanyMiddleware;
 
@@ -72,6 +74,12 @@ Route::middleware(['auth',
 
     Route::post('warehouses/switch/{warehouses}', [WarehouseController::class, 'switchWarehouse'])->name('warehouses.switch'); 
     Route::get('warehuses/exit/{route}', [WarehouseController::class, 'exitWarehouse'])->name('warehouses.exit');
+
+
+
+    
+    // file migrate client
+    Route::resource('migrate_client', MigrateClientController::class);
 });
 
 

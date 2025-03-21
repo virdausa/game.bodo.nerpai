@@ -164,7 +164,6 @@ class CompanyController extends Controller
 			'strict'    => true,
 			'engine'    => null,
 		]);
-
 	}
 
 	public function acceptInvite(Request $request, $id)

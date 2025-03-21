@@ -1,25 +1,13 @@
-<?php
-// Koneksi ke server 192.168.5.240 (database asal)
-$source_conn = new mysqli("192.168.5.240", "id14269137_farhan123", "611281Eb15e*", "haebot1");
-
-// Koneksi ke server tujuan
-$destination_conn = new mysqli("localhost", "root", "", "business_management");
-
-// Check koneksi sumber
-if ($source_conn->connect_error) {
-    die("Koneksi ke database asal gagal: " . $source_conn->connect_error);
-}
-
-// Check koneksi tujuan
-if ($destination_conn->connect_error) {
-    die("Koneksi ke database tujuan gagal: " . $destination_conn->connect_error);
-}
+@php
+use App/Models/Company/Customer;
 
 // Query untuk mendapatkan data dari database asal
 $source_query = "SELECT CUSTOMER_NO, CUSTOMER_NAME, CUSTOMER_STATE, CONTACT, ADDRESS, CUSTOMER_DATE_REG  FROM customers";
 $source_result = $source_conn->query($source_query);
 
 if ($source_result->num_rows > 0) {
+    dd($source_result);
+
     while ($row = $source_result->fetch_assoc()) {
         // Persiapkan data untuk dimasukkan ke database tujuan
         $id = $row['CUSTOMER_NO'];
@@ -58,4 +46,5 @@ if ($source_result->num_rows > 0) {
 // Tutup koneksi
 $source_conn->close();
 $destination_conn->close();
-?>
+
+@endphp
