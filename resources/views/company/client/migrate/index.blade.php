@@ -23,6 +23,8 @@
                             <x-select-option value="supplier">supplier</x-select-option>
                             <x-select-option value="product">product</x-select-option>
                             <x-select-option value="customer">customer</x-select-option>
+                            <x-select-option value="order">order</x-select-option>
+                            <x-select-option value="shipment">shipment</x-select-option>
                         </x-input-select>
 
                         <x-primary-button type="submit" class="btn btn-primary">Migrate</x-primary-button>
