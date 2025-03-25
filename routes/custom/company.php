@@ -26,7 +26,6 @@ use App\Http\Controllers\Company\ProductController;
 use App\Http\Controllers\Company\WarehouseLocationController;
 use App\Http\Controllers\Company\InventoryTransferController;
 
-use App\Http\Controllers\InventoryController;
 use App\Http\Controllers\Warehouse\InboundController;
 use App\Http\Controllers\Warehouse\OutboundController;
 use App\Http\Controllers\Company\InventoryController;

@@ -269,7 +269,7 @@ class CompanyController extends Controller
 	public function setupNewCompany(Company $company)
 	{
 		// create database
-		$db_name = $this->createDatabase($company->id, 'tenant');
+		$db_name = $this->createDatabase($company->code);
 		
 		// config tenant
 		$this->configTenant($company->id);
