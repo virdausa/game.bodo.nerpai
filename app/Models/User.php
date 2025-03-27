@@ -11,6 +11,8 @@ use Spatie\Permission\Models\Permission;
 
 use App\Models\Space\Company;
 
+use App\Models\Primary\Player;
+
 class User extends Authenticatable
 {
     protected $table = 'users';
@@ -30,7 +32,8 @@ class User extends Authenticatable
         'alamat',    
         'no_hp',  
         'tgl_keluar',
-        'role_id', 
+        'role_id',
+        'player_id',
     ];
 
     protected $hidden = [
@@ -69,5 +72,10 @@ class User extends Authenticatable
     public function role()
     {
         return $this->belongsTo(Role::class);
+    }
+
+    public function player()
+    {
+        return $this->belongsTo(Player::class);
     }
 }

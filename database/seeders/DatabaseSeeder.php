@@ -6,6 +6,8 @@ use Illuminate\Database\Seeder;
 
 use Database\Seeders\Space\SpaceSeeder;
 
+use Database\Seeders\Primary\PrimarySeeder;
+
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -18,6 +20,8 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
 
             SpaceSeeder::class,
+
+            PrimarySeeder::class,
             //BackupUsersSeeder::class,
         ]);
     }
