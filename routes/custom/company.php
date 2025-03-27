@@ -4,36 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Middleware\CompanyMiddleware;
 
 use App\Http\Controllers\Company\CompanySettingController;
-
-use App\Http\Controllers\Company\CompanyUserController;
-use App\Http\Controllers\Company\CompanyRoleController;
-use App\Http\Controllers\Company\CompanyPermissionController;
-
-use App\Http\Controllers\Company\EmployeeController;
-
-
-use App\Http\Controllers\Company\PurchaseController;
-use App\Http\Controllers\Company\PurchaseInvoiceController;
-use App\Http\Controllers\Company\SupplierController;
-
-
-use App\Http\Controllers\Company\SaleController;
-use App\Http\Controllers\Company\SaleInvoiceController;
-use App\Http\Controllers\Company\CustomerController;
-
-
-use App\Http\Controllers\Company\ProductController;
-use App\Http\Controllers\Company\WarehouseLocationController;
-use App\Http\Controllers\Company\InventoryTransferController;
-
-use App\Http\Controllers\Warehouse\InboundController;
-use App\Http\Controllers\Warehouse\OutboundController;
-use App\Http\Controllers\Company\InventoryController;
-
-use App\Http\Controllers\Company\ShipmentController;
-use App\Http\Controllers\Company\CourierController;
-
-
 use App\Http\Controllers\Company\Finance\AccountController;
 
 use App\Http\Controllers\Company\Finance\JournalEntryController;
