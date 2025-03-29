@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Models\Role;  // Pastikan Role diimport
 use Spatie\Permission\Models\Permission;
 
+use Laravel\Sanctum\HasApiTokens;
+
 use App\Models\Space\Company;
 
 use App\Models\Primary\Player;
@@ -17,9 +19,9 @@ class User extends Authenticatable
 {
     protected $table = 'users';
 
-    protected $connection = 'mysql';
+    protected $connection = 'primary';
 
-    use HasFactory, Notifiable, HasRoles;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens;
 
     protected $guard_name = 'web';
 
